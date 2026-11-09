@@ -1,7 +1,7 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {GlitchIn, kf, emphasisPulse, easeInOutPow, SENTENCES, TOTAL_FRAMES, CHAPTER_STARTS, FONT_HEAVY, FONT_WIDE, FONT_ORB, clamp01, SQUEEZE, fitSize, EM_WIDE} from '../common';
-import {CText, TechText, TechSub, Pill, TopCapsule, ArrowH, PURPLE, PURPLE_TECH, GREY, GREY_MID, WHITE, GLOW_PURPLE_S, PILL_SHADOW, fadeIn, slideUp} from '../ui';
+import {CText, TechText, TechSub, Pill, TopCapsule, ArrowH, BACKGROUND, SURFACE, GOLD, GOLD_TECH, textOnFill, GREY, GREY_MID, WHITE, GLOW_GOLD_S, PILL_SHADOW, fadeIn, slideUp} from '../ui';
 import {VIDEO} from '../config';
 const clampFrames = (n: number, len: number) => clamp01(n / len);
 
@@ -31,9 +31,9 @@ export const Title: React.FC = () => {
   const glow = 0.5 + 0.5 * Math.sin((N / 30) * Math.PI); // 缓慢呼吸
   return (
     <div style={{position: 'absolute', inset: 0, transform: `translateY(${dy}px)`, opacity: op}}>
-      <GlitchIn N={N} f0={a + 11} rgbSplit={6} slices={14} seed={3}>
+      <GlitchIn N={N} f0={a + 11} rgbSplit={0} slices={14} seed={3}>
         <div style={{position: 'absolute', left: 0, top: 268, width: 1280, display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 26}}>
-          <span style={{fontFamily: FONT_WIDE, fontSize: fitSize(VIDEO.title.big, VIDEO.title.rest ? 620 : 1120, 118, 64, EM_WIDE, 6), color: WHITE, lineHeight: 1, letterSpacing: 6, textShadow: `0 0 ${18 + 14 * glow}px rgba(102,45,248,${0.55 + 0.3 * glow}), 6px 6px 0 ${PURPLE}`}}>{VIDEO.title.big}</span>
+          <span style={{fontFamily: FONT_WIDE, fontSize: fitSize(VIDEO.title.big, VIDEO.title.rest ? 620 : 1120, 118, 64, EM_WIDE, 6), color: WHITE, lineHeight: 1, letterSpacing: 6, textShadow: `0 0 ${6 + 4 * glow}px rgba(207,180,127,${0.08 + 0.04 * glow}), 3px 3px 0 #7D663F`}}>{VIDEO.title.big}</span>
           {VIDEO.title.rest ? (
             <span style={{fontFamily: FONT_HEAVY, fontWeight: 900, fontSize: fitSize(VIDEO.title.rest, 520, 96, 60, 1, 2), color: WHITE, lineHeight: 1, transform: `scaleX(${SQUEEZE})`, transformOrigin: '0 100%', letterSpacing: 2, WebkitTextStroke: '1px #000', paintOrder: 'stroke fill'}}>{VIDEO.title.rest}</span>
           ) : null}
@@ -71,9 +71,9 @@ export const ChapterCard: React.FC<{card: (typeof CHAPTER_CARDS)[number]}> = ({c
   return (
     <div style={{position: 'absolute', inset: 0, transform: `translateY(${dy}px)`, opacity: op}}>
       <div style={{position: 'absolute', opacity: fadeIn(n, 8)}}>
-        <CText cx={640} cy={268} size={54} weight={700} family={FONT_ORB} color={PURPLE_TECH} letterSpacing={4} shadow="0 0 14px rgba(102,45,248,.6)">{`0${card.n}`}</CText>
+        <CText cx={640} cy={268} size={54} weight={700} family={FONT_ORB} color={GOLD_TECH} letterSpacing={4} shadow="0 0 8px rgba(207,180,127,.10)">{`0${card.n}`}</CText>
       </div>
-      <GlitchIn N={N} f0={card.from + 3} rgbSplit={5} seed={card.n}>
+      <GlitchIn N={N} f0={card.from + 3} rgbSplit={0} seed={card.n}>
         <CText cx={640} cy={372} size={fitSize(card.title, 1100, 80, 46, 1, 3)} weight={900} scaleX={SQUEEZE} letterSpacing={3} style={{WebkitTextStroke: '1px #000', paintOrder: 'stroke fill'}}>{card.title}</CText>
       </GlitchIn>
       <div style={{position: 'absolute', left: 640 - w / 2, top: 428, width: w, height: 3, background: WHITE, opacity: 0.85}} />
@@ -121,10 +121,10 @@ export const Hud: React.FC = () => {
     const newOp = 1 - Math.pow(1 - clampFrames(n - 3, 7), 2.5);
     return (
       <div style={{position: 'absolute', inset: 0, opacity: fadeTail}}>
-        <Pill x={640 - wNow / 2} y={28} w={wNow} h={51} fill={PURPLE} sw={2} style={{filter: PILL_SHADOW}} />
-        {oldOp > 0.01 ? <CText cx={640} cy={53.5} size={33} weight={700} letterSpacing={1} opacity={oldOp}>{prev.text}</CText> : null}
+        <Pill x={640 - wNow / 2} y={28} w={wNow} h={51} fill={GOLD} sw={2} style={{filter: PILL_SHADOW}} />
+        {oldOp > 0.01 ? <CText cx={640} cy={53.5} size={33} weight={700} letterSpacing={1} color={textOnFill(GOLD)} opacity={oldOp}>{prev.text}</CText> : null}
         <div style={{position: 'absolute', inset: 0, opacity: newOp, transform: `translateY(${((1 - newOp) * 4).toFixed(2)}px)`}}>
-          <CText cx={640} cy={53.5} size={33} weight={700} letterSpacing={1}>{e.text}</CText>
+          <CText cx={640} cy={53.5} size={33} weight={700} letterSpacing={1} color={textOnFill(GOLD)}>{e.text}</CText>
           {e.tech ? <TechSub cx={640} cy={92} text={e.tech} /> : null}
         </div>
       </div>
@@ -149,13 +149,13 @@ export const Rail: React.FC<{spec: RailSpec}> = ({spec}) => {
       {spec.steps.map((t, i) => {
         const state = i === active ? 'active' : i < active ? 'done' : 'todo';
         const pulse = i === active ? emphasisPulse(N - spec.switches[i], {peak: 1.1, up: 10, hold: 3, down: 10}) : 1;
-        const fill = state === 'active' ? PURPLE : state === 'done' ? '#2A2A2A' : '#000';
+        const fill = state === 'active' ? GOLD : state === 'done' ? '#253442' : SURFACE;
         const stroke = state === 'active' ? WHITE : state === 'done' ? GREY_MID : GREY;
-        const color = state === 'todo' ? GREY : WHITE;
+        const color = state === 'active' ? textOnFill(GOLD) : state === 'todo' ? GREY : WHITE;
         return (
           <React.Fragment key={t}>
             <div style={{position: 'absolute', left: RAIL_CX[i] - RAIL_W / 2, top: RAIL_Y + slideUp(N - (spec.from + i * 2), 40, 16), width: RAIL_W, height: RAIL_H, transform: `scale(${pulse})`, opacity: fadeIn(N - (spec.from + i * 2), 8)}}>
-              <Pill x={0} y={0} w={RAIL_W} h={RAIL_H} fill={fill} stroke={stroke} sw={2} text={t} fontSize={24} weight={700} color={color} letterSpacing={1} textDy={-1.5} glow={state === 'active' ? GLOW_PURPLE_S : undefined} />
+              <Pill x={0} y={0} w={RAIL_W} h={RAIL_H} fill={fill} stroke={stroke} sw={2} text={t} fontSize={24} weight={700} color={color} letterSpacing={1} textDy={-1.5} glow={state === 'active' ? GLOW_GOLD_S : undefined} />
             </div>
             {i < spec.steps.length - 1 ? (
               <ArrowH x={RAIL_CX[i] + RAIL_W / 2 + 6} y={RAIL_Y + RAIL_H / 2 - 9} w={38} h={18} p={clampFrames(N - (spec.from + 4 + i * 2), 10)} color={i < active ? WHITE : GREY} shaft={2} />
@@ -176,7 +176,7 @@ export const Ending: React.FC = () => {
   const N = useCurrentFrame() + ENDING_RANGE[0];
   const n = N - ENDING_RANGE[0];
   const op = fadeIn(n, VIDEO.endingFade);
-  return <div style={{position: 'absolute', inset: 0, background: '#000', opacity: op}} />;
+  return <div style={{position: 'absolute', inset: 0, background: BACKGROUND, opacity: op}} />;
 };
 /** 片尾署名（压黑之后、进度条压黑之前）：完整书名 / 作者 / 出版社，停 ≈3 s，让片头 tagline 读不完的信息在这里补齐（QC v1 C1 #1） */
 export const END_CREDIT_RANGE: [number, number] = [LAST_TO + 1, TOTAL_FRAMES - 26];  // 9110–9182：末句字幕 9109 结束、内容已全黑后再出署名卡（满态 ≈56 帧）；之后 26 帧纯黑
@@ -209,5 +209,5 @@ export const ENDING_TOP_RANGE: [number, number] = [LAST_TO - VIDEO.endingFade, T
 export const EndingTop: React.FC = () => {
   const N = useCurrentFrame() + ENDING_TOP_RANGE[0];
   const op = fadeIn(N - ENDING_TOP_RANGE[0], VIDEO.endingFade);
-  return <div style={{position: 'absolute', inset: 0, background: '#000', opacity: op}} />;
+  return <div style={{position: 'absolute', inset: 0, background: BACKGROUND, opacity: op}} />;
 };

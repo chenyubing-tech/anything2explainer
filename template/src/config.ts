@@ -38,7 +38,7 @@ export const VIDEO = {
     {fromS: 'S01', toS: 'S01', text: '第一节名'},
     {fromS: 'S02', toS: 'S02', text: '第二节名', tech: 'Optional English'},
   ] as HudEntry[],
-  /** 流程轨（可选，只给真有先后顺序步骤的章；一章最多一条，五步以内）：y118–162，当前步紫、已过灰底、未到灰边；有轨的章内容主区 y175–620。
+  /** 流程轨（可选，只给真有先后顺序步骤的章；一章最多一条，五步以内）：y118–162，当前步沙金底深色字、已过灰底、未到灰边；有轨的章内容主区 y175–620。
    *  例：{steps: ['第一步', '第二步', '第三步'], switchS: ['S12', 'S14', 'S16'], fromS: 'S12', toS: 'S18'} */
   rails: [] as RailSpec[],
   /** 片头帧数（tts_build 的 LEAD+CHAPTER_GAP 决定，通常 85）与片尾压黑 */

@@ -3,6 +3,7 @@ import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
 import {Fonts, BgTrack, DotFieldBg, FootageTrack, ProgressBar, Subtitles} from './common';
 import type {ShotDef, BgSpec, FootageSpec} from './common';
 import {VIDEO} from './config';
+import {BACKGROUND} from './theme';
 import {SHOTS_OVERLAY, SHOTS_OVERLAY_TOP, BG_OVERLAY} from './overlay';
 import {SHOTS_G1, BG_G1, FOOTAGE_G1} from './shots/G1';
 import {SHOTS_G2, BG_G2, FOOTAGE_G2} from './shots/G2';
@@ -17,7 +18,7 @@ import {SHOTS_G8, BG_G8, FOOTAGE_G8} from './shots/G8';
 // z 序（低→高）：黑底 < 幕底（config.bg：雾底 Fog + 星点 StarField，或点阵波 DotFieldBg）< 实拍 FootageTrack < 覆盖层 < 镜头 G1–G8 < 片尾压黑 < 进度条 < aboveBar 镜头 < 字幕。
 // 镜头组件不要画不透明黑底（会盖掉雾底星点）；需要纯黑处用 BG_Gn 覆写 {fog:false, stars:'none'}。
 export const Stage: React.FC<{shots: ShotDef[]; bg: BgSpec[]; footage?: FootageSpec[]; audio?: boolean}> = ({shots, bg, footage = [], audio = false}) => (
-  <AbsoluteFill style={{background: '#000'}}>
+  <AbsoluteFill style={{background: BACKGROUND}}>
     <Fonts />
     {audio ? <Audio src={staticFile(`assets/${VIDEO.slug}/audio.wav`)} /> : null}
     {VIDEO.bg === 'dots' ? <DotFieldBg specs={bg} /> : <BgTrack specs={bg} />}

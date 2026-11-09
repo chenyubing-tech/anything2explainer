@@ -4,7 +4,7 @@
 用法：
   python3 scripts/frame_metrics.py [--frames fin_frames] [--storyboard 分镜表.md] [--shots SC11:1627-1806,SC12:1852-1965] [--step 4] [--out qc/frame_metrics_vN.md]
 默认从 分镜表.md 解析 `| SCxx … | a–b |` 行得到镜头区间；帧目录默认 fin_frames/f_%04d.jpg。
-每镜头输出：主体尺度（最大物体高度，宽物体按 min(w,4h)/2.5 折算；一行大字按整行计）中位数/最小值、空场最长连续帧数（无 ≥110 主体且无大面积光活动）、柔光面积（主角区 / 全区）中位数、紫色碎片数中位数、最长静止帧数、标记。
+每镜头输出：主体尺度（最大物体高度，宽物体按 min(w,4h)/2.5 折算；一行大字按整行计）中位数/最小值、空场最长连续帧数（无 ≥110 主体且无大面积光活动）、柔光面积（主角区 / 全区）中位数、强调色碎片数中位数、最长静止帧数、标记。默认哑光主题不因缺少柔光扣分。
 依赖：numpy pillow scipy。亮度统计用 int32。
 """
 import argparse, os, re, sys
@@ -20,9 +20,27 @@ ap.add_argument('--step', type=int, default=4)
 ap.add_argument('--out', default='')
 ap.add_argument('--rail-top', type=int, default=100, help='内容区上界（有流程轨的镜头可传 175）')
 ap.add_argument('--bg', default='auto', help="幕底方案 stars|dots|auto（auto 读 src/config.ts 的 bg）。dots 时按 DotFieldBg 的网格坐标把点阵抠掉再统计，否则波前亮点会被数成背景碎屑")
+ap.add_argument('--accent', default='auto', help='强调色色值 #RRGGBB；auto 读取 src/theme.ts 的 GOLD')
+ap.add_argument('--require-glow', action='store_true', help='仅在明确要求发光的镜头中启用柔光缺失标记')
 a = ap.parse_args()
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+def theme_color(name, fallback):
+    try:
+        with open(f'{ROOT}/src/theme.ts', encoding='utf-8') as f:
+            m = re.search(rf"export const {name}\s*=\s*'(#[0-9a-fA-F]{{6}})'", f.read())
+        return m.group(1) if m else fallback
+    except OSError:
+        return fallback
+
+ACCENT = theme_color('GOLD', '#CFB47F') if a.accent == 'auto' else a.accent
+if not re.fullmatch(r'#[0-9a-fA-F]{6}', ACCENT):
+    ap.error('--accent 必须是 #RRGGBB 或 auto')
+def rgb_color(value):
+    return np.array([int(value[i:i + 2], 16) for i in (1, 3, 5)], dtype=np.int32)
+ACCENT_RGB = rgb_color(ACCENT)
+ACCENT_CHROMA = ACCENT_RGB / max(int(ACCENT_RGB.max()), 1)
+SURFACE_RGB = rgb_color(theme_color('SURFACE', '#14202B'))
 def cfg_bg():
     try:
         m = re.search(r"bg:\s*'(stars|dots)'", open(f'{ROOT}/src/config.ts', encoding='utf-8').read())
@@ -47,9 +65,8 @@ def dot_mask(W=1280, H=720, r=5):
             m[y0:y1, x0:x1] |= disc[(y0 - cy + r):(y1 - cy + r), (x0 - cx + r):(x1 - cx + r)]
     return m
 DOT_MASK = dot_mask()
-# 点阵底色 #0b0c11 本身带一点蓝（sat≈.35、lum≈12），会整屏落进「柔光」判据（sat>.25 且 10<lum<110）→ 空场检测被屏蔽、主角区柔光虚高；
-# dots 模式把柔光亮度下限抬到 22（实测底色+噪点 ≤18；紫柔光在内容区的亮度多在 25–110，基本不受影响）。
-SOFT_LO = 22 if BG == 'dots' else 10
+# 深海黑金的背景、雾底和卡片本身带蓝；柔光亮度必须高于最亮基础表面，避免把整幅背景计作柔光。
+SOFT_LO = max(22 if BG == 'dots' else 10, int(SURFACE_RGB @ np.array([299, 587, 114]) // 1000) + 4)
 
 def parse_shots():
     if a.shots:
@@ -104,11 +121,12 @@ def analyze(i):
         if sub.any():
             lab2, n2 = ndi.label(sub)
             glow_hero = int(np.bincount(lab2.ravel())[1:].max()) if n2 else 0
-    # 紫色碎片：实心紫（排除柔光雾与虚线波纹），不膨胀，≥80px 才算一块
-    purple = (b[Z] > r[Z]) & (r[Z] > g[Z]) & (sat[Z] > 0.45) & (lum[Z] > 45)
-    lab3, n3 = ndi.label(ndi.binary_dilation(purple, structure=np.ones((7, 25), bool)))  # 把一行字的逐字硬投影并成一块
-    npurple = int((np.bincount(lab3.ravel())[1:] >= 80).sum()) if n3 else 0
-    return hero_h, glow_hero, npurple, small, int(bright.sum()), glow_total
+    # 按当前强调色的归一化 RGB 检测实色块，兼容金色及其明暗变化；排除低饱和正文与深蓝底。
+    chroma = arr[Z] / np.maximum(mx[Z, ..., None], 1)
+    accent = (np.max(np.abs(chroma - ACCENT_CHROMA), axis=2) < 0.13) & (sat[Z] > 0.15) & (lum[Z] > 45) & ~DOT_MASK[Z]
+    lab3, n3 = ndi.label(ndi.binary_dilation(accent, structure=np.ones((7, 25), bool)))
+    naccent = int((np.bincount(lab3.ravel())[1:] >= 80).sum()) if n3 else 0
+    return hero_h, glow_hero, naccent, small, int(bright.sum()), glow_total
 
 def diff_series(lo, hi):
     prev = None; out = []
@@ -120,7 +138,7 @@ def diff_series(lo, hi):
 shots = parse_shots()
 if not shots:
     sys.exit('没有解析到镜头区间：检查 --storyboard 或用 --shots')
-lines = ['| 镜头 | 帧 | 主体尺度 中位/最小 px | 空场最长连续帧 | 柔光 主角区/全区 中位 px² | 紫色碎片 中位 | 最长静止帧 | 标记 |', '|---|---|---|---|---|---|---|---|']
+lines = ['| 镜头 | 帧 | 主体尺度 中位/最小 px | 空场最长连续帧 | 柔光 主角区/全区 中位 px² | 强调色碎片 中位 | 最长静止帧 | 标记 |', '|---|---|---|---|---|---|---|---|']
 flags_total = {'高': 0, '中': 0, '低': 0}
 for sid, lo, hi in shots:
     hh = []; gl = []; pp = []; sm = []; gt = []
@@ -145,14 +163,14 @@ for sid, lo, hi in shots:
         flags.append('高:空场(主体<80px>45帧)' if len(low_vals) and np.median(low_vals) < 80 else '中:空场(主体<110px>45帧)')
     elif med_h < 170:
         flags.append('低:主角<170px')
-    if float(np.median(gl)) < 800: flags.append('低:主角无光')
-    if float(np.median(pp)) >= 8: flags.append('低:紫色碎片≥8')
+    if a.require_glow and float(np.median(gl)) < 800: flags.append('低:主角无光')
+    if float(np.median(pp)) >= 8: flags.append('低:强调色碎片≥8')
     if float(np.median(sm)) >= 10: flags.append('中:背景碎屑≥10')
     if sbest > 90: flags.append(f'中:静止{sbest}帧(>3s)')  # composition-and-light §7：完全静止 >3 s 才是缺陷，不为凑动作加漂浮；落位停留看 motion_check 的 hold
     for f in flags:
         flags_total[f[0]] += 1
     lines.append(f'| {sid} | {lo}–{hi} | {med_h:.0f} / {min_h} | {low_run} | {np.median(gl):.0f} / {np.median(gt):.0f} | {np.median(pp):.0f} | {sbest} | {"；".join(flags) or "OK"} |')
-head = f'# 构图/光/运动量化（{a.frames}，步长 {a.step}，幕底 {BG}）\n\n标记合计：高 {flags_total["高"]} / 中 {flags_total["中"]} / 低 {flags_total["低"]}。判据见 reference/composition-and-light.md §6。\n\n'
+head = f'# 构图/光/运动量化（{a.frames}，步长 {a.step}，幕底 {BG}，强调色 {ACCENT}）\n\n标记合计：高 {flags_total["高"]} / 中 {flags_total["中"]} / 低 {flags_total["低"]}。判据见 reference/composition-and-light.md §6。\n\n'
 txt = head + '\n'.join(lines) + '\n'
 if a.out:
     os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True); open(a.out, 'w', encoding='utf-8').write(txt); print(a.out)

@@ -13,17 +13,17 @@ export const GLITCH_SEQ_B = [0.55, 1, 0.55, 0, 0.55, 0, 0.55, 1, 0.78, 0.55, 0.7
 export const glitchOpacity = (n: number, seq: number[] = GLITCH_SEQ) => (n < 0 ? 0 : n >= seq.length ? 1 : seq[n]);
 
 let glitchSeq = 0;
-/** 任意内容染成单色（品红/青副本用）：feColorMatrix 取亮度写入指定通道，保留 alpha。 */
+/** 任意内容染成单色（沙金/蓝灰副本用）：feColorMatrix 取亮度写入指定通道，保留 alpha。 */
 const TintDefs: React.FC<{id: string}> = ({id}) => (
   <svg width={0} height={0} style={{position: 'absolute'}}>
     <defs>
-      {/* 品红 #D100D6 (209,0,214) */}
+      {/* 沙金 #CFB47F */}
       <filter id={`${id}-m`} colorInterpolationFilters="sRGB">
-        <feColorMatrix type="matrix" values="0.174 0.586 0.059 0 0  0 0 0 0 0  0.178 0.600 0.061 0 0  0 0 0 1 0" />
+        <feColorMatrix type="matrix" values="0.173 0.580 0.058 0 0  0.150 0.505 0.051 0 0  0.106 0.356 0.036 0 0  0 0 0 1 0" />
       </filter>
-      {/* 青 #58FFEE (88,255,238) */}
+      {/* 蓝灰 #91AABC */}
       <filter id={`${id}-c`} colorInterpolationFilters="sRGB">
-        <feColorMatrix type="matrix" values="0.073 0.247 0.025 0 0  0.213 0.715 0.072 0 0  0.199 0.667 0.067 0 0  0 0 0 1 0" />
+        <feColorMatrix type="matrix" values="0.121 0.407 0.041 0 0  0.142 0.477 0.048 0 0  0.157 0.527 0.053 0 0  0 0 0 1 0" />
       </filter>
     </defs>
   </svg>

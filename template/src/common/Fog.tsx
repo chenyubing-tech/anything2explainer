@@ -1,4 +1,5 @@
 import React from 'react';
+import {BACKGROUND, SURFACE} from '../theme';
 /**
  * 底部雾底渐变（背景层，位于内容之下）。列中值实测（f700/f3000/f9000/f12500/f13060 完全一致 → 全片恒定存在，seg_19 的"纯黑"只是未测底部）：
  * y≤430 → 1；y460 6；y500 10；y540 15；y580 19；y620 24；y660 29；y680 31 ≈ 线性 0→#1F1F1F（0.124 灰度/px），全宽，无淡入。
@@ -7,7 +8,7 @@ import React from 'react';
  * 各组镜头**不要**再画不透明黑底（会盖掉雾底与星点）；需要全黑处用 BgSpec.fog=false 关掉。
  */
 export const FOG_DEFAULT_ON = true; // 待主会话终裁（seg_19 记"纯黑"，实测有雾）
-export const Fog: React.FC<{top?: number; bottom?: number; from?: string; to?: string; opacity?: number}> = ({top = 415, bottom = 687, from = '#000000', to = '#212121', opacity = 1}) => (
+export const Fog: React.FC<{top?: number; bottom?: number; from?: string; to?: string; opacity?: number}> = ({top = 415, bottom = 687, from = BACKGROUND, to = SURFACE, opacity = 1}) => (
   // 主会话（QC v1 RQ3）：雾底末色要一直垫到画底 y720——原片进度条压在 ≈#212121 上（轨道 100 / 填充 (114,103,145)），v1 只到 687 使条体叠在纯黑上（78 / (100,89,131)）
   <div style={{position: 'absolute', left: 0, top, width: 1280, height: 720 - top, background: `linear-gradient(180deg, ${from} 0%, ${to} ${(((bottom - top) / (720 - top)) * 100).toFixed(2)}%, ${to} 100%)`, opacity, pointerEvents: 'none'}} />
 );

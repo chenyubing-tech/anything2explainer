@@ -1,36 +1,44 @@
 import React from 'react';
+import {BACKGROUND, SURFACE, GOLD, GOLD_LIGHT, GOLD_DEEP, GOLD_PALE, BLUE_GREY, FOREGROUND, MUTED, SUCCESS, DANGER} from './theme';
 import {FONT_HEAVY, FONT_TECH, FONT_MONO, FONT_ORB, TEXT_DY, LANG} from './common/lib';
 import {GlitchIn, powOutRemain, BEZ_SCALE_IN, clamp01, rnd} from './common';
 
 /**
- * 共用图元与调色板（黑填充 + 白描边 2–3px、紫 = 当前重点、橙红 = 指标/警示、灰 = 非重点、绿 = 正确）。镜头组件 `import {…} from '../../ui'`。
+ * 共用图元与调色板（黑填充 + 白描边 2–3px、金 = 当前重点、蓝灰 = 指标/对照，柔红 = 错误、灰 = 非重点、绿 = 正确）。镜头组件 `import {…} from '../../ui'`。
  * 所有组件为纯函数式、绝对定位（画布 1280×720）；动画由调用方按 N 计算后传入（opacity/p/s 等）。
  */
-// ---- 调色板 ----
-export const PURPLE = '#6630F8'; // 标准胶囊紫 (102,48,248)
-export const PURPLE_LIGHT = '#A175F1'; // 亮紫（高光端 / 穿过进度条后）
-export const PURPLE_TECH = '#6530F4'; // 英文科技字紫
-export const PURPLE_DEEP = '#5A3AD5'; // 深紫（曲线 / 硬投影）
-export const PURPLE_PALE = '#E6DCFF';
-export const ORANGE = '#F05F41'; // 橙红：指标数字 / 另一方 / 强调
-export const CORAL = '#F16043';
-export const RED_DEEP = '#EC081F'; // 深红警示块
-export const GREEN = '#8FF740'; // 绿勾
-export const GREY = '#A0A0A1'; // 非激活
-export const GREY_MID = '#747474';
-export const GREY_LINE = '#4A4A4A'; // 网格线
-export const GREY_LIGHT = '#D4D4D4';
-export const WHITE = '#FFFFFF';
-export const MAGENTA = '#D100D6';
-export const CYAN = '#58FFEE';
-export const GLOW_PURPLE = '0 0 12px 3px rgba(102,45,248,.35), 0 0 42px 14px rgba(102,45,248,.45)';
-export const GLOW_PURPLE_S = '0 0 24px 8px rgba(102,45,248,.6)';
-export const GLOW_ORANGE = '0 0 40px rgba(243,95,69,.75), 0 0 100px 10px rgba(243,95,69,.25)';
-export const GLOW_RED = '0 0 60px 20px rgba(236,8,31,.42), 0 0 20px 6px rgba(236,8,31,.45)';
-export const BLOOM = 'drop-shadow(0 0 3px rgba(255,255,255,0.5))';
-export const BLOOM_SOFT = 'drop-shadow(0 0 2px rgba(255,255,255,0.35))';
-export const TEXT_GLOW = '0 0 12px rgba(255,255,255,.55), 0 0 4px rgba(255,255,255,.35)';
-export const PILL_SHADOW = 'drop-shadow(0 0 2px rgba(200,180,255,.6))';
+// ---- 深海黑金调色板 ----
+export {BACKGROUND, SURFACE, GOLD, GOLD_LIGHT, GOLD_DEEP, GOLD_PALE, BLUE_GREY} from './theme';
+export const GOLD_TECH = GOLD;
+export const CORAL = BLUE_GREY;
+export const RED_DEEP = DANGER;
+export const GREEN = SUCCESS;
+export const GREY = MUTED;
+export const GREY_MID = '#788894';
+export const GREY_LINE = '#354552';
+export const GREY_LIGHT = '#C2CCD3';
+export const WHITE = FOREGROUND;
+// RGB 残影也只用沙金与蓝灰，不引入品红或紫色。
+export const MAGENTA = GOLD;
+export const CYAN = BLUE_GREY;
+export const GLOW_GOLD = '0 0 10px 2px rgba(207,180,127,.10), 0 0 26px 5px rgba(207,180,127,.08)';
+export const GLOW_GOLD_S = '0 0 14px 2px rgba(207,180,127,.12)';
+export const GLOW_BLUE_GREY = '0 0 18px 3px rgba(145,170,188,.12)';
+export const GLOW_RED = '0 0 18px 3px rgba(217,130,125,.16)';
+export const BLOOM = 'drop-shadow(0 0 2px rgba(236,238,240,.12))';
+export const BLOOM_SOFT = 'drop-shadow(0 0 1px rgba(236,238,240,.08))';
+export const TEXT_GLOW = '0 0 4px rgba(236,238,240,.10)';
+export const PILL_SHADOW = 'none';
+// 兼容旧镜头的 import 名称；实际值全部指向深海黑金。
+export const PURPLE = GOLD, PURPLE_LIGHT = GOLD_LIGHT, PURPLE_TECH = GOLD_TECH, PURPLE_DEEP = GOLD_DEEP, PURPLE_PALE = GOLD_PALE;
+export const ORANGE = BLUE_GREY, GLOW_PURPLE = GLOW_GOLD, GLOW_PURPLE_S = GLOW_GOLD_S, GLOW_ORANGE = GLOW_BLUE_GREY;
+
+/** 实色金底使用深色文字；深底使用灰白字。自定义渐变请显式传 color。 */
+export const textOnFill = (fill: string) => {
+  if (!/^#[0-9a-f]{6}$/i.test(fill)) return WHITE;
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(fill.slice(i, i + 2), 16) / 255).map((v) => v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  return r * 0.2126 + g * 0.7152 + b * 0.0722 > 0.3 ? BACKGROUND : WHITE;
+};
 
 // ---- 动效小工具（n = N − f0）----
 export const fadeIn = (n: number, len = 12) => clamp01(n / len);
@@ -70,9 +78,9 @@ export const mixHex = (a: string, b: string, k: number) => {
   const t = clamp01(k);
   return `rgb(${pa.map((v, i) => Math.round(v + (pb[i] - v) * t)).join(',')})`;
 };
-/** GLOW_PURPLE 的强度版（k 0→1），配 glowOffK 做"先灭光" */
-export const glowPurple = (k: number) => `0 0 12px 3px rgba(102,45,248,${(0.35 * clamp01(k)).toFixed(3)}), 0 0 42px 14px rgba(102,45,248,${(0.45 * clamp01(k)).toFixed(3)})`;
-export const glowPurpleS = (k: number) => `0 0 24px 8px rgba(102,45,248,${(0.6 * clamp01(k)).toFixed(3)})`;
+/** GLOW_GOLD 的强度版（k 0→1），配 glowOffK 做"先灭光" */
+export const glowGold = (k: number) => `0 0 10px 2px rgba(207,180,127,${(0.10 * clamp01(k)).toFixed(3)}), 0 0 26px 5px rgba(207,180,127,${(0.08 * clamp01(k)).toFixed(3)})`;
+export const glowGoldS = (k: number) => `0 0 14px 2px rgba(207,180,127,${(0.12 * clamp01(k)).toFixed(3)})`;
 
 export const SoftIn: React.FC<{N: number; f0: number; children: React.ReactNode; len?: number; dy?: number; style?: React.CSSProperties}> = ({N, f0, children, len = 8, dy = 10, style}) => {
   const n = N - f0;
@@ -98,15 +106,15 @@ export const CText: React.FC<CTextProps> = ({cx, cy, size, weight = 700, family 
     {children}
   </div>
 );
-/** 英文技术词：Exo 2 紫斜体 + scaleX 压窄 */
-export const TechText: React.FC<{cx: number; cy: number; text: string; fontSize?: number; color?: string; scaleX?: number; weight?: number; letterSpacing?: number; glow?: boolean; opacity?: number; style?: React.CSSProperties}> = ({cx, cy, text, fontSize = 32, color = PURPLE_TECH, scaleX = LANG === 'en' ? 1 : 0.81, weight = 600, letterSpacing = 1, glow = true, opacity = 1, style}) => (
-  <CText cx={cx} cy={cy} size={fontSize} weight={weight} family={FONT_TECH} color={color} letterSpacing={letterSpacing} scaleX={scaleX} italic opacity={opacity} dy={0} shadow={glow ? '0 0 6px rgba(80,30,200,.7)' : undefined} style={style}>
+/** 英文技术词：Exo 2 金色斜体 + scaleX 压窄 */
+export const TechText: React.FC<{cx: number; cy: number; text: string; fontSize?: number; color?: string; scaleX?: number; weight?: number; letterSpacing?: number; glow?: boolean; opacity?: number; style?: React.CSSProperties}> = ({cx, cy, text, fontSize = 32, color = GOLD_TECH, scaleX = LANG === 'en' ? 1 : 0.81, weight = 600, letterSpacing = 1, glow = false, opacity = 1, style}) => (
+  <CText cx={cx} cy={cy} size={fontSize} weight={weight} family={FONT_TECH} color={color} letterSpacing={letterSpacing} scaleX={scaleX} italic opacity={opacity} dy={0} shadow={glow ? '0 0 6px rgba(207,180,127,.12)' : undefined} style={style}>
     {text}
   </CText>
 );
 /**
  * 中英配对的副标：主体（中文胶囊 / 章名大字）下面那行另一种语言。一律**灰色小字**，不与主体同色同大小——
- * 紫色只给"当前重点"，常驻/重复出现的副标不是重点；中英两行等大又同色会读成两个主体（用户反馈：中英样式割裂）。
+ * 金色只给"当前重点"，常驻/重复出现的副标不是重点；中英两行等大又同色会读成两个主体（用户反馈：中英样式割裂）。
  */
 export const TechSub: React.FC<{cx: number; cy: number; text: string; size?: number; opacity?: number; color?: string}> = ({cx, cy, text, size = 22, opacity = 1, color = GREY}) => (
   <TechText cx={cx} cy={cy} text={text} fontSize={size} color={color} glow={false} letterSpacing={1.5} opacity={opacity} />
@@ -120,21 +128,21 @@ export const MonoText: React.FC<{x: number; y: number; size?: number; color?: st
 // ---- 框 / 胶囊 ----
 export type BoxProps = {x: number; y: number; w: number; h: number; r?: number; fill?: string; stroke?: string; sw?: number; dashed?: boolean; opacity?: number; glow?: string; style?: React.CSSProperties; children?: React.ReactNode};
 /** 黑底白边矩形（border-box；fill 可为渐变字串；glow 传 boxShadow） */
-export const Box: React.FC<BoxProps> = ({x, y, w, h, r = 0, fill = '#000', stroke = WHITE, sw = 2, dashed = false, opacity = 1, glow, style, children}) => (
+export const Box: React.FC<BoxProps> = ({x, y, w, h, r = 0, fill = SURFACE, stroke = WHITE, sw = 2, dashed = false, opacity = 1, glow, style, children}) => (
   <div style={{...abs(x, y, w, h), boxSizing: 'border-box', background: fill, border: sw > 0 ? `${sw}px ${dashed ? 'dashed' : 'solid'} ${stroke}` : undefined, borderRadius: r, opacity, boxShadow: glow, ...style}}>{children}</div>
 );
 export type PillProps = BoxProps & {text?: React.ReactNode; fontSize?: number; weight?: number; color?: string; family?: string; textDy?: number; letterSpacing?: number; scaleX?: number};
 /** 全圆角胶囊 + 居中文字（(x,y,w,h) 含描边外框） */
-export const Pill: React.FC<PillProps> = ({text, fontSize = 28, weight = 700, color = WHITE, family = FONT_HEAVY, textDy = TEXT_DY, letterSpacing = 0, scaleX = 1, r, h, ...box}) => (
+export const Pill: React.FC<PillProps> = ({text, fontSize = 28, weight = 700, color, family = FONT_HEAVY, textDy = TEXT_DY, letterSpacing = 0, scaleX = 1, r, h, ...box}) => (
   <Box {...box} h={h} r={r ?? h / 2}>
-    <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `translateY(${textDy}px) scaleX(${scaleX})`, fontFamily: family, fontWeight: weight, fontSize, color, letterSpacing, lineHeight: 1, whiteSpace: 'nowrap'}}>{text}</div>
+    <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `translateY(${textDy}px) scaleX(${scaleX})`, fontFamily: family, fontWeight: weight, fontSize, color: color ?? textOnFill(box.fill ?? SURFACE), letterSpacing, lineHeight: 1, whiteSpace: 'nowrap'}}>{text}</div>
   </Box>
 );
 /** 大标签块（沿用「召回/精排」体系简化版）：色块 + 超粗字 scaleX .73 + 同色外发光 */
-export const TagBlock: React.FC<{x: number; y: number; w?: number; h?: number; color?: string; text: string; fontSize?: number; opacity?: number; glow?: boolean; skewPx?: number; scaleX?: number}> = ({x, y, w = 237, h = 62, color = PURPLE, text, fontSize = 44, opacity = 1, glow = true, skewPx = 0, scaleX = LANG === 'en' ? 1 : 0.8}) => (
+export const TagBlock: React.FC<{x: number; y: number; w?: number; h?: number; color?: string; text: string; fontSize?: number; opacity?: number; glow?: boolean; skewPx?: number; scaleX?: number}> = ({x, y, w = 237, h = 62, color = GOLD, text, fontSize = 44, opacity = 1, glow = false, skewPx = 0, scaleX = LANG === 'en' ? 1 : 0.8}) => (
   <div style={{...abs(x, y, w, h), opacity}}>
-    <div style={{position: 'absolute', inset: 0, background: color, transform: skewPx ? `skewX(${(-Math.atan2(skewPx, h) * 180) / Math.PI}deg)` : undefined, boxShadow: glow ? `0 0 28px 10px ${color}99` : undefined}} />
-    <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_HEAVY, fontWeight: 900, fontSize, color: WHITE, letterSpacing: -1, lineHeight: 1, transform: `translateY(${TEXT_DY}px) scaleX(${scaleX})`, WebkitTextStroke: '1.5px #000', paintOrder: 'stroke fill'}}>{text}</div>
+    <div style={{position: 'absolute', inset: 0, background: color, transform: skewPx ? `skewX(${(-Math.atan2(skewPx, h) * 180) / Math.PI}deg)` : undefined, boxShadow: glow ? `0 0 14px 2px ${color}20` : undefined}} />
+    <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_HEAVY, fontWeight: 900, fontSize, color: textOnFill(color), letterSpacing: -1, lineHeight: 1, transform: `translateY(${TEXT_DY}px) scaleX(${scaleX})`, paintOrder: 'stroke fill'}}>{text}</div>
   </div>
 );
 
@@ -193,7 +201,7 @@ export const Cross: React.FC<{cx: number; cy: number; size?: number; color?: str
 
 // ---- 语义图标（通用：文档 / 数据库 / 文本块卡 / 模型；按主题在此补 2–5 个）----
 /** 文档页：黑底白边 + 折角 + 文本线条（lines 条），label 在下方 */
-export const DocIcon: React.FC<{x: number; y: number; w?: number; h?: number; lines?: number; color?: string; fill?: string; sw?: number; label?: string; labelSize?: number; opacity?: number; accent?: string; glow?: string}> = ({x, y, w = 64, h = 80, lines = 4, color = WHITE, fill = '#000', sw = 2, label, labelSize = 22, opacity = 1, accent, glow}) => {
+export const DocIcon: React.FC<{x: number; y: number; w?: number; h?: number; lines?: number; color?: string; fill?: string; sw?: number; label?: string; labelSize?: number; opacity?: number; accent?: string; glow?: string}> = ({x, y, w = 64, h = 80, lines = 4, color = WHITE, fill = SURFACE, sw = 2, label, labelSize = 22, opacity = 1, accent, glow}) => {
   const f = w * 0.3;
   return (
     <div style={{...abs(x, y, w, h + (label ? labelSize + 14 : 0)), opacity}}>
@@ -211,7 +219,7 @@ export const DocIcon: React.FC<{x: number; y: number; w?: number; h?: number; li
   );
 };
 /** 数据库圆柱（数据库 / 索引 / 存储） */
-export const DBIcon: React.FC<{cx: number; cy: number; w?: number; h?: number; color?: string; fill?: string; sw?: number; opacity?: number; label?: string; labelSize?: number; accent?: string}> = ({cx, cy, w = 120, h = 130, color = WHITE, fill = '#000', sw = 2.5, opacity = 1, label, labelSize = 24, accent}) => {
+export const DBIcon: React.FC<{cx: number; cy: number; w?: number; h?: number; color?: string; fill?: string; sw?: number; opacity?: number; label?: string; labelSize?: number; accent?: string}> = ({cx, cy, w = 120, h = 130, color = WHITE, fill = SURFACE, sw = 2.5, opacity = 1, label, labelSize = 24, accent}) => {
   const ry = w * 0.18;
   const x0 = cx - w / 2, y0 = cy - h / 2;
   return (
@@ -225,10 +233,10 @@ export const DBIcon: React.FC<{cx: number; cy: number; w?: number; h?: number; c
     </div>
   );
 };
-/** 文本块 chunk 卡：黑底白边圆角 + 若干灰白文本线；active → 紫边 + 柔光 */
+/** 文本块 chunk 卡：黑底白边圆角 + 若干灰白文本线；active → 金边 + 柔光 */
 export const ChunkCard: React.FC<{x: number; y: number; w?: number; h?: number; lines?: number; active?: boolean; opacity?: number; r?: number; title?: string; seed?: number; sw?: number}> = ({x, y, w = 150, h = 92, lines = 4, active = false, opacity = 1, r = 8, title, seed = 1, sw = 2}) => (
-  <Box x={x} y={y} w={w} h={h} r={r} stroke={active ? PURPLE_LIGHT : WHITE} sw={sw} opacity={opacity} glow={active ? GLOW_PURPLE_S : undefined}>
-    {title ? <div style={{position: 'absolute', left: 12, top: 8, fontFamily: FONT_HEAVY, fontSize: 15, fontWeight: 600, color: PURPLE_LIGHT, whiteSpace: 'nowrap', lineHeight: 1}}>{title}</div> : null}
+  <Box x={x} y={y} w={w} h={h} r={r} stroke={active ? GOLD_LIGHT : WHITE} sw={sw} opacity={opacity} glow={active ? GLOW_GOLD_S : undefined}>
+    {title ? <div style={{position: 'absolute', left: 12, top: 8, fontFamily: FONT_HEAVY, fontSize: 15, fontWeight: 600, color: GOLD_LIGHT, whiteSpace: 'nowrap', lineHeight: 1}}>{title}</div> : null}
     {Array.from({length: lines}, (_, i) => {
       const lw = (0.5 + 0.42 * (((seed * 7 + i * 13) % 10) / 10)) * (w - 24);
       const top = (title ? 30 : 14) + i * ((h - (title ? 40 : 26)) / Math.max(1, lines - 0.3));
@@ -237,13 +245,13 @@ export const ChunkCard: React.FC<{x: number; y: number; w?: number; h?: number; 
   </Box>
 );
 /** 大模型图标：圆角方块 + 内部"神经元"三层点阵，label 可选 */
-export const LLMIcon: React.FC<{cx: number; cy: number; size?: number; color?: string; accent?: string; opacity?: number; label?: string; labelSize?: number; glow?: boolean}> = ({cx, cy, size = 140, color = WHITE, accent = PURPLE, opacity = 1, label, labelSize = 28, glow = true}) => {
+export const LLMIcon: React.FC<{cx: number; cy: number; size?: number; color?: string; accent?: string; opacity?: number; label?: string; labelSize?: number; glow?: boolean}> = ({cx, cy, size = 140, color = WHITE, accent = GOLD, opacity = 1, label, labelSize = 28, glow = true}) => {
   const s = size;
   const cols = [0.28, 0.5, 0.72];
   const rows = [[0.3, 0.5, 0.7], [0.22, 0.38, 0.62, 0.78], [0.3, 0.5, 0.7]];
   return (
     <div style={{...abs(cx - s / 2, cy - s / 2, s, s + (label ? labelSize + 16 : 0)), opacity}}>
-      <div style={{position: 'absolute', left: 0, top: 0, width: s, height: s, boxSizing: 'border-box', background: '#000', border: `3px solid ${color}`, borderRadius: s * 0.16, boxShadow: glow ? GLOW_PURPLE : undefined}} />
+      <div style={{position: 'absolute', left: 0, top: 0, width: s, height: s, boxSizing: 'border-box', background: SURFACE, border: `3px solid ${color}`, borderRadius: s * 0.16, boxShadow: glow ? GLOW_GOLD : undefined}} />
       <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} style={{position: 'absolute', left: 0, top: 0}}>
         {cols.slice(0, -1).map((cxr, ci) => rows[ci].map((ry, i) => rows[ci + 1].map((ry2, j) => <line key={`${ci}-${i}-${j}`} x1={cxr * s} y1={ry * s} x2={cols[ci + 1] * s} y2={ry2 * s} stroke={GREY} strokeWidth={1.3} opacity={0.7} />)))}
         {cols.map((cxr, ci) => rows[ci].map((ry, i) => <circle key={`${ci}-${i}`} cx={cxr * s} cy={ry * s} r={s * 0.045} fill={ci === 1 ? accent : color} />))}
@@ -253,7 +261,7 @@ export const LLMIcon: React.FC<{cx: number; cy: number; size?: number; color?: s
   );
 };
 /** 顶部 HUD 胶囊（沿用 (533,28,216,51) 位置，宽随文字）：GlitchIn 入场；tech 为其下方的英文副标（中心 y 92） */
-export const TopCapsule: React.FC<{N: number; f0: number; text: string; w?: number; fill?: string; tech?: string; opacity?: number; textSize?: number; glitch?: boolean}> = ({N, f0, text, w = 216, fill = PURPLE, tech, opacity = 1, textSize = 33, glitch = false}) => (
+export const TopCapsule: React.FC<{N: number; f0: number; text: string; w?: number; fill?: string; tech?: string; opacity?: number; textSize?: number; glitch?: boolean}> = ({N, f0, text, w = 216, fill = GOLD, tech, opacity = 1, textSize = 33, glitch = false}) => (
   // 规范：闪烁只给重点词；HUD 换词默认用 SoftIn 淡入，glitch 需显式开
   glitch ? (
   <GlitchIn N={N} f0={f0} style={{opacity}}>
@@ -269,12 +277,12 @@ export const TopCapsule: React.FC<{N: number; f0: number; text: string; w?: numb
 );
 
 // ---- 漏斗层（召回→重排→生成 之类的分层筛选）----
-/** 灰→紫的非对称水平渐变 stops（原片实测：最暗平台在 t≈0.5–0.6，右半升得更慢）。k=0 灰、k=1 紫。 */
-const TRAP_STOPS: Array<[number, number, number[]]> = [[0, 224, [230, 220, 255]], [0.18, 190, [170, 140, 250]], [0.45, 160, [110, 60, 248]], [0.6, 160, [102, 45, 248]], [0.8, 178, [125, 85, 248]], [1, 224, [230, 220, 255]]];
+/** 灰→金的非对称水平渐变 stops（原片实测：最暗平台在 t≈0.5–0.6，右半升得更慢）。k=0 灰、k=1 金。 */
+const TRAP_STOPS: Array<[number, number, number[]]> = [[0, 160, [227, 205, 163]], [0.18, 150, [216, 190, 141]], [0.45, 140, [207, 180, 127]], [0.6, 140, [207, 180, 127]], [0.8, 150, [216, 190, 141]], [1, 160, [227, 205, 163]]];
 export const trapStops = (k: number): Array<[number, string]> => TRAP_STOPS.map(([t, g, p]) => [t, `rgb(${p.map((v) => Math.round(g + (v - g) * k)).join(',')})`] as [number, string]);
 let trapSeq = 0;
-/** 倒梯形漏斗层：顶宽 wTop、底宽 wBot、高 h，水平渐变填充 + 2px 白边 + 居中文字。k 0→1 灰变紫（11 帧变色用）。 */
-export const Trap: React.FC<{cx: number; y: number; wTop: number; wBot: number; h: number; k?: number; stops?: Array<[number, string]>; text?: React.ReactNode; fontSize?: number; textDy?: number; stroke?: number; textShadow?: string; opacity?: number}> = ({cx, y, wTop, wBot, h, k = 1, stops, text, fontSize = 34, textDy = TEXT_DY, stroke = 2, textShadow = '0 2px 12px rgba(0,0,0,.45)', opacity = 1}) => {
+/** 倒梯形漏斗层：顶宽 wTop、底宽 wBot、高 h，水平渐变填充 + 2px 白边 + 居中文字。k 0→1 灰变金（11 帧变色用）。 */
+export const Trap: React.FC<{cx: number; y: number; wTop: number; wBot: number; h: number; k?: number; stops?: Array<[number, string]>; text?: React.ReactNode; fontSize?: number; textDy?: number; stroke?: number; textShadow?: string; opacity?: number}> = ({cx, y, wTop, wBot, h, k = 1, stops, text, fontSize = 34, textDy = TEXT_DY, stroke = 2, textShadow = 'none', opacity = 1}) => {
   const idRef = React.useRef<string | undefined>(undefined);
   if (!idRef.current) idRef.current = `trap-${trapSeq++}`;
   const id = idRef.current;
@@ -290,7 +298,7 @@ export const Trap: React.FC<{cx: number; y: number; wTop: number; wBot: number; 
         </defs>
         <polygon points={pts} fill={`url(#${id})`} stroke={WHITE} strokeWidth={stroke} strokeLinejoin="miter" />
       </svg>
-      {text !== undefined ? <div style={{position: 'absolute', left: 0, top: 0, width: Wd, height: h, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_HEAVY, fontWeight: 700, fontSize, color: WHITE, lineHeight: 1, textShadow, transform: `translateY(${textDy}px)`}}>{text}</div> : null}
+      {text !== undefined ? <div style={{position: 'absolute', left: 0, top: 0, width: Wd, height: h, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_HEAVY, fontWeight: 700, fontSize, color: BACKGROUND, lineHeight: 1, textShadow, transform: `translateY(${textDy}px)`}}>{text}</div> : null}
     </div>
   );
 };
@@ -303,8 +311,8 @@ export const Counter: React.FC<{cx: number; cy: number; value: string | number; 
 );
 
 // ---- 语义图标第二组（芯片 / 时间条 / 仪表 / 集群网格 / 机架 / 人形 / 代码卡 / 仓库卡；按主题取用或删减）----
-/** GPU 芯片：四边引脚 + 黑底白边圆角本体 + 内部核心方阵（lit 0–1 为点亮比例，行优先；点亮核紫、未点亮灰边）；glow 紫柔光（当主角时开）；label 在下方。size 是含引脚的外接边长。 */
-export const GPUChip: React.FC<{cx: number; cy: number; size?: number; color?: string; accent?: string; lit?: number; grid?: number; opacity?: number; label?: string; labelSize?: number; glow?: boolean; pins?: boolean; sw?: number; glowK?: number}> = ({cx, cy, size = 170, color = WHITE, accent = PURPLE, lit = 1, grid = 6, opacity = 1, label, labelSize = 26, glow = true, pins = true, sw = 3, glowK = 1}) => {
+/** GPU 芯片：四边引脚 + 黑底白边圆角本体 + 内部核心方阵（lit 0–1 为点亮比例，行优先；点亮核金、未点亮灰边）；glow 金色微光（当主角时开）；label 在下方。size 是含引脚的外接边长。 */
+export const GPUChip: React.FC<{cx: number; cy: number; size?: number; color?: string; accent?: string; lit?: number; grid?: number; opacity?: number; label?: string; labelSize?: number; glow?: boolean; pins?: boolean; sw?: number; glowK?: number}> = ({cx, cy, size = 170, color = WHITE, accent = GOLD, lit = 1, grid = 6, opacity = 1, label, labelSize = 26, glow = true, pins = true, sw = 3, glowK = 1}) => {
   const s = size;
   const pinL = s * 0.075;
   const inner = s - 2 * pinL;
@@ -317,7 +325,7 @@ export const GPUChip: React.FC<{cx: number; cy: number; size?: number; color?: s
   const pinW = inner / (pinsPerSide * 2.4);
   return (
     <div style={{...abs(cx - s / 2, cy - s / 2, s, s + (label ? labelSize + 16 : 0)), opacity}}>
-      {glow && glowK > 0.005 ? <div style={{position: 'absolute', left: x0, top: y0, width: inner, height: inner, borderRadius: inner * 0.12, boxShadow: glowPurple(glowK)}} /> : null}
+      {glow && glowK > 0.005 ? <div style={{position: 'absolute', left: x0, top: y0, width: inner, height: inner, borderRadius: inner * 0.12, boxShadow: glowGold(glowK)}} /> : null}
       <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', filter: BLOOM_SOFT}}>
         {pins
           ? Array.from({length: pinsPerSide}, (_, i) => {
@@ -332,7 +340,7 @@ export const GPUChip: React.FC<{cx: number; cy: number; size?: number; color?: s
               );
             })
           : null}
-        <rect x={x0 + sw / 2} y={y0 + sw / 2} width={inner - sw} height={inner - sw} rx={inner * 0.12} fill="#000" stroke={color} strokeWidth={sw} />
+        <rect x={x0 + sw / 2} y={y0 + sw / 2} width={inner - sw} height={inner - sw} rx={inner * 0.12} fill={SURFACE} stroke={color} strokeWidth={sw} />
         {Array.from({length: grid * grid}, (_, i) => {
           const r = Math.floor(i / grid), c = i % grid;
           const on = i < nLit;
@@ -344,13 +352,13 @@ export const GPUChip: React.FC<{cx: number; cy: number; size?: number; color?: s
   );
 };
 
-/** 时间线条（profiler 轨 / GPU 利用率）：一行分段条，segs 的 f 为占比（和 ≈1），kind: busy 紫 / idle 黑底灰虚边 / comm 橙 / cpu 灰 / sync 浅紫（profiler 面板里的通信段，避免与 idle 橙光撞色，QC v1 C2 #2）；p 为自左 draw-on 比例；label 为左侧轨名（灰 22px）。
- *  glowIdleK（0–1，glowIdle=true 等于 1）给所有 idle 段橙光（"这里是问题"）——**画在裁切容器之外**（否则被 overflow:hidden 裁掉），可渐亮 / 渐灭。 */
+/** 时间线条（profiler 轨 / GPU 利用率）：一行分段条，segs 的 f 为占比（和 ≈1），kind: busy 金 / idle 黑底灰虚边 / comm 蓝灰 / cpu 灰 / sync 浅金（profiler 面板里的通信段，避免与 idle 蓝灰撞色，QC v1 C2 #2）；p 为自左 draw-on 比例；label 为左侧轨名（灰 22px）。
+ *  glowIdleK（0–1，glowIdle=true 等于 1）给所有 idle 段蓝灰微光（"这里是问题"）——**画在裁切容器之外**（否则被 overflow:hidden 裁掉），可渐亮 / 渐灭。 */
 export type TlSeg = {f: number; kind: 'busy' | 'idle' | 'comm' | 'cpu' | 'sync'};
 export const TimelineBar: React.FC<{x: number; y: number; w: number; h?: number; segs: TlSeg[]; p?: number; label?: string; labelW?: number; labelSize?: number; opacity?: number; sw?: number; glowIdle?: boolean; glowIdleK?: number}> = ({x, y, w, h = 44, segs, p = 1, label, labelW = 110, labelSize = 22, opacity = 1, sw = 2, glowIdle = false, glowIdleK}) => {
   const bw = w - (label ? labelW : 0);
   const gk = clamp01(glowIdleK ?? (glowIdle ? 1 : 0));
-  const fill: Record<TlSeg['kind'], string> = {busy: PURPLE, idle: '#000', comm: ORANGE, cpu: GREY_MID, sync: PURPLE_LIGHT};
+  const fill: Record<TlSeg['kind'], string> = {busy: GOLD, idle: SURFACE, comm: BLUE_GREY, cpu: GREY_MID, sync: GOLD_LIGHT};
   let acc = 0;
   const segsX = segs.map((sg) => { const sx = acc * bw; acc += sg.f; return {...sg, sx, sw: sg.f * bw}; });
   const shown = bw * clamp01(p);
@@ -372,8 +380,8 @@ export const TimelineBar: React.FC<{x: number; y: number; w: number; h?: number;
   );
 };
 
-/** 仪表盘（"fed at full throttle" 的油门 / 利用率表）：240° 弧（−210°→30°），v∈[0,1]；已到弧段紫 + 柔光、其余灰；白指针；value 可选大数字（Orbitron）在表盘下部，label 灰字在表下。半径 r ≥120 才够主角尺寸（整体高 ≈1.7r）。 */
-export const Gauge: React.FC<{cx: number; cy: number; r?: number; v: number; color?: string; accent?: string; sw?: number; label?: string; labelSize?: number; value?: string; valueSize?: number; opacity?: number; glow?: boolean}> = ({cx, cy, r = 120, v, color = WHITE, accent = PURPLE, sw = 8, label, labelSize = 24, value, valueSize = 44, opacity = 1, glow = true}) => {
+/** 仪表盘（"fed at full throttle" 的油门 / 利用率表）：240° 弧（−210°→30°），v∈[0,1]；已到弧段金 + 柔光、其余灰；白指针；value 可选大数字（Orbitron）在表盘下部，label 灰字在表下。半径 r ≥120 才够主角尺寸（整体高 ≈1.7r）。 */
+export const Gauge: React.FC<{cx: number; cy: number; r?: number; v: number; color?: string; accent?: string; sw?: number; label?: string; labelSize?: number; value?: string; valueSize?: number; opacity?: number; glow?: boolean}> = ({cx, cy, r = 120, v, color = WHITE, accent = GOLD, sw = 8, label, labelSize = 24, value, valueSize = 44, opacity = 1, glow = true}) => {
   const a0 = -210, a1 = 30;
   const vv = clamp01(v);
   const toXY = (deg: number, rr: number): [number, number] => [cx + rr * Math.cos((deg * Math.PI) / 180), cy + rr * Math.sin((deg * Math.PI) / 180)];
@@ -387,14 +395,14 @@ export const Gauge: React.FC<{cx: number; cy: number; r?: number; v: number; col
     <div style={{position: 'absolute', inset: 0, opacity, pointerEvents: 'none'}}>
       <svg width={1280} height={720} viewBox="0 0 1280 720" style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', filter: BLOOM_SOFT}}>
         <path d={arc(a0, a1, r)} fill="none" stroke={GREY_LINE} strokeWidth={sw} strokeLinecap="round" />
-        {vv > 0.005 ? <path d={arc(a0, av, r)} fill="none" stroke={accent} strokeWidth={sw} strokeLinecap="round" style={glow ? {filter: 'drop-shadow(0 0 10px rgba(102,45,248,.85))'} : undefined} /> : null}
+        {vv > 0.005 ? <path d={arc(a0, av, r)} fill="none" stroke={accent} strokeWidth={sw} strokeLinecap="round" style={glow ? {filter: 'drop-shadow(0 0 10px rgba(207,180,127,.15))'} : undefined} /> : null}
         {Array.from({length: 9}, (_, i) => {
           const d = a0 + ((a1 - a0) * i) / 8;
           const [tx0, ty0] = toXY(d, r - sw - 4), [tx1, ty1] = toXY(d, r - sw - 14);
           return <line key={i} x1={tx0} y1={ty0} x2={tx1} y2={ty1} stroke={color} strokeWidth={2} opacity={0.8} />;
         })}
         <line x1={cx} y1={cy} x2={nx} y2={ny} stroke={color} strokeWidth={4} strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r={9} fill="#000" stroke={color} strokeWidth={3} />
+        <circle cx={cx} cy={cy} r={9} fill={SURFACE} stroke={color} strokeWidth={3} />
       </svg>
       {value ? <CText cx={cx} cy={cy + r * 0.68} size={valueSize} weight={700} family={FONT_ORB} color={WHITE} shadow={TEXT_GLOW}>{value}</CText> : null}
       {label ? <CText cx={cx} cy={cy + r + labelSize + 6} size={labelSize} weight={600} color={GREY}>{label}</CText> : null}
@@ -403,7 +411,7 @@ export const Gauge: React.FC<{cx: number; cy: number; r?: number; v: number; col
 };
 
 /** 集群方阵（表现"多"：8 → 80,000 GPUs）：cols×rows 个 ≥6px 方块（SVG，单帧 DOM 预算 ≤600 → 方阵 ≤ ~450 格），前 lit 个点亮为 accent，其余灰边；scatter=true 用确定性乱序点亮（"陆续上线"）。 */
-export const ClusterGrid: React.FC<{x: number; y: number; cols: number; rows: number; cell?: number; gap?: number; lit?: number; color?: string; accent?: string; opacity?: number; seed?: number; scatter?: boolean}> = ({x, y, cols, rows, cell = 14, gap = 6, lit, color = GREY_LINE, accent = PURPLE, opacity = 1, seed = 1, scatter = false}) => {
+export const ClusterGrid: React.FC<{x: number; y: number; cols: number; rows: number; cell?: number; gap?: number; lit?: number; color?: string; accent?: string; opacity?: number; seed?: number; scatter?: boolean}> = ({x, y, cols, rows, cell = 14, gap = 6, lit, color = GREY_LINE, accent = GOLD, opacity = 1, seed = 1, scatter = false}) => {
   const n = cols * rows;
   const nl = lit === undefined ? n : Math.max(0, Math.min(n, Math.round(lit)));
   const order = Array.from({length: n}, (_, i) => i);
@@ -416,22 +424,22 @@ export const ClusterGrid: React.FC<{x: number; y: number; cols: number; rows: nu
         {Array.from({length: n}, (_, i) => {
           const r = Math.floor(i / cols), c = i % cols;
           const on = rank[i] < nl;
-          return <rect key={i} x={c * (cell + gap) + 0.5} y={r * (cell + gap) + 0.5} width={cell - 1} height={cell - 1} rx={2} fill={on ? accent : '#000'} stroke={on ? accent : color} strokeWidth={1} opacity={on ? 1 : 0.8} />;
+          return <rect key={i} x={c * (cell + gap) + 0.5} y={r * (cell + gap) + 0.5} width={cell - 1} height={cell - 1} rx={2} fill={on ? accent : SURFACE} stroke={on ? accent : color} strokeWidth={1} opacity={on ? 1 : 0.8} />;
         })}
       </svg>
     </div>
   );
 };
 
-/** 机架：竖框 + units 层服务器（每层左侧状态灯：前 lit 层紫、其余灰）；glow 紫柔光；label 下方。h ≥170 才够主角。 */
-export const RackIcon: React.FC<{cx: number; cy: number; w?: number; h?: number; units?: number; lit?: number; color?: string; accent?: string; sw?: number; opacity?: number; label?: string; labelSize?: number; glow?: boolean}> = ({cx, cy, w = 110, h = 200, units = 6, lit, color = WHITE, accent = PURPLE, sw = 2.5, opacity = 1, label, labelSize = 22, glow = false}) => {
+/** 机架：竖框 + units 层服务器（每层左侧状态灯：前 lit 层金、其余灰）；glow 金色微光；label 下方。h ≥170 才够主角。 */
+export const RackIcon: React.FC<{cx: number; cy: number; w?: number; h?: number; units?: number; lit?: number; color?: string; accent?: string; sw?: number; opacity?: number; label?: string; labelSize?: number; glow?: boolean}> = ({cx, cy, w = 110, h = 200, units = 6, lit, color = WHITE, accent = GOLD, sw = 2.5, opacity = 1, label, labelSize = 22, glow = false}) => {
   const nl = lit ?? units;
   const uh = (h - 2 * sw - 8) / units;
   return (
     <div style={{...abs(cx - w / 2, cy - h / 2, w, h + (label ? labelSize + 14 : 0)), opacity}}>
-      {glow ? <div style={{position: 'absolute', left: 0, top: 0, width: w, height: h, borderRadius: 8, boxShadow: GLOW_PURPLE}} /> : null}
+      {glow ? <div style={{position: 'absolute', left: 0, top: 0, width: w, height: h, borderRadius: 8, boxShadow: GLOW_GOLD}} /> : null}
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', filter: BLOOM_SOFT}}>
-        <rect x={sw / 2} y={sw / 2} width={w - sw} height={h - sw} rx={8} fill="#000" stroke={color} strokeWidth={sw} />
+        <rect x={sw / 2} y={sw / 2} width={w - sw} height={h - sw} rx={8} fill={SURFACE} stroke={color} strokeWidth={sw} />
         {Array.from({length: units}, (_, i) => {
           const y = sw + 4 + i * uh;
           const on = i < nl;
@@ -449,13 +457,13 @@ export const RackIcon: React.FC<{cx: number; cy: number; w?: number; h?: number;
   );
 };
 
-/** 人形（头 + 肩）：团队角色；accent 给肩部填充（当前重点）；glow 紫光；label 下方。size ≥96。 */
-export const PersonIcon: React.FC<{cx: number; cy: number; size?: number; color?: string; fill?: string; sw?: number; label?: string; labelSize?: number; accent?: string; opacity?: number; glow?: boolean}> = ({cx, cy, size = 96, color = WHITE, fill = '#000', sw = 2.5, label, labelSize = 22, accent, opacity = 1, glow = false}) => {
+/** 人形（头 + 肩）：团队角色；accent 给肩部填充（当前重点）；glow 金光；label 下方。size ≥96。 */
+export const PersonIcon: React.FC<{cx: number; cy: number; size?: number; color?: string; fill?: string; sw?: number; label?: string; labelSize?: number; accent?: string; opacity?: number; glow?: boolean}> = ({cx, cy, size = 96, color = WHITE, fill = SURFACE, sw = 2.5, label, labelSize = 22, accent, opacity = 1, glow = false}) => {
   const s = size;
   const hr = s * 0.2;
   return (
     <div style={{...abs(cx - s / 2, cy - s / 2, s, s + (label ? labelSize + 14 : 0)), opacity}}>
-      <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', filter: glow ? 'drop-shadow(0 0 10px rgba(102,45,248,.75))' : BLOOM_SOFT}}>
+      <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', filter: glow ? 'drop-shadow(0 0 10px rgba(207,180,127,.12))' : BLOOM_SOFT}}>
         <path d={`M${sw},${s - sw} V${s * 0.8} A${s / 2 - sw},${s * 0.3} 0 0 1 ${s - sw},${s * 0.8} V${s - sw} Z`} fill={accent ?? fill} stroke={color} strokeWidth={sw} strokeLinejoin="round" />
         <circle cx={s / 2} cy={hr + sw + s * 0.06} r={hr} fill={fill} stroke={color} strokeWidth={sw} />
       </svg>
@@ -464,33 +472,36 @@ export const PersonIcon: React.FC<{cx: number; cy: number; size?: number; color?
   );
 };
 
-/** 代码卡：黑底白边圆角 + 左上语言标签（22px，**画在卡外上方 17px**，有流程轨的章注意 y）+ 等宽代码线条；hot 行橙色发光（"热点"）；active → 紫边柔光。 */
-export const CodeCard: React.FC<{x: number; y: number; w?: number; h?: number; tag?: string; tagColor?: string; lines?: number; hot?: number; active?: boolean; seed?: number; opacity?: number; r?: number; glowK?: number}> = ({x, y, w = 220, h = 150, tag, tagColor = PURPLE, lines = 5, hot = -1, active = false, seed = 1, opacity = 1, r = 10, glowK = 1}) => (
-  <Box x={x} y={y} w={w} h={h} r={r} stroke={active ? PURPLE_LIGHT : WHITE} sw={2} opacity={opacity} glow={active && glowK > 0.005 ? glowPurpleS(glowK) : undefined}>
+/** 代码卡：黑底白边圆角 + 左上语言标签（22px，**画在卡外上方 17px**，有流程轨的章注意 y）+ 等宽代码线条；hot 行蓝灰强调（"热点"）；active → 金边柔光。 */
+export const CodeCard: React.FC<{x: number; y: number; w?: number; h?: number; tag?: string; tagColor?: string; lines?: number; hot?: number; active?: boolean; seed?: number; opacity?: number; r?: number; glowK?: number}> = ({x, y, w = 220, h = 150, tag, tagColor = GOLD, lines = 5, hot = -1, active = false, seed = 1, opacity = 1, r = 10, glowK = 1}) => (
+  <Box x={x} y={y} w={w} h={h} r={r} stroke={active ? GOLD_LIGHT : WHITE} sw={2} opacity={opacity} glow={active && glowK > 0.005 ? glowGoldS(glowK) : undefined}>
     {tag ? <Pill x={14} y={-17} w={Math.max(76, Math.round(tag.length * 13.5) + 30)} h={34} fill={tagColor} sw={2} text={tag} fontSize={22} weight={700} /> : null}
     {Array.from({length: lines}, (_, i) => {
       const indent = ((seed * 3 + i * 5) % 3) * 14;
       const lw = (0.35 + 0.5 * (((seed * 7 + i * 13) % 10) / 10)) * (w - 40 - indent);
       const top = 30 + i * ((h - 44) / lines);
       const isHot = i === hot;
-      return <div key={i} style={{position: 'absolute', left: 18 + indent, top, width: lw, height: 4, borderRadius: 2, background: isHot ? ORANGE : GREY_LIGHT, opacity: isHot ? 1 : 0.85, boxShadow: isHot ? GLOW_ORANGE : undefined}} />;
+      return <div key={i} style={{position: 'absolute', left: 18 + indent, top, width: lw, height: 4, borderRadius: 2, background: isHot ? BLUE_GREY : GREY_LIGHT, opacity: isHot ? 1 : 0.85, boxShadow: isHot ? GLOW_BLUE_GREY : undefined}} />;
     })}
   </Box>
 );
 
-/** 开源仓库卡：黑底白边圆角 + 左侧分叉小图标 + 仓库名（700）+ 一行灰说明；active → 紫边柔光 + 分叉底点紫。 */
+/** 开源仓库卡：黑底白边圆角 + 左侧分叉小图标 + 仓库名（700）+ 一行灰说明；active → 金边柔光 + 分叉底点金。 */
 export const RepoCard: React.FC<{x: number; y: number; w?: number; h?: number; name: string; desc?: string; active?: boolean; opacity?: number; nameSize?: number; descSize?: number}> = ({x, y, w = 360, h = 84, name, desc, active = false, opacity = 1, nameSize = 28, descSize = 22}) => {
-  const sc = active ? PURPLE_LIGHT : WHITE;
+  const sc = active ? GOLD_LIGHT : WHITE;
   return (
-    <Box x={x} y={y} w={w} h={h} r={12} stroke={sc} sw={2} opacity={opacity} glow={active ? GLOW_PURPLE_S : undefined}>
+    <Box x={x} y={y} w={w} h={h} r={12} stroke={sc} sw={2} opacity={opacity} glow={active ? GLOW_GOLD_S : undefined}>
       <svg width={44} height={44} viewBox="0 0 44 44" style={{position: 'absolute', left: 16, top: h / 2 - 22}}>
         <path d="M12,14 V20 Q12,26 18,26 H26 Q32,26 32,20 V14 M22,26 V31" fill="none" stroke={sc} strokeWidth={2.5} />
-        <circle cx={12} cy={9} r={5} fill="#000" stroke={sc} strokeWidth={2.5} />
-        <circle cx={32} cy={9} r={5} fill="#000" stroke={sc} strokeWidth={2.5} />
-        <circle cx={22} cy={36} r={5} fill={active ? PURPLE : '#000'} stroke={sc} strokeWidth={2.5} />
+        <circle cx={12} cy={9} r={5} fill={SURFACE} stroke={sc} strokeWidth={2.5} />
+        <circle cx={32} cy={9} r={5} fill={SURFACE} stroke={sc} strokeWidth={2.5} />
+        <circle cx={22} cy={36} r={5} fill={active ? GOLD : SURFACE} stroke={sc} strokeWidth={2.5} />
       </svg>
       <div style={{position: 'absolute', left: 74, top: desc ? 14 : h / 2 - nameSize / 2 - 2, fontFamily: FONT_HEAVY, fontSize: nameSize, fontWeight: 700, color: WHITE, lineHeight: 1, whiteSpace: 'nowrap'}}>{name}</div>
       {desc ? <div style={{position: 'absolute', left: 74, top: 14 + nameSize + 8, fontFamily: FONT_HEAVY, fontSize: descSize, fontWeight: 500, color: GREY, lineHeight: 1, whiteSpace: 'nowrap'}}>{desc}</div> : null}
     </Box>
   );
 };
+
+// 旧镜头辅助函数兼容。
+export const glowPurple = glowGold, glowPurpleS = glowGoldS;

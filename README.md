@@ -7,7 +7,7 @@
 
 **English** | [简体中文](README_ZH.md)
 
-**Topic in, narrated explainer video out.** anything2explainer is a [Claude Code](https://claude.com/claude-code) / [Codex](https://openai.com/codex) skill that turns any topic into a black-canvas motion-graphics explainer video with TTS voiceover, subtitles and a chapter progress bar, in Chinese or English. Every frame is drawn in code with [Remotion](https://remotion.dev) (React + TypeScript). No stock footage, no generative video model, no frames lifted from anyone else's work.
+**Topic in, narrated explainer video out.** anything2explainer is a [Claude Code](https://claude.com/claude-code) / [Codex](https://openai.com/codex) skill that turns any topic into a deep-navy-and-gold motion-graphics explainer video with TTS voiceover, subtitles and a chapter progress bar, in Chinese or English. Charts, numbers, tables and structured graphics are drawn in code with [Remotion](https://remotion.dev) by default; research also prepares topic-related images/videos, with high-quality related external media preferred; MiniMax-H3 is used when search finds nothing suitable or the available media is too low-quality, and research may collect related media and usage should be logged when source information is available.
 
 It is not a CLI. What ships here is the whole method an AI coding agent needs to finish the film: a compilable Remotion template, a primitives and lighting library, tooling for voiceover / storyboard / rendering / quantitative QC, written style and motion specs, a multi-agent division-of-labour protocol, and one complete reference film as the quality bar.
 
@@ -35,7 +35,7 @@ Both cuts share one storyboard and 44 shots; the English cut re-times every shot
 | Frame / rate | 1280×720 @ 30fps, H.264 |
 | Length | your call (see table below); 2–8 minutes all work |
 | Language | Chinese or English (`lang` in `src/config.ts`); typography, subtitle budgets and TTS switch with it |
-| Look | black canvas with one of two backdrops, star field + fog gradient or dot-field wave (`bg` in `src/config.ts`; the dot-field wave is ported from video-talkcraft); white line art + purple accents; ultra-bold headline type |
+| Look | black canvas with one of two backdrops, star field + fog gradient or dot-field wave (`bg` in `src/config.ts`; the dot-field wave is ported from video-talkcraft); off-white line art + sand-gold accents + blue-grey comparisons; ultra-bold headline type |
 | Persistent layers | 44px white-on-black-stroke subtitles, bottom chapter progress bar, top capsule HUD, optional pipeline rail, `built by Anything2Explainer skill` end credit (`builtBy`, set to `''` to drop) |
 | Voiceover | Chinese: edge-tts `zh-CN-YunxiNeural` (Yunxi, male, unmodified rate ≈5.5 chars/s). English: kokoro-82m `am_liam` (Liam, male). Or bring your own TTS / finished audio |
 
@@ -111,7 +111,7 @@ In Claude Code or Codex, just say what you want. The skill triggers itself:
 It then walks the 9 stages in `SKILL.md`:
 
 1. **Scaffold** the Remotion project from the template.
-2. **Research** (1 agent): a sourced research doc with a list of numbers and analogies, every item with a URL.
+2. **Research** (1 agent): a sourced research doc with a list of numbers and analogies plus an image/video asset list that maps each asset to facts, chapters or candidate shots.
 3. **Narration & timeline**: the script, then TTS voiceover with per-word boundaries turned into a frame-accurate timeline and subtitle table.
 4. **Storyboard**: one line per shot with frame range, beat, visuals, motion, hero element and lighting.
 5. **Overlays & primitives**: title, chapter cards, HUD, pipeline rail, plus 2–5 topic-specific icons.
@@ -203,9 +203,11 @@ examples/contrast/        6 bad/good frame pairs — the yardstick for compositi
 
 The visual language and the quality bar are inspired by the Douyin creator **@图灵宇宙** — black canvas, white line art with purple accents, ultra-bold headline type: that vocabulary was learned from their videos. Everything in this repo is drawn from scratch in code; none of their frames, assets or project files are used. If you feel this crosses a line, please open an issue.
 
+The default palette is **Deep Sea Black & Gold**: background `#101821`, accent `#CFB47F`, secondary `#91AABC`, text `#ECEEF0`, muted `#97A4AE`, success `#9DB8A7`. The template uses restrained, optional glow. The RAG example retains its historical palette; use it for layout and timing references.
+
 ## Originality
 
-- **Every frame is drawn in code.** No frames or clips from existing videos. Optional live-action B-roll must come from royalty-free sources and be logged in a MANIFEST (sha256 / source URL / license / usage).
+- **Structured graphics are drawn in code; key media may be cited.** Charts, numbers, tables and process diagrams stay code-drawn. Key images or videos may come from the research asset list and may include a citation title when useful; external media should be logged when source or license information is available (sha256 / source URL / license / usage / related fact or shot). Use clear, high-quality related external media when available; fall back to MiniMax-H3 when search finds nothing suitable or the quality is insufficient, and mark generated assets as AI-generated.
 - **Every fact is sourced.** Every number, year, organisation and English term shown on screen must trace back to a source URL in that film's research document. Anything unverified stays off the screen and out of the narration.
 
 ## License
