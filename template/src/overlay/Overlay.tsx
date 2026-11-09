@@ -186,21 +186,14 @@ export const EndCredit: React.FC = () => {
   const len = END_CREDIT_RANGE[1] - END_CREDIT_RANGE[0];
   const op = Math.min(fadeIn(n, 8), 1 - clampFrames(N - (END_CREDIT_RANGE[1] - 8), 8));
   const c = VIDEO.credit;
-  const by = VIDEO.builtBy;
-  if (!c && !by) return null;
+  if (!c) return null;
   return (
     <div style={{position: 'absolute', inset: 0, opacity: op}}>
-      {c ? (
-        <>
-          <CText cx={640} cy={300} size={26} weight={500} color={GREY} letterSpacing={4}>{c.kicker}</CText>
-          <CText cx={640} cy={352} size={40} weight={700} color={WHITE}>{c.title}</CText>
-          <CText cx={640} cy={404} size={26} weight={500} color={GREY}>{c.byline}</CText>
-          <div style={{position: 'absolute', left: 560, top: 440, width: 160, height: 2, background: 'rgba(255,255,255,0.35)', transform: `scaleX(${fadeIn(n - 6, 16)})`}} />
-          <CText cx={640} cy={476} size={22} weight={500} color={GREY}>{c.note}</CText>
-        </>
-      ) : null}
-      {/* 片尾署名行（config.builtBy，默认开）：有署名卡时排在卡下方，没有卡时单独居中 */}
-      {by ? <CText cx={640} cy={c ? 524 : 384} size={22} weight={500} color={GREY_MID} letterSpacing={2}>{by}</CText> : null}
+      <CText cx={640} cy={300} size={26} weight={500} color={GREY} letterSpacing={4}>{c.kicker}</CText>
+      <CText cx={640} cy={352} size={40} weight={700} color={WHITE}>{c.title}</CText>
+      <CText cx={640} cy={404} size={26} weight={500} color={GREY}>{c.byline}</CText>
+      <div style={{position: 'absolute', left: 560, top: 440, width: 160, height: 2, background: 'rgba(255,255,255,0.35)', transform: `scaleX(${fadeIn(n - 6, 16)})`}} />
+      <CText cx={640} cy={476} size={22} weight={500} color={GREY}>{c.note}</CText>
     </div>
   );
 };
