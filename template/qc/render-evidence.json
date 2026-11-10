@@ -1,14 +1,14 @@
 [
   {
     "composition": "MixedSolar",
-    "sha256": "949a3dd2a53f55976ea9da2a3d28e92546417dc7bc8b543545fda66a7d0864ed",
-    "bytes": 2392699,
+    "sha256": "e757d53dde1e7d2db203a7da3d58f215a08d6f4d15269690328bc1b0ccc9f61d",
+    "bytes": 2396608,
     "inspection": "stills/MixedSolar/inspection.json"
   },
   {
     "composition": "MixedVolcano",
-    "sha256": "c5c10d27411d111ddbee3e9dc0f5dde91de85628728066bb284e3650a08d0dde",
-    "bytes": 2678103,
+    "sha256": "4a913f9e051b9ac2614955ccfe1a6c6b95ea15ad44ab2082d4a262d7620e8059",
+    "bytes": 2686170,
     "inspection": "stills/MixedVolcano/inspection.json"
   }
 ]

@@ -72,12 +72,22 @@ export const Mechanism: React.FC<{topic:Topic}> = ({topic}) => {
 export const Synthesis: React.FC<{topic:Topic}> = ({topic}) => {
   const f=useCurrentFrame();
   const move=clamp(f/20);
+  const link=clamp((f-22)/22);
+  // Bridge both panels in the annotation layer so neither viewport clips the arrow.
+  const arrowStart=454, arrowEnd=680, arrowY=356;
+  const arrowTip=arrowStart+(arrowEnd-arrowStart)*link;
   return <AbsoluteFill style={{fontFamily:font}}>
     <div style={{position:'absolute',left:72,top:120,color:GOLD,fontSize:22,letterSpacing:4}}>走进原理</div>
     <div style={{position:'absolute',left:72,top:157,color:WHITE,fontSize:44,fontWeight:900}}>{topicCopy[topic].action}</div>
     <div style={{position:'absolute',left:122,top:310,width:90+240*move,height:120,border:`2px solid ${GOLD_LIGHT}`,borderRadius:12,opacity:.7}}/>
-    <div style={{position:'absolute',left:500,top:355,width:70*move,height:3,background:GOLD}}/>
     <Plot topic={topic} settled/>
+    {link>0?<svg width={1280} height={720} viewBox="0 0 1280 720" aria-hidden="true" style={{position:'absolute',inset:0,pointerEvents:'none'}}>
+      <path d={`M ${arrowStart},${arrowY} H ${arrowTip}`} fill="none" stroke={BACKGROUND} strokeWidth={8} strokeLinecap="round" opacity={.85}/>
+      <path d={`M ${arrowStart},${arrowY} H ${arrowTip}`} fill="none" stroke={GOLD_LIGHT} strokeWidth={3} strokeLinecap="round"/>
+      <path d={`M ${arrowTip-12},${arrowY-7} L ${arrowTip},${arrowY} L ${arrowTip-12},${arrowY+7}`} fill="none" stroke={BACKGROUND} strokeWidth={8} strokeLinecap="round" strokeLinejoin="round"/>
+      <path d={`M ${arrowTip-12},${arrowY-7} L ${arrowTip},${arrowY} L ${arrowTip-12},${arrowY+7}`} fill="none" stroke={GOLD_LIGHT} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx={arrowStart} cy={arrowY} r={4} fill={GOLD_LIGHT}/>
+    </svg>:null}
   </AbsoluteFill>;
 };
 
