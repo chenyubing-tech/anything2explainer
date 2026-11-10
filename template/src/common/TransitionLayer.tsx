@@ -31,10 +31,10 @@ const DataToFootage: React.FC<{phase: number; focusX: number; focusY: number; di
     ? {left: 0, top: scan - 2, width: 1280, height: 4 + 20 * veil}
     : {left: scan - 2, top: 0, width: 4 + 20 * veil, height: 720};
   return (
-    <AbsoluteFill style={{background: `rgba(16,24,33,${(0.16 + 0.72 * veil).toFixed(3)})`, pointerEvents: 'none'}}>
-      <div style={{position: 'absolute', inset: 0, opacity: 0.22 * veil, backgroundImage: 'linear-gradient(rgba(227,205,163,.20) 1px, transparent 1px), linear-gradient(90deg, rgba(227,205,163,.15) 1px, transparent 1px)', backgroundSize: '80px 80px', transform: `scale(${(1 + 0.04 * veil).toFixed(4)})`}} />
+    <AbsoluteFill style={{pointerEvents: 'none'}}>
+      <div style={{position: 'absolute', inset: 0, opacity: 0.16 * veil, backgroundImage: 'linear-gradient(rgba(227,205,163,.20) 1px, transparent 1px), linear-gradient(90deg, rgba(227,205,163,.15) 1px, transparent 1px)', backgroundSize: '80px 80px', transform: `scale(${(1 + 0.04 * veil).toFixed(4)})`}} />
       <div style={{position: 'absolute', left: focusX - 160 * veil, top: focusY - 160 * veil, width: 320 * veil, height: 320 * veil, borderRadius: '50%', background: `radial-gradient(circle, rgba(227,205,163,${(0.22 * veil).toFixed(3)}) 0%, rgba(207,180,127,${(0.08 * veil).toFixed(3)}) 34%, transparent 72%)`}} />
-      <div style={{...line, background: `linear-gradient(${isVertical ? '180deg' : '90deg'}, transparent, ${GOLD_LIGHT}, ${accent}, transparent)`, boxShadow: `0 0 ${Math.round(10 + 28 * veil)}px ${Math.round(3 + 10 * veil)}px rgba(207,180,127,${(0.16 + 0.48 * veil).toFixed(3)})`, opacity: 0.3 + 0.7 * veil}} />
+      <div style={{...line, background: `linear-gradient(${isVertical ? '180deg' : '90deg'}, transparent, ${GOLD_LIGHT}, ${accent}, transparent)`, boxShadow: `0 0 ${Math.round(10 + 28 * veil)}px ${Math.round(3 + 10 * veil)}px rgba(207,180,127,${(0.12 + 0.28 * veil).toFixed(3)})`, opacity: 0.18 + 0.46 * veil}} />
     </AbsoluteFill>
   );
 };
@@ -44,14 +44,14 @@ const FootageToData: React.FC<{phase: number; focusX: number; focusY: number; di
   const scan = scanPosition(phase, direction);
   const barCount = 7;
   return (
-    <AbsoluteFill style={{background: `rgba(16,24,33,${(0.12 + 0.78 * veil).toFixed(3)})`, backdropFilter: `blur(${(1 + 4 * veil).toFixed(2)}px) saturate(${(1 - 0.12 * veil).toFixed(3)})`, pointerEvents: 'none'}}>
-      <div style={{position: 'absolute', left: focusX - 220 * veil, top: focusY - 110 * veil, width: 440 * veil, height: 220 * veil, border: `${Math.max(1, 2 * veil)}px solid ${accent}`, boxShadow: `0 0 ${Math.round(16 + 30 * veil)}px rgba(207,180,127,${(0.12 + 0.35 * veil).toFixed(3)})`, opacity: 0.25 + 0.75 * veil}} />
+    <AbsoluteFill style={{pointerEvents: 'none'}}>
+      <div style={{position: 'absolute', left: focusX - 220 * veil, top: focusY - 110 * veil, width: 440 * veil, height: 220 * veil, border: `${Math.max(1, 2 * veil)}px solid ${accent}`, boxShadow: `0 0 ${Math.round(16 + 30 * veil)}px rgba(207,180,127,${(0.12 + 0.35 * veil).toFixed(3)})`, opacity: 0.18 + 0.48 * veil}} />
       {Array.from({length: barCount}, (_, i) => {
         const y = 120 + i * 78;
         const offset = ((i % 2 ? -1 : 1) * (1 - phase) * 64);
-        return <div key={i} style={{position: 'absolute', left: 80 + offset, top: y, width: 180 + (i % 3) * 90, height: 2, background: accent, opacity: 0.12 + 0.28 * veil}} />;
+        return <div key={i} style={{position: 'absolute', left: 80 + offset, top: y, width: 180 + (i % 3) * 90, height: 2, background: accent, opacity: 0.08 + 0.18 * veil}} />;
       })}
-      <div style={{position: 'absolute', left: scan - 2, top: 0, width: 4 + 18 * veil, height: 720, background: `linear-gradient(180deg, transparent, ${GOLD_LIGHT}, transparent)`, boxShadow: `0 0 ${Math.round(8 + 24 * veil)}px ${Math.round(3 + 8 * veil)}px rgba(207,180,127,${(0.16 + 0.42 * veil).toFixed(3)})`, opacity: 0.28 + 0.72 * veil}} />
+      <div style={{position: 'absolute', left: scan - 2, top: 0, width: 4 + 18 * veil, height: 720, background: `linear-gradient(180deg, transparent, ${GOLD_LIGHT}, transparent)`, boxShadow: `0 0 ${Math.round(8 + 24 * veil)}px ${Math.round(3 + 8 * veil)}px rgba(207,180,127,${(0.12 + 0.28 * veil).toFixed(3)})`, opacity: 0.22 + 0.48 * veil}} />
     </AbsoluteFill>
   );
 };

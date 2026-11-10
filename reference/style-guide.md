@@ -54,7 +54,7 @@ python template/scripts/sync_shot_timing.py `
 
 ## 2.2 代码画面与生成视频的转场
 
-`ShotDef` 与 `FootageSpec` 都支持 `transitionIn` / `transitionOut`。转场覆盖边界前后各半个 duration，默认 18 帧，在硬切位置用深海黑遮罩、金色扫描线和局部焦点光把两个画面连接起来：
+`ShotDef` 与 `FootageSpec` 都支持 `transitionIn` / `transitionOut`。`FootageTrack` 会按转场时长自动把生成视频向前/向后延展，和代码画面产生真实重叠；`TransitionTrack` 只叠加轻量扫描线与焦点光，不再用整屏黑幕遮住硬切。默认 duration 为 18 帧：
 
 ```ts
 {
@@ -72,7 +72,17 @@ python template/scripts/sync_shot_timing.py `
 }
 ```
 
-代码画面进入生成视频使用 `data-to-footage`，生成视频回到图表或页面使用 `footage-to-data`。转场只负责连接边界，视频本身仍需通过 `filter`、裁切、主体位置和 `zoomKf` 做统一调色与运动匹配。模板提供 `TransitionPreview` 合成，可在 Studio 中直接检查两个方向的边界效果。
+代码画面进入生成视频使用 `data-to-footage`，生成视频回到图表或页面使用 `footage-to-data`。同一条 H3 片段可以通过 `reuseFootage(h3Source(...), range, overrides)` 多次复用，每次只改变 `zoomKf`、`panKf`、焦点和转场方向：
+
+```ts
+const h3 = h3Source('assets/demo/minmax-h3/explain.mp4', 'h3-explain');
+export const FOOTAGE_G3 = [
+  reuseFootage(h3, {from: 2100, to: 2180}, {id: 'h3-explain-wide', transitionIn: {kind: 'data-to-footage', duration: 18}}),
+  reuseFootage(h3, {from: 2440, to: 2520}, {id: 'h3-explain-close', zoomKf: [[2440, 1.06], [2520, 1.16]], transitionIn: {kind: 'data-to-footage', duration: 18}, transitionOut: {kind: 'footage-to-data', duration: 18}}),
+];
+```
+
+视频本身仍需通过 `filter`、裁切、主体位置和 `zoomKf` 做统一调色与运动匹配。模板提供 `TransitionPreview` 合成，可在 Studio 中直接检查两个方向的边界效果。
 
 ## 2.3 节奏二轮调整
 
