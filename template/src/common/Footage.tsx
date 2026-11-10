@@ -1,6 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {W, H, keyframes, DirBlur} from './lib';
+import type {TransitionSpec} from './types';
 
 /**
  * 实拍/B-roll 层（可选）。素材只能来自 public/assets/<slug>/（免版权来源如 Mixkit，登记 MANIFEST.md：sha256 / 来源 URL / 许可 / 用途）。
@@ -15,11 +16,13 @@ export type FootageSpec = {
   originX?: number; originY?: number; flipX?: boolean;
   grade?: 'dark' | 'none';
   filter?: string;
+  transitionIn?: TransitionSpec;
+  transitionOut?: TransitionSpec;
 };
-/** 低照暖调 + 暗角（让实拍融入黑底星空） */
+/** 低照深海调 + 暗角（让生成视频融入黑金画面） */
 export const DarkGrade: React.FC = () => (
   <>
-    <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(40,30,20,0.25), rgba(10,8,6,0.35))', mixBlendMode: 'multiply', pointerEvents: 'none'}} />
+    <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(16,24,33,0.20), rgba(10,15,22,0.42))', mixBlendMode: 'multiply', pointerEvents: 'none'}} />
     <AbsoluteFill style={{background: 'radial-gradient(ellipse 100% 95% at 50% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.6) 100%)', pointerEvents: 'none'}} />
   </>
 );
@@ -32,10 +35,10 @@ export const FootageClip: React.FC<{spec: FootageSpec}> = ({spec}) => {
   const focus = spec.focusKf ? keyframes(N, spec.focusKf) : 0;
   const opacity = spec.opacityKf ? keyframes(N, spec.opacityKf) : 1;
   return (
-    <AbsoluteFill style={{overflow: 'hidden', opacity, background: '#0b0908'}}>
+    <AbsoluteFill style={{overflow: 'hidden', opacity, background: '#101821'}}>
       <DirBlur bx={blur + focus} by={blur * 0.15 + focus}>
         <AbsoluteFill style={{transform: `translate(${pan}px, ${panY}px) scale(${scale})${spec.flipX ? ' scaleX(-1)' : ''}`, transformOrigin: `${spec.originX ?? 640}px ${spec.originY ?? 360}px`}}>
-          <OffthreadVideo src={staticFile(spec.src)} trimBefore={spec.srcFrom} muted style={{width: W, height: H, objectFit: 'cover', filter: spec.filter ?? 'saturate(0.95) contrast(1.05) brightness(0.9)'}} />
+          <OffthreadVideo src={staticFile(spec.src)} trimBefore={spec.srcFrom} muted style={{width: W, height: H, objectFit: 'cover', filter: spec.filter ?? 'saturate(0.84) contrast(1.08) brightness(0.88)'}} />
         </AbsoluteFill>
       </DirBlur>
       {(spec.grade ?? 'dark') === 'dark' ? <DarkGrade /> : null}

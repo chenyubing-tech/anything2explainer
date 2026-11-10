@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
-import {Fonts, BgTrack, DotFieldBg, FootageTrack, ProgressBar, Subtitles} from './common';
-import type {ShotDef, BgSpec, FootageSpec} from './common';
+import {Fonts, BgTrack, DotFieldBg, FootageTrack, ProgressBar, Subtitles, TransitionTrack} from './common';
+import type {ShotDef, BgSpec, FootageSpec, TimedTransition} from './common';
 import {VIDEO} from './config';
 import {BACKGROUND} from './theme';
 import {SHOTS_OVERLAY, SHOTS_OVERLAY_TOP, BG_OVERLAY} from './overlay';
@@ -13,6 +13,25 @@ import {SHOTS_G5, BG_G5, FOOTAGE_G5} from './shots/G5';
 import {SHOTS_G6, BG_G6, FOOTAGE_G6} from './shots/G6';
 import {SHOTS_G7, BG_G7, FOOTAGE_G7} from './shots/G7';
 import {SHOTS_G8, BG_G8, FOOTAGE_G8} from './shots/G8';
+
+const collectTransitions = (shots: ShotDef[], footage: FootageSpec[]): TimedTransition[] => {
+  const all: TimedTransition[] = [];
+  const add = (id: string, at: number, spec: ShotDef['transitionIn']) => {
+    if (spec) all.push({...spec, at, id});
+  };
+  shots.forEach((shot) => {
+    add(`${shot.id}:in`, shot.from, shot.transitionIn);
+    add(`${shot.id}:out`, shot.to + 1, shot.transitionOut);
+  });
+  footage.forEach((clip, i) => {
+    add(`footage-${i}:in`, clip.from, clip.transitionIn);
+    add(`footage-${i}:out`, clip.to + 1, clip.transitionOut);
+  });
+  // 同一边界只保留同一种语义的一个转场，避免两层遮罩叠加把画面压黑。
+  const unique = new Map<string, TimedTransition>();
+  all.forEach((spec) => unique.set(`${spec.at}:${spec.kind}`, spec));
+  return [...unique.values()];
+};
 
 // 1280×720@30fps，帧号 N = useCurrentFrame()+1（1 起含端点）。
 // z 序（低→高）：黑底 < 幕底（config.bg：雾底 Fog + 星点 StarField，或点阵波 DotFieldBg）< 实拍 FootageTrack < 覆盖层 < 镜头 G1–G8 < 片尾压黑 < 进度条 < aboveBar 镜头 < 字幕。
@@ -28,6 +47,7 @@ export const Stage: React.FC<{shots: ShotDef[]; bg: BgSpec[]; footage?: FootageS
         <s.Comp />
       </Sequence>
     ))}
+    <TransitionTrack transitions={collectTransitions(shots, footage)} />
     <ProgressBar />
     {shots.filter((s) => s.layer === 'aboveBar').map((s) => (
       <Sequence key={s.id} from={s.from - 1} durationInFrames={s.to - s.from + 1}>

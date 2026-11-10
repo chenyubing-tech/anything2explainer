@@ -52,6 +52,28 @@ python template/scripts/sync_shot_timing.py `
 
 这样只需更新分镜表和 `CURRENT_RANGES`，不必手动改动 44 个镜头里的绝对节拍帧。
 
+## 2.2 代码画面与生成视频的转场
+
+`ShotDef` 与 `FootageSpec` 都支持 `transitionIn` / `transitionOut`。转场覆盖边界前后各半个 duration，默认 18 帧，在硬切位置用深海黑遮罩、金色扫描线和局部焦点光把两个画面连接起来：
+
+```ts
+{
+  from: 1200,
+  to: 1320,
+  src: 'assets/demo/minmax-h3-01.mp4',
+  srcFrom: 0,
+  transitionIn: {
+    kind: 'data-to-footage',
+    duration: 18,
+    focusX: 640,
+    focusY: 360,
+    direction: 'left',
+  },
+}
+```
+
+代码画面进入生成视频使用 `data-to-footage`，生成视频回到图表或页面使用 `footage-to-data`。转场只负责连接边界，视频本身仍需通过 `filter`、裁切、主体位置和 `zoomKf` 做统一调色与运动匹配。模板提供 `TransitionPreview` 合成，可在 Studio 中直接检查两个方向的边界效果。
+
 ## 3. 字体（`public/fonts`，全部 OFL；`common/lib.tsx` 的 `Fonts` 在 Main 挂一次）
 | 角色 | 族 | 字号/字重/变形 |
 |---|---|---|
