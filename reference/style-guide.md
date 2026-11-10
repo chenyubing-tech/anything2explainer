@@ -72,17 +72,9 @@ python template/scripts/sync_shot_timing.py `
 }
 ```
 
-代码画面进入生成视频使用 `data-to-footage`，生成视频回到图表或页面使用 `footage-to-data`。同一条 H3 片段可以通过 `reuseFootage(h3Source(...), range, overrides)` 多次复用，每次只改变 `zoomKf`、`panKf`、焦点和转场方向：
+代码画面进入生成视频使用 `data-to-footage`，生成视频回到图表或页面使用 `footage-to-data`。这些配置只执行边界效果；创作时先按 [H3 导演指南](generated-video-direction.md) 为场景、过程和视觉隐喻设计不同的新视频，再匹配共同物体、构图和动作方向。`reuseFootage()` 保留为确有回扣需要时的可选工具，不把同一段换裁切作为增加 H3 使用量的默认办法。
 
-```ts
-const h3 = h3Source('assets/demo/minmax-h3/explain.mp4', 'h3-explain');
-export const FOOTAGE_G3 = [
-  reuseFootage(h3, {from: 2100, to: 2180}, {id: 'h3-explain-wide', transitionIn: {kind: 'data-to-footage', duration: 18}}),
-  reuseFootage(h3, {from: 2440, to: 2520}, {id: 'h3-explain-close', zoomKf: [[2440, 1.06], [2520, 1.16]], transitionIn: {kind: 'data-to-footage', duration: 18}, transitionOut: {kind: 'footage-to-data', duration: 18}}),
-];
-```
-
-视频本身仍需通过 `filter`、裁切、主体位置和 `zoomKf` 做统一调色与运动匹配。模板提供 `TransitionPreview` 合成，可在 Studio 中直接检查两个方向的边界效果。
+视频通过 `filter`、裁切、主体位置和 `zoomKf` 做风格匹配。生成画面可以承担完整场景背景，其构图以主体清晰、代码叠加区与字幕安全区为准；纯代码镜头的“只用幕底、不撒碎屑”规则不限制 H3 创作场景。模板 `TransitionPreview` 是转场示意，不能计为实际 H3 素材或混合剪辑验收结果。
 
 ## 2.3 节奏二轮调整
 

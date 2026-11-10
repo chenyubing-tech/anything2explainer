@@ -7,7 +7,7 @@
 
 **English** | [简体中文](README_ZH.md)
 
-**Topic in, narrated explainer video out.** anything2explainer is a [Claude Code](https://claude.com/claude-code) / [Codex](https://openai.com/codex) skill that turns any topic into a deep-navy-and-gold motion-graphics explainer video with TTS voiceover, subtitles and a chapter progress bar, in Chinese or English. Charts, numbers, tables and structured graphics are drawn in code with [Remotion](https://remotion.dev) by default; research also prepares topic-related images/videos, with high-quality related external media preferred; MiniMax-H3 is used when search finds nothing suitable or the available media is too low-quality, and research may collect related media and usage should be logged when source information is available.
+**Topic in, narrated explainer video out.** anything2explainer is a [Claude Code](https://claude.com/claude-code) / [Codex](https://openai.com/codex) skill that turns any topic into a deep-navy-and-gold motion-graphics explainer video with TTS voiceover, subtitles and a chapter progress bar, in Chinese or English. Charts, numbers, tables and structured graphics are drawn in code with [Remotion](https://remotion.dev) by default; research also prepares topic-related images/videos, with MiniMax-H3 actively creating original scenes, process demonstrations and visual metaphors, while primary media is preferred for factual evidence, and research may collect related media and usage should be logged when source information is available.
 
 It is not a CLI. What ships here is the whole method an AI coding agent needs to finish the film: a compilable Remotion template, a primitives and lighting library, tooling for voiceover / storyboard / rendering / quantitative QC, written style and motion specs, a multi-agent division-of-labour protocol, and one complete reference film as the quality bar.
 
@@ -207,7 +207,7 @@ The default palette is **Deep Sea Black & Gold**: background `#101821`, accent `
 
 ## Originality
 
-- **Structured graphics are drawn in code; key media may be cited.** Charts, numbers, tables and process diagrams stay code-drawn. Key images or videos may come from the research asset list and may include a citation title when useful; external media should be logged when source or license information is available (sha256 / source URL / license / usage / related fact or shot). Use clear, high-quality related external media when available; fall back to MiniMax-H3 when search finds nothing suitable or the quality is insufficient, and mark generated assets as AI-generated.
+- **Structured graphics are drawn in code; key media may be cited.** Charts, numbers, tables and process diagrams stay code-drawn. Key images or videos may come from the research asset list and may include a citation title when useful; external media should be logged when source or license information is available (sha256 / source URL / license / usage / related fact or shot). Use primary media for factual evidence and actively create distinct MiniMax-H3 scenes for processes, spatial relationships and visual metaphors. Mark generated assets as AI-generated; see [generated video direction](reference/generated-video-direction.md).
 - **Every fact is sourced.** Every number, year, organisation and English term shown on screen must trace back to a source URL in that film's research document. Anything unverified stays off the screen and out of the narration.
 
 ## License
