@@ -9,6 +9,7 @@ import {FRAME_L32, FRAME_R32, TAG_L32, TAG_R32, CHECK_L, CHECK_R} from './SC32';
  * SC33 指标与 RAGAS（5947–6212）
  * 5947–5961 两框自 SC32 几何变形为两只高框，流水线上移为框内表头（右组重新居中），绿勾淡出；
  * 5953 左列三枚指标 Pill 2 帧错峰滑入；6043 右列四枚；6108 底部「RAGAS」glitch + 两侧横线向外长出 + 灰小字全称；
+ * 6118–6174 金色焦点框逐项扫过 7 个指标，持续表现评估过程；
  * 6198 起整体加速下摇 + 淡出（14 帧）。
  */
 const F0 = 5947;
@@ -46,6 +47,19 @@ export const SC33: React.FC = () => {
   const checkOp = 1 - clamp01((N - T_MORPH) / 8);
   const ex = exitOut(N - T_EXIT, 14);
   const ragasLine = slideIn(N - (T_RAGAS + 4), 16, 2);
+  // RAGAS 登场前逐项扫过指标，给「指标与评估」一条持续的视觉动作。
+  const metricK = clamp01((N - (T_RAGAS + 10)) / 56);
+  const metricRows = [
+    {x: 160, y: LEFT_CY[0] - 29, w: 400, h: 58},
+    {x: 160, y: LEFT_CY[1] - 29, w: 400, h: 58},
+    {x: 160, y: LEFT_CY[2] - 29, w: 400, h: 58},
+    {x: 735, y: RIGHT_CY[0] - 27, w: 440, h: 54},
+    {x: 735, y: RIGHT_CY[1] - 27, w: 440, h: 54},
+    {x: 735, y: RIGHT_CY[2] - 27, w: 440, h: 54},
+    {x: 735, y: RIGHT_CY[3] - 27, w: 440, h: 54},
+  ];
+  const metricIndex = Math.min(metricRows.length - 1, Math.floor(metricK * metricRows.length));
+  const metricFocus = metricRows[metricIndex];
   return (
     <AbsoluteFill style={{pointerEvents: 'none'}}>
       <div style={{position: 'absolute', inset: 0, transform: `translateY(${ex.dy.toFixed(2)}px)`, opacity: ex.op}}>
@@ -81,6 +95,7 @@ export const SC33: React.FC = () => {
           if (n < 0) return null;
           return <MetricPill key={mt.en} cx={955} cy={RIGHT_CY[i] + slideUp(n, 30)} w={440} h={54} en={mt.en} zh={mt.zh} dim={mt.dim} opacity={fadeIn(n, 10)} enSize={26} zhSize={23} />;
         })}
+        {N >= T_RAGAS + 10 && metricK < 1 ? <div style={{...abs(metricFocus.x, metricFocus.y, metricFocus.w, metricFocus.h), boxSizing: 'border-box', border: '2px solid rgba(227,205,163,.9)', borderRadius: 8, boxShadow: '0 0 16px 3px rgba(207,180,127,.16)', opacity: fadeIn(N - (T_RAGAS + 10), 5)}} /> : null}
         {/* RAGAS */}
         <GlitchIn N={N} f0={T_RAGAS}>
           <Pill x={535} y={538} w={210} h={44} fill={PURPLE} sw={2} text="RAGAS" fontSize={28} weight={800} letterSpacing={2} textDy={-1} style={{filter: 'drop-shadow(0 0 2px rgba(227,205,163,.6))'}} glow="0 0 24px 6px rgba(207,180,127,.45)" />

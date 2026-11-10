@@ -10,6 +10,7 @@ import {mixHex} from './ui';
  * 节拍：5026 第四步组装上下文 / 5060 研究发现 / 5077 中间记得最差 / 5154 Lost in the Middle / 5244 放开头和结尾
  * 画面：左 竖长「上下文」条（8 段证据，2 段紫色关键证据在中间）；右 曲线卡（证据位置 1→20 × 准确率，U 形紫曲线，中点红点「中间最差」）；
  *      5077 曲线按 x 揭示 + 中段变暗；5154 标题「Lost in the Middle」+「Liu et al., TACL 2024」；5244 两段紫色证据移到条的两端并脉冲。
+ * 持续动作：5105–5157 金色标记沿 U 形曲线扫过证据位置 1→20，标题出现前停在末端。
  */
 const F0 = 5018;
 const B_CTX = 5026, B_CARD = 5060, B_CURVE = 5077, B_TITLE = 5154, B_MOVE = 5244;
@@ -58,6 +59,11 @@ export const SC28: React.FC = () => {
   const cardOp = fadeIn(ncd, 6);
   const wipe = clamp01((N - B_CURVE) / 24);
   const dotS = scaleIn(N - (B_CURVE + 12), 8);
+  // 曲线揭示完成后让证据位置继续被扫描，承接「中间最差」这句旁白。
+  const traceK = clamp01((N - (B_CURVE + 28)) / 52);
+  const traceP = 1 + 19 * traceK;
+  const traceX = xFor(traceP);
+  const traceY = yFor(traceP);
 
   return (
     <div style={{position: 'absolute', inset: 0, opacity: opAll}}>
@@ -115,6 +121,7 @@ export const SC28: React.FC = () => {
             </g>
             {/* 中点红点 */}
             {dotS > 0 ? <circle cx={xFor(10.5)} cy={yFor(10.5)} r={6.5 * dotS} fill={CORAL} stroke="#FFF" strokeWidth={1.5} /> : null}
+            {traceK > 0 && traceK < 1 ? <circle cx={traceX} cy={traceY} r={6.5} fill={PURPLE_LIGHT} stroke={WHITE} strokeWidth={1.5} opacity={0.95} /> : null}
           </Svg>
           {/* 刻度与轴名 */}
           {X_TICKS.map((p) => (

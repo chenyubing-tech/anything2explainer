@@ -11,6 +11,7 @@ import {LText, Bar} from './g3ui';
  *      / 2400 补一句来自哪（中：ChunkCard 上方长出紫色前缀条「员工手册 › 第 3 章 差旅报销」打字机；文档树 3.1 段高亮 + 虚线箭头指向卡片）
  *      / 2498 Anthropic 实验（右：「Anthropic」Pill + Contextual Retrieval）/ 2572 配合关键词检索（「BM25」小 Pill 贴到前缀条旁）
  *      / 2606 降低 49%（Counter 0→49 计数 20 帧 + 橙柔光脉冲；灰小字 Top-20 检索失败率）
+ * 持续动作：2420–2474 一枚金点沿虚线箭头从文档树流入 chunk 卡，承接「补一句来自哪」。
  * 2674–2685 末 12 帧离场 opacity = 1 − (n/12)^1.5（末帧归零）+ 轻微下摇 exitAccel(n,0.2)（QC v1 组界裁定；G4 SC16 卡片 2686 起自左入场）。条目 wipe 自 2322 起（原 2346，避免空框停留 26 帧）。数字依据：research/RAG调研.md §2.3 Contextual Retrieval（Anthropic 2024，+BM25 → top-20 失败率 −49%）。
  */
 const F0 = 2309;
@@ -50,6 +51,10 @@ export const SC15: React.FC = () => {
   const cardS = scaleIn(N - 2394);
   const barSy = scaleIn(N - 2402, 12);
   const typed = N < 2412 ? 0 : Math.min(PREFIX.length, Math.floor((N - 2412) / 1.2) + 1);
+  // 上下文从文档树流入 chunk 卡：把 2346–2498 的静态等待变成一次可读的语义传递。
+  const flowK = clamp01((N - 2420) / 54);
+  const flowX = TREE.x + TREE.w + (556 - (TREE.x + TREE.w)) * flowK;
+  const flowY = TREE.y + (CUTS[0] + CUTS[1]) / 2 + (450 - (TREE.y + (CUTS[0] + CUTS[1]) / 2)) * flowK;
   // 右：Anthropic / −49%
   const cn = N - 2606;
   const val = Math.round(49 * clamp01(cn / 20));
@@ -89,6 +94,7 @@ export const SC15: React.FC = () => {
       <Svg bloom={false}>
         <LineArrow x0={TREE.x + TREE.w} y0={TREE.y + (CUTS[0] + CUTS[1]) / 2} x1={556} y1={450} p={slideIn(N - 2404, 14)} rodW={2.5} headL={16} headW={16} color={PURPLE_LIGHT} dashed />
       </Svg>
+      {flowK > 0 && flowK < 1 ? <div style={{...abs(flowX - 6, flowY - 6, 12, 12), borderRadius: '50%', background: PURPLE_LIGHT, boxShadow: '0 0 12px 3px rgba(207,180,127,.55)', opacity: fadeIn(N - 2420, 6)}} /> : null}
       {cardS > 0 ? (
         <div style={{...abs(560, 400, 180, 100), transform: `scale(${cardS.toFixed(4)})`}}>
           <ChunkCard x={0} y={0} w={180} h={100} lines={4} seed={5} active />
