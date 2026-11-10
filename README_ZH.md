@@ -232,3 +232,7 @@ Remotion 自身对公司用户另有授权要求，见 [remotion.dev/license](ht
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Vincentwei1021/anything2explainer&type=date&legend=top-left" />
  </picture>
 </a>
+
+## 设计审美与成片评审
+
+集成 [taste-skill](https://github.com/Leonxlnx/taste-skill) 的设计视角，将主题优先、构图与边线、统一视觉世界、克制而有目的的动效及证据驱动的完成检查，适配为 [八维成片审美规则](reference/taste-video-review.md)。分镜前写方向卡，实际成片完成后带声音通看、逐镜头评审并复验问题，使用 [报告模板](reference/taste-review-report-template.md)。网页检查脚本不能直接评审视频，本集成没有安装其 Stop hook；也不改变已确认的深海黑金。来源版本与 MIT 许可见 [第三方说明](THIRD_PARTY_NOTICES.md)。

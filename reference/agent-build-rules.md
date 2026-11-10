@@ -46,6 +46,8 @@
 
 H3 场景按 `generated-video-direction.md` 设计；纯代码镜头的幕底限制不要求把生成场景抹掉。实际素材必须可播放且已接入 `FOOTAGE_Gn`；仅有计划、提示词或占位预览时如实报告待生成。
 
+构建时读 `taste-video-review.md` §1–2 和项目 `script/visual_direction.md`：先展示主题本身，一个节拍一个主要结论，统一边线与视觉世界；说明每个动效为什么存在。避免连续镜头机械重复同一构图。按终审 T01–T08 自查，先修最影响观感的三处，再做细节润饰。
+
 ## 4. 性能红线（违反会让整片渲染慢 10–50 倍）
 - 禁 `feConvolveMatrix`；`filter: blur()`/feGaussianBlur σ≥1（σ<0.8 在 Chromium 中无效）；SVG filter 加 `colorInterpolationFilters="sRGB"`。
 - 单帧 DOM 节点 ≤ 600、SVG filter 实例 ≤ 6、OffthreadVideo ≤ 1。粒子/网格用纯函数按 N 生成，不要每帧 new 大数组以外的东西。

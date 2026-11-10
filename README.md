@@ -232,3 +232,7 @@ Remotion itself has its own license terms for companies — see [remotion.dev/li
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Vincentwei1021/anything2explainer&type=date&legend=top-left" />
  </picture>
 </a>
+
+## Design taste and final-film review
+
+Adapted from [taste-skill](https://github.com/Leonxlnx/taste-skill): subject-led visuals, clear hierarchy, aligned edges, one visual world, purposeful motion and evidence-based finish reviews. The [video review rules](reference/taste-video-review.md) connect a pre-storyboard direction card to a complete final-film viewing, per-shot checks and revision evidence; use the [report template](reference/taste-review-report-template.md). This is a video adaptation, not the upstream browser checker or Stop hook, and preserves the approved navy-and-gold palette. Attribution, source revision and MIT license: [third-party notices](THIRD_PARTY_NOTICES.md).
