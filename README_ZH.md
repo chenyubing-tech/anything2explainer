@@ -236,3 +236,7 @@ Remotion 自身对公司用户另有授权要求，见 [remotion.dev/license](ht
 ## 设计审美与成片评审
 
 集成 [taste-skill](https://github.com/Leonxlnx/taste-skill) 的设计视角，将主题优先、构图与边线、统一视觉世界、克制而有目的的动效及证据驱动的完成检查，适配为 [八维成片审美规则](reference/taste-video-review.md)。分镜前写方向卡，实际成片完成后带声音通看、逐镜头评审并复验问题，使用 [报告模板](reference/taste-review-report-template.md)。网页检查脚本不能直接评审视频，本集成没有安装其 Stop hook；也不改变已确认的深海黑金。来源版本与 MIT 许可见 [第三方说明](THIRD_PARTY_NOTICES.md)。
+
+## 通用混合场景预览
+
+图片、视频、代码图表在同一场景编排，由统一边界同步切换，普通转场总长 18 帧。接入、源时间和检查命令见 [场景编排指南](reference/scene-composition.md)。在模板 Studio 选择 `MixedSolar`（太阳物理）或 `MixedVolcano`（地球科学），可以查看带中文配音的 12 秒真实媒体预览。素材来自 NASA，并非 H3 输出；公共组件不绑定题材。

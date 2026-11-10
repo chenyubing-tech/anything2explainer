@@ -1,0 +1,53 @@
+"""Inspect an actual rendered demo: every decoded frame, boundaries, streams and a contact sheet.
+
+Technical evidence only. It cannot judge taste, semantic correctness or listening quality.
+Run from the template directory: python scripts/inspect_scene_preview.py renders/MixedSolar.mp4
+"""
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+from PIL import Image, ImageDraw, ImageStat
+
+root = Path(__file__).resolve().parents[1]
+video = Path(sys.argv[1]).resolve()
+bin_dir = root / 'node_modules' / '@remotion' / 'compositor-win32-x64-msvc'
+ff = os.environ.get('FFMPEG', str(bin_dir / 'ffmpeg.exe') if os.name == 'nt' else 'ffmpeg')
+probe = os.environ.get('FFPROBE', str(bin_dir / 'ffprobe.exe') if os.name == 'nt' else 'ffprobe')
+out = root / 'stills' / video.stem
+out.mkdir(parents=True, exist_ok=True)
+info = json.loads(subprocess.check_output([probe, '-v', 'error', '-show_entries', 'format=duration:stream=codec_type,width,height,nb_frames,r_frame_rate', '-of', 'json', str(video)]))
+stream = next(s for s in info['streams'] if s['codec_type'] == 'video')
+width, height = stream['width'], stream['height']
+num, den = map(int, stream['r_frame_rate'].split('/'))
+fps = num / den
+edges = {frame for at in [72, 168, 264] for frame in [at - 10, at - 9, at - 1, at, at + 8, at + 9]}
+sheet = Image.new('RGB', (1920, 1764), '#101821')
+draw = ImageDraw.Draw(sheet)
+decoded = out / 'decoded'
+decoded.mkdir(exist_ok=True)
+subprocess.run([ff, '-v', 'error', '-y', '-i', str(video), '-q:v', '3', '-start_number', '0', str(decoded / 'frame_%04d.jpg')], check=True)
+files = sorted(decoded.glob('frame_*.jpg'))
+count, brightness = len(files), []
+for index, file in enumerate(files):
+    im = Image.open(file).convert('RGB')
+    brightness.append(round(ImageStat.Stat(im.convert('L').resize((160, 90))).mean[0], 3))
+    if index in edges or index == 0 or index == 359:
+        im.save(out / f'frame_{index:04d}.png')
+    if index % 15 == 0 and index // 15 < 24:
+        i = index // 15
+        x, y = i % 4 * 480, i // 4 * 294
+        sheet.paste(im.resize((480, 270)), (x, y))
+        draw.text((x + 8, y + 272), f'{index / fps:.2f}s / frame {index}', fill='white')
+sheet.save(out / 'sheet.jpg')
+report = {'file': str(video), 'videoFrames': count, 'fps': fps, 'videoSeconds': count / fps,
+          'containerSeconds': float(info['format']['duration']), 'audioPresent': any(s['codec_type'] == 'audio' for s in info['streams']),
+          'minimumFrameMean': min(brightness), 'nearBlackFrames': [i for i, v in enumerate(brightness) if v < 5],
+          'boundaries': [{'at': at, 'transitionStart': at - duration // 2, 'transitionEndExclusive': at + duration - duration // 2} for at, duration in [(72, 18), (168, 0), (264, 18)]],
+          'scope': 'Technical decoding and frame evidence only; not a taste or listening verdict.'}
+(out / 'inspection.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+assert count == 360, f'Expected 360 video frames, decoded {count}'
+assert report['audioPresent'], 'No audio stream'
+assert not report['nearBlackFrames'], 'Near-black frames found; inspect them'
+print(json.dumps(report, indent=2))

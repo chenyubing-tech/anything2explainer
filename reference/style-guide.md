@@ -52,29 +52,13 @@ python template/scripts/sync_shot_timing.py `
 
 这样只需更新分镜表和 `CURRENT_RANGES`，不必手动改动 44 个镜头里的绝对节拍帧。
 
-## 2.2 代码画面与生成视频的转场
+## 2.2 图片、视频与代码画面统一编排
 
-`ShotDef` 与 `FootageSpec` 都支持 `transitionIn` / `transitionOut`。`FootageTrack` 会按转场时长自动把生成视频向前/向后延展，和代码画面产生真实重叠；`TransitionTrack` 只叠加轻量扫描线与焦点光，不再用整屏黑幕遮住硬切。默认 duration 为 18 帧：
+新片混合场景使用 `SceneSpec`、`SceneTrack` 和 `BoundarySpec`，实际接口与可运行示例见 [scene-composition.md](scene-composition.md)。场景内显式控制图片、视频、图表和标注的层序、视口与运动；字幕和导航独立。
 
-```ts
-{
-  from: 1200,
-  to: 1320,
-  src: 'assets/demo/minmax-h3-01.mp4',
-  srcFrom: 0,
-  transitionIn: {
-    kind: 'data-to-footage',
-    duration: 18,
-    focusX: 640,
-    focusY: 360,
-    direction: 'left',
-  },
-}
-```
+边界的 `durationFrames: 18` 表示总共 18 帧（30fps 下 0.6 秒），前后各 9 帧；图片、视频和代码使用同一个进度。旧 `transitionIn/transitionOut` 的 `duration` 也已改为总长度，但旧轨道不自动控制代码镜头，完整同步需迁移到新场景。
 
-代码画面进入生成视频使用 `data-to-footage`，生成视频回到图表或页面使用 `footage-to-data`。这些配置只执行边界效果；创作时先按 [H3 导演指南](generated-video-direction.md) 为场景、过程和视觉隐喻设计不同的新视频，再匹配共同物体、构图和动作方向。`reuseFootage()` 保留为确有回扣需要时的可选工具，不把同一段换裁切作为增加 H3 使用量的默认办法。
-
-视频通过 `filter`、裁切、主体位置和 `zoomKf` 做风格匹配。生成画面可以承担完整场景背景，其构图以主体清晰、代码叠加区与字幕安全区为准；纯代码镜头的“只用幕底、不撒碎屑”规则不限制 H3 创作场景。模板 `TransitionPreview` 是转场示意，不能计为实际 H3 素材或混合剪辑验收结果。
+生成前按 [H3 导演指南](generated-video-direction.md) 设计不同的新素材与共同物体/构图/运动方向。`reuseFootage()` 只作可选兼容工具。`TransitionPreview` 是旧转场装饰示意；真实媒体链路看 `MixedSolar` 和 `MixedVolcano`，它们使用 NASA 资料而非 H3 输出。
 
 ## 2.3 节奏二轮调整
 

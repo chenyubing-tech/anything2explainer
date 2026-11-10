@@ -1,0 +1,28 @@
+[
+  {
+    "kind": "video",
+    "src": "assets/scene-demo/solar-clip.mp4",
+    "sourceDurationSeconds": 6.0,
+    "sourceFps": 30.0,
+    "width": 480,
+    "height": 270,
+    "sha256": "c96f4ddfa84ba1fd73239c916eebb50f9b805e1dbef445824cbafa51d0e8cc1c"
+  },
+  {
+    "kind": "image",
+    "src": "assets/scene-demo/solar.jpg"
+  },
+  {
+    "kind": "video",
+    "src": "assets/scene-demo/volcano-clip.mp4",
+    "sourceDurationSeconds": 6.0,
+    "sourceFps": 30.0,
+    "width": 480,
+    "height": 270,
+    "sha256": "d91a49cecad6af0f00ea855ecac671c91394b11d43e9beca2567d6418e97a379"
+  },
+  {
+    "kind": "image",
+    "src": "assets/scene-demo/volcano.jpg"
+  }
+]

@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {clamp} from './lib';
 import type {TransitionDirection, TransitionKind, TransitionSpec} from './types';
+import {transitionWindow} from './sceneTimeline';
 
 export type TimedTransition = TransitionSpec & {id: string; at: number};
 
@@ -58,11 +59,10 @@ const FootageToData: React.FC<{phase: number; focusX: number; focusY: number; di
 
 const TransitionOverlay: React.FC<{spec: TimedTransition}> = ({spec}) => {
   const N = useCurrentFrame() + 1;
-  const duration = Math.max(1, spec.duration ?? DEFAULT_DURATION);
-  const start = spec.at - duration;
-  const end = spec.at + duration - 1;
-  if (N < start || N > end) return null;
-  const phase = (N - start) / Math.max(1, end - start);
+  const duration = spec.duration ?? DEFAULT_DURATION;
+  const {start, end} = transitionWindow(spec.at, duration);
+  if (duration <= 1 || N < start || N >= end) return null;
+  const phase = (N - start) / (duration - 1);
   const focusX = spec.focusX ?? 640;
   const focusY = spec.focusY ?? 360;
   const direction = directionOf(spec.direction, spec.kind === 'footage-to-data' ? 'right' : 'left');

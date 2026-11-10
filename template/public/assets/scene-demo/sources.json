@@ -1,0 +1,52 @@
+[
+  {
+    "id": "solar-mp4",
+    "file": "solar-clip.mp4",
+    "url": "https://images-assets.nasa.gov/video/GSFC_20170403_Trio_m12563_SolarFlares/GSFC_20170403_Trio_m12563_SolarFlares~preview.mp4",
+    "sha256": "c96f4ddfa84ba1fd73239c916eebb50f9b805e1dbef445824cbafa51d0e8cc1c",
+    "sourcePage": "https://images.nasa.gov/details/GSFC_20170403_Trio_m12563_SolarFlares",
+    "credit": "NASA / Goddard Space Flight Center",
+    "usage": "Real-media composition verification; not H3 output",
+    "sourceSha256": "7c50bf595ef5e0b2f037fbb12c9db3a2a3c8ac1df898f238689def6db6635885",
+    "edit": {
+      "sourceStartSeconds": 12,
+      "durationSeconds": 6,
+      "audio": "removed",
+      "videoEncoding": "H.264 CRF20, original fps retained"
+    }
+  },
+  {
+    "id": "solar-jpg",
+    "file": "solar.jpg",
+    "url": "https://images-assets.nasa.gov/video/GSFC_20170403_Trio_m12563_SolarFlares/GSFC_20170403_Trio_m12563_SolarFlares~large.jpg",
+    "sha256": "ae9d588ab481689ac69890b7045ea0eac389644abb15a27a222ce1a23c4e9e1a",
+    "sourcePage": "https://images.nasa.gov/details/GSFC_20170403_Trio_m12563_SolarFlares",
+    "credit": "NASA / Goddard Space Flight Center",
+    "usage": "Real-media composition verification; not H3 output"
+  },
+  {
+    "id": "volcano-mp4",
+    "file": "volcano-clip.mp4",
+    "url": "https://images-assets.nasa.gov/video/GSFC_20141113_Volcanoes_m10183_Degassing/GSFC_20141113_Volcanoes_m10183_Degassing~preview.mp4",
+    "sha256": "d91a49cecad6af0f00ea855ecac671c91394b11d43e9beca2567d6418e97a379",
+    "sourcePage": "https://images.nasa.gov/details/GSFC_20141113_Volcanoes_m10183_Degassing",
+    "credit": "NASA / Goddard Space Flight Center",
+    "usage": "Real-media composition verification; not H3 output",
+    "sourceSha256": "2c058a91a09c42a5150d5e4c862b0a2d6e9b74c8620633ca34c85357ff7b9fd6",
+    "edit": {
+      "sourceStartSeconds": 2,
+      "durationSeconds": 6,
+      "audio": "removed",
+      "videoEncoding": "H.264 CRF20, original fps retained"
+    }
+  },
+  {
+    "id": "volcano-jpg",
+    "file": "volcano.jpg",
+    "url": "https://images-assets.nasa.gov/video/GSFC_20141113_Volcanoes_m10183_Degassing/GSFC_20141113_Volcanoes_m10183_Degassing~large.jpg",
+    "sha256": "05f2ebecd6959cff3238d7035ba7bd457dd99bc57b7e9a9baa3cbd3aa588a06c",
+    "sourcePage": "https://images.nasa.gov/details/GSFC_20141113_Volcanoes_m10183_Degassing",
+    "credit": "NASA / Goddard Space Flight Center",
+    "usage": "Real-media composition verification; not H3 output"
+  }
+]

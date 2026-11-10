@@ -45,7 +45,7 @@ description: 给一个主题，产出一条深海黑金 MG 风格（幕底可选
 
 阶段 3 分镜（25 分，主会话）：写 `script/storyboard_src.md`（令牌 `{S12.from-8}` `{S12.c3}` `{C2}`），`python3 scripts/render_storyboard.py` → `分镜表.md`。**镜头按画面单元分**：短句（<3 s 或单块）并入相邻镜头当节拍，单镜头 ≥120 帧，能承接就不清场。每镜头一行：帧区间 / 节拍（字幕块起始帧）/ 画面 / 动效（含运镜）/ **主角·尺寸** / **光**；末尾"全局约束"写示例语境、闪烁白名单、**扫光白名单**（全片 ≤2 个镜头）、事实清单、**高光时刻清单**（每章 ≤1 个，标类型）、**运镜清单**（每章 ≥3 处）、**§9 持续动作**（判据照抄 `composition-and-light.md` §7）。动效列每镜头末尾必须有「持续：…」和「停留：…」两句——前者写这个字幕块的动词靠哪个动作撑到下一拍（没有其它运镜的写「1.0→1.05 慢推」，不写漂浮 / 飘动）；后者写末拍元素落位帧到离场起点的帧数（≥30，目标 30–45），不够的三选一：末拍元素前挂 / 回文案加 `## gap` / 并入相邻镜头。运镜不进末拍：运镜结束到离场起点 ≥30 帧。改 `src/config.ts`（片名、章节英文、HUD 条目、流程轨）。 **生成视频导演设计**：读 `reference/generated-video-direction.md`；在项目内写 `script/h3_shot_plan.md`，每个候选写独立 `asset_id`、表达目的、提示词、目标使用时长、前后画面锚点与状态。优先为难以靠代码传达的过程和空间关系设计不同的新素材，随后执行可用的生成工具；未生成的列为待生成，不能静默退化成同一段视频换裁切。 **审美方向卡**：先按 `reference/taste-video-review.md` §2 写 `script/visual_direction.md`，说明主角、媒介分工、构图变化与动效目的，指导代码和 H3 共用一个视觉世界。
 
-阶段 4 覆盖层与图元（10 分，主会话）：模板已带片头/章节卡/HUD/流程轨/片尾（`src/overlay/`）、图元库（`src/ui.tsx`）与光效/运镜图元（`src/fx.tsx`：扫光、舞台光线、幽灵轮廓、光环、主角柔光、大数字、倾斜平面、相机）。按主题补 2–5 个语义图标进 `ui.tsx`（如样片的 DocIcon/DBIcon/ChunkCard/LLMIcon），跑 `scripts/still.sh Overlay 40,<章节卡帧>,<有轨帧>,<片尾帧> <绝对路径> ov` 看一眼。
+阶段 4 覆盖层与图元（10 分，主会话）：混合媒体片先读 `reference/scene-composition.md`，用 `SceneSpec`/`SceneTrack` 统一图片、视频和代码层，并在 `BoundarySpec` 中一次声明边界；源素材按实际元数据预检。模板已带片头/章节卡/HUD/流程轨/片尾（`src/overlay/`）、图元库（`src/ui.tsx`）与光效/运镜图元（`src/fx.tsx`：扫光、舞台光线、幽灵轮廓、光环、主角柔光、大数字、倾斜平面、相机）。按主题补 2–5 个语义图标进 `ui.tsx`（如样片的 DocIcon/DBIcon/ChunkCard/LLMIcon），跑 `scripts/still.sh Overlay 40,<章节卡帧>,<有轨帧>,<片尾帧> <绝对路径> ov` 看一眼。
 
 阶段 5a 打样（15 分，1 个 agent）：先只派 **G1**（第 1 章上半，含片头后的头几个镜头），完工后 `scripts/preview.sh 30` → **确认点 4**：把前 30 秒样片给用户看，风格 / 字号 / 语速 / 节奏定下来。用户要改的（配色、字号、语速、片头、示例语境）在这里一次改完：改语速要重跑 `tts_build.py` 并重排分镜帧号，改风格只动 `ui.tsx` / `overlay/` + G1。 混合媒体片的样片还应包含至少一次“代码 → H3 → 代码”的完整承接；确认生成片段实际可播放、主体位置与运动方向接得上。 样片也按 `reference/taste-video-review.md` 检查主题、构图、视觉世界与动效目的，优先修复最影响观感的三处。
 
@@ -70,6 +70,7 @@ description: 给一个主题，产出一条深海黑金 MG 风格（幕底可选
 | `reference/composition-and-light.md` | **主体尺寸三档、光跟主角、高光时刻编排、纵深与承接、QC 量化判据**（两片对比后补的审美驱动规则） |
 | `reference/narration-guidance.md` | **口播文案写作原则**（通用、高层：处境开场 / 一条主线 / 先因后果 / 可感尺度 / 承重比喻 / 语气 / 节奏 / 术语后置 / 结尾回扣 / 密度 / 说画面说不了的 / 精确 / 章界承上启下）+ 起飞前检查表。结构由主线决定，不套题材模板 |
 | `reference/narration-storyboard.md` | 解说词格式与预算、配音参数、字幕切块、分镜令牌格式、按画面关系类型选的镜头设计模式 |
+| `reference/scene-composition.md` | 通用图片/视频/代码场景编排、统一总转场时长、源时间、旧配置适配与真实媒体预览 |
 | `reference/taste-video-review.md` / `taste-review-report-template.md` | 从 taste-skill 适配的设计方向卡、八维成片终审、证据与复验报告 |
 | `reference/generated-video-direction.md` | H3 原创场景、过程与视觉隐喻设计、生成计划、提示词和剪辑承接 |
 | `reference/research-brief.md` | 研究员 prompt、事实规则与图片/视频素材搜集及关联格式 |

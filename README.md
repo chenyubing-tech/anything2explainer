@@ -236,3 +236,7 @@ Remotion itself has its own license terms for companies — see [remotion.dev/li
 ## Design taste and final-film review
 
 Adapted from [taste-skill](https://github.com/Leonxlnx/taste-skill): subject-led visuals, clear hierarchy, aligned edges, one visual world, purposeful motion and evidence-based finish reviews. The [video review rules](reference/taste-video-review.md) connect a pre-storyboard direction card to a complete final-film viewing, per-shot checks and revision evidence; use the [report template](reference/taste-review-report-template.md). This is a video adaptation, not the upstream browser checker or Stop hook, and preserves the approved navy-and-gold palette. Attribution, source revision and MIT license: [third-party notices](THIRD_PARTY_NOTICES.md).
+
+## Mixed-media scenes
+
+Compose images, videos and code graphics in a shared scene with one boundary clock (18 frames total by default). See [scene composition](reference/scene-composition.md) for timing, source mapping, migration and checks. The template includes two narrated 12-second compositions, `MixedSolar` and `MixedVolcano`, using actual NASA media. These are cross-topic renderer demonstrations, not H3-generated outputs.

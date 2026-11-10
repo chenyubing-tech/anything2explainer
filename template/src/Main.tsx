@@ -1,7 +1,7 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
-import {Fonts, BgTrack, DotFieldBg, FootageTrack, ProgressBar, Subtitles, TransitionTrack} from './common';
-import type {ShotDef, BgSpec, FootageSpec, TimedTransition} from './common';
+import {AbsoluteFill, Audio, Sequence, staticFile, useVideoConfig} from 'remotion';
+import {Fonts, BgTrack, DotFieldBg, FootageTrack, ProgressBar, Subtitles, TransitionTrack, SceneTrack, compileSceneTimeline} from './common';
+import type {ShotDef, BgSpec, FootageSpec, TimedTransition, SceneSpec, BoundarySpec} from './common';
 import {VIDEO} from './config';
 import {BACKGROUND} from './theme';
 import {SHOTS_OVERLAY, SHOTS_OVERLAY_TOP, BG_OVERLAY} from './overlay';
@@ -36,18 +36,22 @@ const collectTransitions = (shots: ShotDef[], footage: FootageSpec[]): TimedTran
 // 1280×720@30fps，帧号 N = useCurrentFrame()+1（1 起含端点）。
 // z 序（低→高）：黑底 < 幕底（config.bg：雾底 Fog + 星点 StarField，或点阵波 DotFieldBg）< 实拍 FootageTrack < 覆盖层 < 镜头 G1–G8 < 片尾压黑 < 进度条 < aboveBar 镜头 < 字幕。
 // 镜头组件不要画不透明黑底（会盖掉雾底星点）；需要纯黑处用 BG_Gn 覆写 {fog:false, stars:'none'}。
-export const Stage: React.FC<{shots: ShotDef[]; bg: BgSpec[]; footage?: FootageSpec[]; audio?: boolean}> = ({shots, bg, footage = [], audio = false}) => (
+export const Stage: React.FC<{shots?: ShotDef[]; bg?: BgSpec[]; footage?: FootageSpec[]; audio?: boolean; scenes?: SceneSpec[]; boundaries?: BoundarySpec[]}> = ({shots = [], bg = [], footage = [], audio = false, scenes, boundaries = []}) => {
+  const {durationInFrames, fps} = useVideoConfig();
+  const plan = React.useMemo(() => scenes ? compileSceneTimeline(scenes, boundaries, durationInFrames, fps) : null, [scenes, boundaries, durationInFrames, fps]);
+  if (plan && footage.length) throw new Error('Use scene media layers in scene mode; do not mount the legacy footage track twice');
+  return (
   <AbsoluteFill style={{background: BACKGROUND}}>
     <Fonts />
     {audio ? <Audio src={staticFile(`assets/${VIDEO.slug}/audio.wav`)} /> : null}
     {VIDEO.bg === 'dots' ? <DotFieldBg specs={bg} /> : <BgTrack specs={bg} />}
-    <FootageTrack specs={footage} />
+    {plan ? <SceneTrack plan={plan} /> : <FootageTrack specs={footage} />}
     {shots.filter((s) => s.layer !== 'aboveBar').map((s) => (
       <Sequence key={s.id} from={s.from - 1} durationInFrames={s.to - s.from + 1}>
         <s.Comp />
       </Sequence>
     ))}
-    <TransitionTrack transitions={collectTransitions(shots, footage)} />
+    {plan ? null : <TransitionTrack transitions={collectTransitions(shots, footage)} />}
     <ProgressBar />
     {shots.filter((s) => s.layer === 'aboveBar').map((s) => (
       <Sequence key={s.id} from={s.from - 1} durationInFrames={s.to - s.from + 1}>
@@ -56,7 +60,8 @@ export const Stage: React.FC<{shots: ShotDef[]; bg: BgSpec[]; footage?: FootageS
     ))}
     <Subtitles />
   </AbsoluteFill>
-);
+  );
+};
 
 const SHOTS = [...SHOTS_OVERLAY, ...SHOTS_G1, ...SHOTS_G2, ...SHOTS_G3, ...SHOTS_G4, ...SHOTS_G5, ...SHOTS_G6, ...SHOTS_G7, ...SHOTS_G8, ...SHOTS_OVERLAY_TOP];
 const BG = [...BG_OVERLAY, ...BG_G1, ...BG_G2, ...BG_G3, ...BG_G4, ...BG_G5, ...BG_G6, ...BG_G7, ...BG_G8];

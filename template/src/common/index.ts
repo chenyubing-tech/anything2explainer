@@ -13,3 +13,7 @@ export * from './timeline';
 export * from './Footage';
 export * from './footageCatalog';
 export * from './TransitionLayer';
+export * from './sceneTypes';
+export * from './sceneTimeline';
+export * from './SceneTrack';
+export * from './sceneAdapters';

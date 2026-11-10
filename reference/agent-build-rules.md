@@ -73,3 +73,7 @@ H3 场景按 `generated-video-direction.md` 设计；纯代码镜头的幕底限
 - **每个镜头最多 1 处 glitch，且只用于该镜头的重点词**（下表）；其余一切文字/标签/胶囊/数字/图标入场一律用 `SoftIn`（`ui.tsx`，8 帧淡入 + 10px 上浮，签名与 GlitchIn 相同可直接替换）或 fadeIn/slideUp/scaleIn。HUD 换词由 G0 用 SoftIn。
 - 白名单在本片 `分镜表.md` 末尾「全局约束」给出（每镜头最多一个重点词；样片实例见 skill `examples/rag/AGENT_RAG_BUILD_RULES.md` §8）。**不在表内的镜头一处 glitch 都不要。**
 - 用 `rgbSplit/slices` 的重口味 glitch 只允许片头、章节卡标题、主角登场、片尾大字。
+
+## 新混合场景模式
+
+图片、视频和代码共同表达时先读 `scene-composition.md`。新模式使用一个 `BoundarySpec` 协调双侧，不叠加旧 FootageTrack；`sceneFromShot`/`sceneFromFootage` 用于显式迁移。编写每个图层的主角、视口、order 和关键帧；外部素材真实文件须预检，不能只写路径。每场景可包含多个节拍和多次镜头运动，每节拍一个主导运动；本文件旧的“每镜头 ≤1 次运镜”仅针对旧模式。

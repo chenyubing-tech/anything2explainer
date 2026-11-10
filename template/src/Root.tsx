@@ -4,6 +4,7 @@ import {W, H, FPS, TOTAL_FRAMES} from './common';
 import {Video} from './Main';
 import {ThemePreview} from './ThemePreview';
 import {TransitionPreview} from './TransitionPreview';
+import {SolarPreview, VolcanoPreview} from './previews/MixedMediaPreview';
 import {PreviewOverlay} from './overlay/Preview';
 import {PreviewG1} from './shots/G1/Preview';
 import {PreviewG2} from './shots/G2/Preview';
@@ -19,6 +20,8 @@ export const Root: React.FC = () => (
   <>
     <Composition id="ThemePreview" component={ThemePreview} durationInFrames={180} fps={FPS} width={W} height={H} />
     <Composition id="TransitionPreview" component={TransitionPreview} durationInFrames={216} fps={FPS} width={W} height={H} />
+    <Composition id="MixedSolar" component={SolarPreview} durationInFrames={360} fps={FPS} width={W} height={H} />
+    <Composition id="MixedVolcano" component={VolcanoPreview} durationInFrames={360} fps={FPS} width={W} height={H} />
     <Composition id="Video" component={Video} durationInFrames={TOTAL_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Overlay" component={PreviewOverlay} durationInFrames={TOTAL_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="G1" component={PreviewG1} durationInFrames={TOTAL_FRAMES} fps={FPS} width={W} height={H} />
