@@ -25,7 +25,7 @@ export const CHECK_R = {cx: 1020, cy: 448};
 const FLASH_SEQ = [1, 0.55, 1, 0.3, 0.8, 0.45, 0.6, 0.25, 0];
 
 export const SC32: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC32', useCurrentFrame());
   const k = EASE(clamp01((N - T_SPLIT) / 16));
   const dxL = -SPLIT_DX * k, dxR = SPLIT_DX * k;
   const midArrowOp = 1 - clamp01((N - (T_SPLIT - 3)) / 5);
@@ -38,7 +38,7 @@ export const SC32: React.FC = () => {
       {/* 承接 SC31 的问号：上浮 + 淡出 */}
       {qn < 13 ? <QMark N={N} f0={5778} opacity={fadeOut(qn, 12)} dy={-exitAccel(qn, 0.45)} /> : null}
       {/* 虚线框（在 Pill 之下） */}
-      <DashFrame {...FRAME_L32} color={PURPLE_LIGHT} p={pL} tint="rgba(102,48,248,0.07)" />
+      <DashFrame {...FRAME_L32} color={PURPLE_LIGHT} p={pL} tint="rgba(207,180,127,0.07)" />
       <DashFrame {...FRAME_R32} color={ORANGE} p={pR} tint="rgba(240,95,65,0.06)" />
       {/* 流水线 */}
       {PIPE_NAMES.map((_, i) => (

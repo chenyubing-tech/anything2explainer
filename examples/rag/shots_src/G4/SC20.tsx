@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {easeOutCubic, clamp01, powOutRemain, FONT_ORB} from '../../common';
 import {CText, Pill, Svg, LineArrow, DocIcon, DBIcon, ChunkCard, PURPLE, PURPLE_LIGHT, CORAL, WHITE, GREY, GREY_LIGHT, fadeIn, scaleIn, exitAccel, abs, SoftIn} from '../../ui';
 
@@ -44,7 +45,7 @@ const docLineY = (i: number, lines: number) => {
 };
 
 export const SC20: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC20', useCurrentFrame());
   // 末 2 帧整组快速淡出（3663 章节卡 glitch 入）
   const ne = N - EXIT;
   const exitOp = ne < 0 ? 1 : 1 - Math.pow(Math.min(1, ne / 7), 1.5); // 3655–3662 八帧归零
@@ -88,11 +89,11 @@ export const SC20: React.FC = () => {
           {[2, 3].map((li, k) => {
             const w = 0.72 * DOC.w * clamp01(chg[k]);
             if (w <= 0) return null;
-            return <div key={li} style={{...abs(DOC.x + DOC.w * 0.14, DOC.y + docLineY(li, 6), w, 3), background: PURPLE_LIGHT, boxShadow: '0 0 6px rgba(161,117,241,.8)'}} />;
+            return <div key={li} style={{...abs(DOC.x + DOC.w * 0.14, DOC.y + docLineY(li, 6), w, 3), background: PURPLE_LIGHT, boxShadow: '0 0 6px rgba(227,205,163,.8)'}} />;
           })}
           {/* 版本角标（Orbitron），翻页换 v2 */}
           <div style={{...abs(DOC.x + DOC.w - 34, DOC.y - 16, 68, 32), transform: `scaleX(${flipSx.toFixed(4)})`, transformOrigin: '50% 50%'}}>
-            <Pill x={0} y={0} w={68} h={32} text={isV2 ? 'v2' : 'v1'} fontSize={22} weight={700} family={FONT_ORB} fill={isV2 ? PURPLE : '#000'} stroke={WHITE} sw={2} textDy={0} letterSpacing={1} glow={isV2 ? '0 0 14px 4px rgba(102,45,248,.5)' : undefined} />
+            <Pill x={0} y={0} w={68} h={32} text={isV2 ? 'v2' : 'v1'} fontSize={22} weight={700} family={FONT_ORB} fill={isV2 ? PURPLE : '#000'} stroke={WHITE} sw={2} textDy={0} letterSpacing={1} glow={isV2 ? '0 0 14px 4px rgba(207,180,127,.5)' : undefined} />
           </div>
         </div>
       ) : null}
@@ -102,14 +103,14 @@ export const SC20: React.FC = () => {
         {pA1 > 0 ? <LineArrow x0={DOC.x + DOC.w + 14} y0={LOOP.cy} x1={LOOP.cx - LOOP.r - 26} y1={LOOP.cy} p={pA1} /> : null}
         {pA2 > 0 ? <LineArrow x0={LOOP.cx + LOOP.r + 26} y0={LOOP.cy} x1={DB.cx - DB.w / 2 - 14} y1={LOOP.cy} p={pA2} /> : null}
         {pArc > 0 ? (
-          <g transform={`rotate(${rot.toFixed(1)} ${LOOP.cx} ${LOOP.cy})`} style={{filter: 'drop-shadow(0 0 6px rgba(102,45,248,.8))'}}>
+          <g transform={`rotate(${rot.toFixed(1)} ${LOOP.cx} ${LOOP.cy})`} style={{filter: 'drop-shadow(0 0 6px rgba(207,180,127,.8))'}}>
             <ArcArrow start={-160} p={pArc} />
             <ArcArrow start={20} p={pArc} />
           </g>
         ) : null}
       </Svg>
       <SoftIn N={N} f0={B_LOOP + 8}>
-        <Pill x={LOOP.cx - 80} y={LOOP.cy + LOOP.r + 30} w={160} h={42} text="增量更新" fontSize={28} weight={700} fill={PURPLE} sw={2} textDy={-2} glow="0 0 16px 5px rgba(102,45,248,.45)" />
+        <Pill x={LOOP.cx - 80} y={LOOP.cy + LOOP.r + 30} w={160} h={42} text="增量更新" fontSize={28} weight={700} fill={PURPLE} sw={2} textDy={-2} glow="0 0 16px 5px rgba(207,180,127,.45)" />
       </SoftIn>
 
       {/* 右：知识库 + 库内卡片 */}

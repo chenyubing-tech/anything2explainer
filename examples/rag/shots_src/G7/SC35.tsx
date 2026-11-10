@@ -20,7 +20,7 @@ const FAN: Array<{en?: string; zh?: string; cx: number; cy: number; w: number}> 
 const FLY = 14;
 
 export const SC35: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC35', useCurrentFrame());
   const ex = exitOut(N - T_EXIT, 6);
   return (
     <AbsoluteFill style={{pointerEvents: 'none', opacity: ex.op, transform: `translateY(${ex.dy.toFixed(2)}px)`}}>

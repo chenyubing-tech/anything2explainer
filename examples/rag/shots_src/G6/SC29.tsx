@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {easeInOutPow, emphasisPulse, clamp01} from '../../common';
 import {Box, Pill, TechText, Svg, LineArrow, LLMIcon, fadeIn, slideUp, scaleIn, exitAccel, abs} from '../../ui';
 import {AnswerCard, EvidenceCard, TypeLine, HLine, typedCount, citeOp, ANS_TOTAL} from './ui';
@@ -24,7 +25,7 @@ const RULE_T0 = [B_RULE1, B_RULE2, B_RULE3];
 const easeFly = easeInOutPow(2.5);
 
 export const SC29: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC29', useCurrentFrame());
 
   // ---- 离场（Prompt 卡 / LLM / 箭头）----
   const ne = N - T_EXIT;

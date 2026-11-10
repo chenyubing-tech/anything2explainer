@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, easeInOutPow, emphasisPulse, clamp01, rnd, FONT_HEAVY} from '../../common';
 import {CText, TechText, Box, Pill, Svg, fadeIn, slideUp, scaleIn, PURPLE, PURPLE_DEEP, PURPLE_LIGHT, CORAL, GREY, GREY_LIGHT, GREY_LINE, WHITE, abs, SoftIn} from '../../ui';
 import {mixHex} from './ui';
@@ -37,7 +38,7 @@ const CURVE_PTS: Array<[number, number]> = Array.from({length: 77}, (_, i) => {
 const X_TICKS = [1, 5, 10, 15, 20];
 
 export const SC28: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC28', useCurrentFrame());
   const opAll = N >= 5308 ? Math.max(0, 1 - (N - 5307) / 7) : 1;
 
   // ---- 上下文条 ----
@@ -70,11 +71,11 @@ export const SC28: React.FC = () => {
             const isP = PURPLE_IDS.includes(id);
             const mid = 1 - clamp01((Math.abs(p - 3.5) - 1.5) / 1); // 中段 slot 2–5 → 1
             const dim = dimK * mid;
-            const fill = isP ? mixHex(PURPLE, '#2E2550', dim) : mixHex('#000000', '#050505', dim);
+            const fill = isP ? mixHex(PURPLE, '#3A3024', dim) : mixHex('#000000', '#050505', dim);
             const border = isP ? mixHex(WHITE, '#6A6A6A', dim) : mixHex(WHITE, '#5A5A5A', dim);
             const line = isP ? mixHex(WHITE, '#8A8A8A', dim) : mixHex(GREY_LIGHT, '#4A4A4A', dim);
             const s = isP ? pulse : 1;
-            const glow = isP && glowK > 0 ? `0 0 ${Math.round(22 * glowK)}px ${Math.round(7 * glowK)}px rgba(102,45,248,${(0.6 * glowK).toFixed(2)})` : undefined;
+            const glow = isP && glowK > 0 ? `0 0 ${Math.round(22 * glowK)}px ${Math.round(7 * glowK)}px rgba(207,180,127,${(0.6 * glowK).toFixed(2)})` : undefined;
             return (
               <div key={id} style={{...abs(SEG_X, y, SEG_W, SEG_H), boxSizing: 'border-box', background: fill, border: `1.5px solid ${border}`, borderRadius: 4, boxShadow: glow, transform: s === 1 ? undefined : `scale(${s.toFixed(3)})`, transformOrigin: '50% 50%', opacity: 1 - 0.35 * dim}}>
                 {[0, 1].map((i) => <div key={i} style={{position: 'absolute', left: 10, top: 10 + i * 11, width: (0.5 + 0.42 * rnd(id + 1, i, 9)) * (SEG_W - 20) * (i === 1 ? 0.7 : 1), height: 3, background: line, opacity: 0.9}} />)}

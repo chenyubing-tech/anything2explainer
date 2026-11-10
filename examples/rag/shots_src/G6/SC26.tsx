@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {kf, powOutRemain, easeInOutPow, easeOutCubic, clamp01, glitchOpacity, emphasisPulse, FONT_ORB, FONT_HEAVY} from '../../common';
 import {CText, TechText, Box, Svg, LineArrow, fadeIn, slideUp, GREY_LIGHT, WHITE, abs, SoftIn} from '../../ui';
 import {TrapRag, TrapText, TrapTech, MiniCard, mixStops} from './ui';
@@ -29,7 +30,7 @@ const easeMove = easeInOutPow(2.5);
 const TRAP_ROW: React.CSSProperties = {position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12};
 
 export const SC26: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC26', useCurrentFrame());
   const opAll = N >= 4921 ? Math.max(0, 1 - (N - 4920) / 7) : 1;
 
   // ---- 梯形层：4687 灰占位 slideUp → 4734 灰→紫 11 帧 + 换字 ----

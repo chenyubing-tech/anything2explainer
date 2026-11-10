@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, emphasisPulse, clamp01, easeInOutPow, FONT_TECH, FONT_WIDE} from '../../common';
 import {CText, Box, WHITE, PURPLE, PURPLE_TECH, PURPLE_LIGHT, slideUp, fadeIn, stagger, SoftIn} from '../../ui';
 import {LightBar} from './parts';
@@ -32,7 +33,7 @@ const sweepX = (n: number, w: number) => {
 };
 
 export const SC08: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC08', useCurrentFrame());
   const ex = N - T_EXIT;
   const exOp = ex <= 0 ? 1 : Math.max(0, 1 - ex / 6);
 
@@ -64,11 +65,11 @@ export const SC08: React.FC = () => {
       )}
       {/* 舞台光线 */}
       {showLine ? (
-        <div style={{position: 'absolute', left: 640 - lineW / 2, top: 331, width: lineW, height: 3, borderRadius: 2, background: flash >= 0 ? WHITE : `linear-gradient(90deg, transparent, ${PURPLE_LIGHT} 20%, ${PURPLE_LIGHT} 80%, transparent)`, opacity: flash >= 0 ? [0.95, 0.7, 0.35][flash] : breathe, boxShadow: flash >= 0 ? '0 0 30px 8px rgba(255,255,255,.55)' : '0 0 18px 4px rgba(102,45,248,.5)'}} />
+        <div style={{position: 'absolute', left: 640 - lineW / 2, top: 331, width: lineW, height: 3, borderRadius: 2, background: flash >= 0 ? WHITE : `linear-gradient(90deg, transparent, ${PURPLE_LIGHT} 20%, ${PURPLE_LIGHT} 80%, transparent)`, opacity: flash >= 0 ? [0.95, 0.7, 0.35][flash] : breathe, boxShadow: flash >= 0 ? '0 0 30px 8px rgba(255,255,255,.55)' : '0 0 18px 4px rgba(207,180,127,.5)'}} />
       ) : null}
       {/* RAG 轮廓隐现（白描边、透明填充、紫雾） */}
       {ghostOp > 0 ? (
-        <CText cx={640} cy={330} size={150} weight={400} family={FONT_WIDE} letterSpacing={8} color="transparent" dy={-4} opacity={ghostOp} shadow="0 0 22px rgba(161,117,241,.95)" style={{WebkitTextStroke: `2px ${WHITE}`}}>
+        <CText cx={640} cy={330} size={150} weight={400} family={FONT_WIDE} letterSpacing={8} color="transparent" dy={-4} opacity={ghostOp} shadow="0 0 22px rgba(227,205,163,.95)" style={{WebkitTextStroke: `2px ${WHITE}`}}>
           RAG
         </CText>
       ) : null}
@@ -76,7 +77,7 @@ export const SC08: React.FC = () => {
       {rn >= 0 ? (
         <div style={{position: 'absolute', inset: 0, transformOrigin: '640px 330px', transform: pulse === 1 ? undefined : `scale(${pulse.toFixed(4)})`}}>
           <GlitchIn N={N} f0={T_RAG} rgbSplit={8} slices={20} sliceBands={4} seed={8}>
-            <CText cx={640} cy={330} size={150} weight={400} family={FONT_WIDE} letterSpacing={8} color={WHITE} dy={-4} shadow={`6px 6px 0 ${PURPLE}, 0 0 28px rgba(102,45,248,.45)`}>
+            <CText cx={640} cy={330} size={150} weight={400} family={FONT_WIDE} letterSpacing={8} color={WHITE} dy={-4} shadow={`6px 6px 0 ${PURPLE}, 0 0 28px rgba(207,180,127,.45)`}>
               RAG
             </CText>
           </GlitchIn>
@@ -92,7 +93,7 @@ export const SC08: React.FC = () => {
       {PILLS.map(([head, rest, cx, w], i) => (
         <SoftIn key={head} N={N} f0={T_PILLS + stagger(i, 2)}>
           <Box x={cx - w / 2} y={520} w={w} h={46} r={23} sw={2}>
-            <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_TECH, fontStyle: 'italic', fontSize: 27, letterSpacing: 1, lineHeight: 1, whiteSpace: 'nowrap', transform: 'translateY(-1px) scaleX(0.9)', textShadow: '0 0 6px rgba(80,30,200,.7)'}}>
+            <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_TECH, fontStyle: 'italic', fontSize: 27, letterSpacing: 1, lineHeight: 1, whiteSpace: 'nowrap', transform: 'translateY(-1px) scaleX(0.9)', textShadow: '0 0 6px rgba(125,102,63,.7)'}}>
               <span style={{color: WHITE, fontWeight: 900, fontSize: 31}}>{head}</span>
               <span style={{color: PURPLE_TECH, fontWeight: 600}}>{rest}</span>
             </div>

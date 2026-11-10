@@ -4,34 +4,34 @@ import {FONT_TECH, FONT_MONO} from './common/fonts';
 import {GlitchIn, powOutRemain, BEZ_SCALE_IN, clamp01} from './common';
 
 /**
- * RAG 片共用图元与调色板（沿用推荐系统片：黑填充 + 白描边 2–3px、紫 = 当前重点、橙红 = 指标/警示、灰 = 非重点）。
+ * RAG 片共用图元与调色板（深海黑金：藏蓝黑底 + 灰白描边、沙金 = 当前重点、蓝灰 = 对照数据、红/绿 = 状态）。
  * 所有组件为纯函数式、绝对定位（画布 1280×720）；动画由调用方按 N 计算后传入（opacity/p/s 等）。
  */
 // ---- 调色板 ----
-export const PURPLE = '#6630F8'; // 标准胶囊紫 (102,48,248)
-export const PURPLE_LIGHT = '#A175F1'; // 亮紫（高光端 / 穿过进度条后）
-export const PURPLE_TECH = '#6530F4'; // 英文科技字紫
-export const PURPLE_DEEP = '#5A3AD5'; // 深紫（曲线 / 硬投影）
-export const PURPLE_PALE = '#E6DCFF';
-export const ORANGE = '#F05F41'; // 橙红：指标数字 / 另一方 / 强调
-export const CORAL = '#F16043';
-export const RED_DEEP = '#EC081F'; // 深红警示块
-export const GREEN = '#8FF740'; // 绿勾
-export const GREY = '#A0A0A1'; // 非激活
-export const GREY_MID = '#747474';
-export const GREY_LINE = '#4A4A4A'; // 网格线
-export const GREY_LIGHT = '#D4D4D4';
-export const WHITE = '#FFFFFF';
-export const MAGENTA = '#D100D6';
-export const CYAN = '#58FFEE';
-export const GLOW_PURPLE = '0 0 12px 3px rgba(102,45,248,.35), 0 0 42px 14px rgba(102,45,248,.45)';
-export const GLOW_PURPLE_S = '0 0 24px 8px rgba(102,45,248,.6)';
+export const PURPLE = '#CFB47F'; // 兼容旧名称：实际为沙金
+export const PURPLE_LIGHT = '#E3CDA3'; // 兼容旧名称：浅金高光
+export const PURPLE_TECH = '#CFB47F'; // 兼容旧名称：技术词沙金
+export const PURPLE_DEEP = '#7D663F'; // 兼容旧名称：深金投影
+export const PURPLE_PALE = '#F0E2C8';
+export const ORANGE = '#91AABC'; // 兼容旧名称：蓝灰对照数据
+export const CORAL = '#91AABC';
+export const RED_DEEP = '#D9827D'; // 深红警示块
+export const GREEN = '#9DB8A7'; // 绿勾
+export const GREY = '#97A4AE'; // 非激活
+export const GREY_MID = '#788894';
+export const GREY_LINE = '#354552'; // 网格线
+export const GREY_LIGHT = '#C2CCD3';
+export const WHITE = '#ECEEF0';
+export const MAGENTA = '#CFB47F';
+export const CYAN = '#91AABC';
+export const GLOW_PURPLE = '0 0 12px 3px rgba(207,180,127,.12), 0 0 42px 14px rgba(207,180,127,.08)';
+export const GLOW_PURPLE_S = '0 0 24px 8px rgba(207,180,127,.12)';
 export const GLOW_ORANGE = '0 0 40px rgba(243,95,69,.75), 0 0 100px 10px rgba(243,95,69,.25)';
 export const GLOW_RED = '0 0 60px 20px rgba(236,8,31,.42), 0 0 20px 6px rgba(236,8,31,.45)';
 export const BLOOM = 'drop-shadow(0 0 3px rgba(255,255,255,0.5))';
 export const BLOOM_SOFT = 'drop-shadow(0 0 2px rgba(255,255,255,0.35))';
 export const TEXT_GLOW = '0 0 12px rgba(255,255,255,.55), 0 0 4px rgba(255,255,255,.35)';
-export const PILL_SHADOW = 'drop-shadow(0 0 2px rgba(200,180,255,.6))';
+export const PILL_SHADOW = 'drop-shadow(0 0 2px rgba(227,205,163,.6))';
 
 // ---- 动效小工具（n = N − f0）----
 export const fadeIn = (n: number, len = 12) => clamp01(n / len);
@@ -75,9 +75,9 @@ export const CText: React.FC<CTextProps> = ({cx, cy, size, weight = 700, family 
     {children}
   </div>
 );
-/** 英文技术词：Exo 2 紫斜体 + scaleX 压窄 */
+/** 英文技术词：Exo 2 金色斜体 + scaleX 压窄 */
 export const TechText: React.FC<{cx: number; cy: number; text: string; fontSize?: number; color?: string; scaleX?: number; weight?: number; letterSpacing?: number; glow?: boolean; opacity?: number; style?: React.CSSProperties}> = ({cx, cy, text, fontSize = 32, color = PURPLE_TECH, scaleX = 0.81, weight = 600, letterSpacing = 1, glow = true, opacity = 1, style}) => (
-  <CText cx={cx} cy={cy} size={fontSize} weight={weight} family={FONT_TECH} color={color} letterSpacing={letterSpacing} scaleX={scaleX} italic opacity={opacity} dy={0} shadow={glow ? '0 0 6px rgba(80,30,200,.7)' : undefined} style={style}>
+  <CText cx={cx} cy={cy} size={fontSize} weight={weight} family={FONT_TECH} color={color} letterSpacing={letterSpacing} scaleX={scaleX} italic opacity={opacity} dy={0} shadow={glow ? '0 0 6px rgba(125,102,63,.7)' : undefined} style={style}>
     {text}
   </CText>
 );

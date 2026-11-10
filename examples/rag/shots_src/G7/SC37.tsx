@@ -57,7 +57,7 @@ const ArcArrow: React.FC<{a: number; b: number; p: number; color?: string}> = ({
 };
 
 export const SC37: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC37', useCurrentFrame());
   // 球位置
   const deg = kf(N, BALL_KF, EASE);
   const onRing = N < T_OUT;
@@ -93,7 +93,7 @@ export const SC37: React.FC = () => {
       </GlitchIn>
       <SoftIn N={N} f0={T_DR}>
         <div style={{...abs(915, 138, 250, 44), transform: `scale(${drPulse.toFixed(4)})`, transformOrigin: '50% 50%'}}>
-          <Pill x={0} y={0} w={250} h={44} fill={PURPLE} sw={2} text="Deep Research" fontSize={26} weight={700} family={FONT_TECH} letterSpacing={1} textDy={-1} style={{fontStyle: 'italic', filter: 'drop-shadow(0 0 2px rgba(200,180,255,.6))'}} glow="0 0 24px 6px rgba(102,45,248,.45)" />
+          <Pill x={0} y={0} w={250} h={44} fill={PURPLE} sw={2} text="Deep Research" fontSize={26} weight={700} family={FONT_TECH} letterSpacing={1} textDy={-1} style={{fontStyle: 'italic', filter: 'drop-shadow(0 0 2px rgba(227,205,163,.6))'}} glow="0 0 24px 6px rgba(207,180,127,.45)" />
         </div>
       </SoftIn>
       <SoftIn N={N} f0={T_EQ}>
@@ -134,7 +134,7 @@ export const SC37: React.FC = () => {
       })}
       {N >= T_ANS ? (
         <div style={{...abs(ANS.x - ANS.w / 2, ANS.y - 24, ANS.w, 48), transform: `scale(${(scaleIn(N - T_ANS) * ansPulse).toFixed(4)})`, transformOrigin: '50% 50%', opacity: fadeIn(N - T_ANS, 6)}}>
-          <Pill x={0} y={0} w={ANS.w} h={48} fill={mixHex('#000000', PURPLE, ansK)} stroke={mixHex('#FFFFFF', PURPLE_LIGHT, ansK)} sw={2} text="回答" fontSize={24} weight={700} textDy={-2} glow={ansK > 0.02 ? `0 0 ${Math.round(26 * ansK)}px ${Math.round(8 * ansK)}px rgba(102,45,248,${(0.6 * ansK).toFixed(3)})` : undefined} style={{filter: 'drop-shadow(0 0 2px rgba(255,255,255,.35))'}} />
+          <Pill x={0} y={0} w={ANS.w} h={48} fill={mixHex('#000000', PURPLE, ansK)} stroke={mixHex('#FFFFFF', PURPLE_LIGHT, ansK)} sw={2} text="回答" fontSize={24} weight={700} textDy={-2} glow={ansK > 0.02 ? `0 0 ${Math.round(26 * ansK)}px ${Math.round(8 * ansK)}px rgba(207,180,127,${(0.6 * ansK).toFixed(3)})` : undefined} style={{filter: 'drop-shadow(0 0 2px rgba(255,255,255,.35))'}} />
         </div>
       ) : null}
       {/* 中心大模型 */}
@@ -158,12 +158,12 @@ export const SC37: React.FC = () => {
           <span style={{fontFamily: FONT_HEAVY, fontWeight: 700, fontSize: 26, color: WHITE}}>轮</span>
         </div>
         {[0, 1, 2].map((i) => (
-          <div key={i} style={{...abs(982 + (i - 1) * 22 - 5, 338, 10, 10), borderRadius: '50%', background: round > i ? PURPLE_LIGHT : 'transparent', border: `1.5px solid ${round > i ? PURPLE_LIGHT : GREY}`, boxSizing: 'border-box', boxShadow: round > i ? '0 0 8px 2px rgba(161,117,241,.5)' : undefined}} />
+          <div key={i} style={{...abs(982 + (i - 1) * 22 - 5, 338, 10, 10), borderRadius: '50%', background: round > i ? PURPLE_LIGHT : 'transparent', border: `1.5px solid ${round > i ? PURPLE_LIGHT : GREY}`, boxSizing: 'border-box', boxShadow: round > i ? '0 0 8px 2px rgba(227,205,163,.5)' : undefined}} />
         ))}
       </SoftIn>
       {N >= T_COUNTER ? (
         <SoftIn N={N} f0={ROUND_STARTS[round - 1]} len={6} dy={6}>
-          <CText cx={1000} cy={300} size={46} weight={700} family={FONT_ORB} color={PURPLE_LIGHT} dy={0} shadow="0 0 14px rgba(102,45,248,.7)" style={{fontVariantNumeric: 'tabular-nums'}}>
+          <CText cx={1000} cy={300} size={46} weight={700} family={FONT_ORB} color={PURPLE_LIGHT} dy={0} shadow="0 0 14px rgba(207,180,127,.7)" style={{fontVariantNumeric: 'tabular-nums'}}>
             {round}
           </CText>
         </SoftIn>

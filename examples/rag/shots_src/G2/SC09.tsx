@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {stepKf, clamp01, emphasisPulse, FONT_ORB, FONT_SERIF} from '../../common';
 import {CText, Box, Pill, TechText, WHITE, GREY, GREY_LIGHT, GREY_MID, PURPLE, PURPLE_LIGHT, TEXT_GLOW, BLOOM_SOFT, slideUp, fadeIn, SoftIn} from '../../ui';
 import {mixHex} from './parts';
@@ -24,13 +25,13 @@ const CHART_BARS: Array<[number, string]> = [[30, GREY_MID], [44, GREY_MID], [58
 
 /** 标题词：k = 灰→紫进度（1238 起）；f = 白闪强度 0→1→0（1211 起，与 k 不重叠） */
 const Word: React.FC<{k: number; f?: number; children: React.ReactNode}> = ({k, f = 0, children}) => (
-  <span style={{color: f > 0 ? mixHex(GREY_LIGHT, WHITE, f) : mixHex(GREY_LIGHT, PURPLE_LIGHT, k), textShadow: f > 0 ? `0 0 ${Math.round(6 + 10 * f)}px rgba(255,255,255,${(0.85 * f).toFixed(2)})` : k > 0.5 ? '0 0 8px rgba(161,117,241,.6)' : undefined, fontWeight: 700}}>{children}</span>
+  <span style={{color: f > 0 ? mixHex(GREY_LIGHT, WHITE, f) : mixHex(GREY_LIGHT, PURPLE_LIGHT, k), textShadow: f > 0 ? `0 0 ${Math.round(6 + 10 * f)}px rgba(255,255,255,${(0.85 * f).toFixed(2)})` : k > 0.5 ? '0 0 8px rgba(227,205,163,.6)' : undefined, fontWeight: 700}}>{children}</span>
 );
 /** 12 帧三角脉冲 0→1→0 */
 const tri = (n: number, len = 12) => (n <= 0 || n >= len ? 0 : n < len / 2 ? n / (len / 2) : 1 - (n - len / 2) / (len / 2));
 
 export const SC09: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC09', useCurrentFrame());
   const ex = N - T_EXIT;
   const exOp = ex <= 0 ? 1 : Math.max(0, 1 - ex / 6);
 
@@ -58,7 +59,7 @@ export const SC09: React.FC = () => {
             <div>NLP Tasks</div>
           </div>
           {/* 下划线（1211 draw-on，左锚） */}
-          {under > 0 ? <div style={{position: 'absolute', left: 40, top: 122, width: (CARD.w - 80) * under, height: 2.5, background: PURPLE_LIGHT, boxShadow: '0 0 8px rgba(102,45,248,.7)'}} /> : null}
+          {under > 0 ? <div style={{position: 'absolute', left: 40, top: 122, width: (CARD.w - 80) * under, height: 2.5, background: PURPLE_LIGHT, boxShadow: '0 0 8px rgba(207,180,127,.7)'}} /> : null}
           {/* 作者行 */}
           <div style={{position: 'absolute', left: 0, right: 0, top: 138, textAlign: 'center', fontFamily: FONT_SERIF, fontSize: 22, lineHeight: '26px', color: GREY, whiteSpace: 'nowrap'}}>Lewis et al. · NeurIPS 2020</div>
           <div style={{position: 'absolute', left: 24, top: 176, width: CARD.w - 48, height: 1.5, background: GREY, opacity: 0.7}} />

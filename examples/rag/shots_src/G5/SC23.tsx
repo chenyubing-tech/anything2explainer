@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, clamp01, BEZ_SCALE_IN, FONT_TECH, powOutRemain} from '../../common';
 import {Box, Pill, ArrowH, TechText, Svg, PURPLE, PURPLE_LIGHT, ORANGE, GREY, WHITE, GLOW_PURPLE_S, fadeIn, fadeOut, exitAccel, SoftIn} from '../../ui';
 import {VectorPlane, VNEIGHBORS} from './vspace';
@@ -21,7 +22,7 @@ const LABELS: Array<{text: string; cx: number; cy: number; w: number}> = [
 ];
 
 export const SC23: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC23', useCurrentFrame());
   const ne = N - T_EXIT;
   const op = ne > 0 ? fadeOut(ne, 12) : 1;
   const dy = ne > 0 ? exitAccel(ne, 0.6) : 0;
@@ -49,7 +50,7 @@ export const SC23: React.FC = () => {
         {VNEIGHBORS.map(([x, y], i) => {
           const k = mixK(N - (T_CIRCLE + 4 + i * 6));
           const r = 4.2 + 3 * k;
-          return <circle key={i} cx={x} cy={y} r={r} fill={mixHex('#D4D4D4', PURPLE, k)} style={k > 0.5 ? {filter: 'drop-shadow(0 0 5px rgba(161,117,241,.9))'} : undefined} />;
+          return <circle key={i} cx={x} cy={y} r={r} fill={mixHex('#D4D4D4', PURPLE, k)} style={k > 0.5 ? {filter: 'drop-shadow(0 0 5px rgba(227,205,163,.9))'} : undefined} />;
         })}
         {/* 标签牵引线 */}
         {LABELS.map((l, i) => {

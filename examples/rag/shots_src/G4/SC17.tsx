@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {easeOutCubic, clamp01} from '../../common';
 import {CText, Pill, Svg, PURPLE, PURPLE_LIGHT, WHITE, GREY, GREY_MID, GREY_LINE, GREY_LIGHT, fadeIn, scaleIn, exitAccel, SoftIn} from '../../ui';
 import {VSPACE, VSPACE_POINTS, VSPACE_PAIRS} from './vspace';
@@ -20,7 +21,7 @@ const COLS = Math.round((x1 - x0) / cell), ROWS = Math.round((y1 - y0) / cell);
 const RING_LEN = 2 * Math.PI * RING.r;
 
 export const SC17: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC17', useCurrentFrame());
   const ne = N - EXIT;
   const exitOp = ne <= 0 ? 1 : Math.max(0, 1 - ne / 8);
   const exitDy = exitAccel(ne, 0.5);
@@ -77,7 +78,7 @@ export const SC17: React.FC = () => {
           <circle cx={RING.cx} cy={RING.cy} r={RING.r} fill="none" stroke={PURPLE_LIGHT} strokeWidth={2} strokeDasharray={`${RING_LEN}`} strokeDashoffset={RING_LEN * (1 - clamp01(pRing))} transform={`rotate(-90 ${RING.cx} ${RING.cy})`} opacity={0.95} />
         ) : null}
         {/* 两个紫点（白边 + 紫柔光） */}
-        <g style={{filter: 'drop-shadow(0 0 6px rgba(102,45,248,.95))'}}>
+        <g style={{filter: 'drop-shadow(0 0 6px rgba(207,180,127,.95))'}}>
           {sA > 0 ? <circle cx={A.x} cy={A.y} r={8 * sA} fill={PURPLE} stroke={WHITE} strokeWidth={2} /> : null}
           {sB > 0 ? <circle cx={B.x} cy={B.y} r={8 * sB} fill={PURPLE} stroke={WHITE} strokeWidth={2} /> : null}
         </g>
@@ -94,7 +95,7 @@ export const SC17: React.FC = () => {
         <Pill x={LABEL_FAR.x} y={LABEL_FAR.y} w={LABEL_FAR.w} h={LABEL_FAR.h} text={FAR.label} fontSize={24} weight={600} color={GREY_LIGHT} stroke={GREY} textDy={-2} />
       </SoftIn>
       <SoftIn N={N} f0={B_NEAR + 14}>
-        <Pill x={LABEL_NEAR.x} y={LABEL_NEAR.y} w={LABEL_NEAR.w} h={LABEL_NEAR.h} text="邻居" fontSize={24} weight={700} fill={PURPLE} sw={2} textDy={-2} glow="0 0 14px 4px rgba(102,45,248,.5)" />
+        <Pill x={LABEL_NEAR.x} y={LABEL_NEAR.y} w={LABEL_NEAR.w} h={LABEL_NEAR.h} text="邻居" fontSize={24} weight={700} fill={PURPLE} sw={2} textDy={-2} glow="0 0 14px 4px rgba(207,180,127,.5)" />
       </SoftIn>
 
       {/* 角注：二维投影示意（真实向量几百到几千维） */}

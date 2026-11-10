@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, clamp01} from '../../common';
 import {CText, Pill, Svg, Cross, WHITE, GREY, PURPLE, slideUp, fadeIn, scaleIn, SoftIn} from '../../ui';
 import {ExamPaper, BookIcon, Bulb} from './parts';
@@ -18,7 +19,7 @@ const PAPER = {x: 280, y: 175, w: 300, h: 380};
 const BOOK = {cx: 850, cy: 335, w: 280, h: 180};
 
 export const SC06: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC06', useCurrentFrame());
   // 离场：6 帧线性淡出 + 幂加速下摇
   const ex = N - T_EXIT;
   const exOp = ex <= 0 ? 1 : Math.max(0, 1 - ex / 6);
@@ -62,7 +63,7 @@ export const SC06: React.FC = () => {
       {bookOp > 0 ? <BookIcon cx={BOOK.cx} cy={BOOK.cy} w={BOOK.w} h={BOOK.h} s={bookS} opacity={bookOp} lines={4} /> : null}
       {/* 大字「开卷考试」：白字 + 紫描边（stroke 外扩），12 帧 GlitchIn（白名单，纯透明度序列） */}
       <GlitchIn N={N} f0={T_TITLE}>
-        <CText cx={850} cy={520} size={64} weight={900} scaleX={0.8} letterSpacing={2} color={WHITE} dy={-3} style={{WebkitTextStroke: `3px ${PURPLE}`, paintOrder: 'stroke fill', textShadow: '0 0 18px rgba(102,45,248,.55)'}}>
+        <CText cx={850} cy={520} size={64} weight={900} scaleX={0.8} letterSpacing={2} color={WHITE} dy={-3} style={{WebkitTextStroke: `3px ${PURPLE}`, paintOrder: 'stroke fill', textShadow: '0 0 18px rgba(207,180,127,.55)'}}>
           开卷考试
         </CText>
       </GlitchIn>

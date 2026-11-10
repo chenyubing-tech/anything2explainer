@@ -37,7 +37,7 @@ export const Title: React.FC = () => {
     <div style={{position: 'absolute', inset: 0, transform: `translateY(${dy}px)`, opacity: op}}>
       <GlitchIn N={N} f0={a + 11} rgbSplit={6} slices={14} seed={3}>
         <div style={{position: 'absolute', left: 0, top: 268, width: 1280, display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 26}}>
-          <span style={{fontFamily: FONT_WIDE, fontSize: 118, color: WHITE, lineHeight: 1, letterSpacing: 6, textShadow: `0 0 ${18 + 14 * glow}px rgba(102,45,248,${0.55 + 0.3 * glow}), 6px 6px 0 ${PURPLE}`}}>RAG</span>
+          <span style={{fontFamily: FONT_WIDE, fontSize: 118, color: WHITE, lineHeight: 1, letterSpacing: 6, textShadow: `0 0 ${18 + 14 * glow}px rgba(207,180,127,${0.55 + 0.3 * glow}), 6px 6px 0 ${PURPLE}`}}>RAG</span>
           <span style={{fontFamily: FONT_HEAVY, fontWeight: 900, fontSize: 96, color: WHITE, lineHeight: 1, transform: 'scaleX(0.85)', transformOrigin: '0 100%', letterSpacing: 2, WebkitTextStroke: '1px #000', paintOrder: 'stroke fill'}}>与知识库</span>
         </div>
       </GlitchIn>
@@ -70,7 +70,7 @@ export const ChapterCard: React.FC<{card: (typeof CHAPTER_CARDS)[number]}> = ({c
   return (
     <div style={{position: 'absolute', inset: 0, transform: `translateY(${dy}px)`, opacity: op}}>
       <div style={{position: 'absolute', opacity: fadeIn(n, 8)}}>
-        <CText cx={640} cy={268} size={54} weight={700} family={FONT_ORB} color={PURPLE_TECH} letterSpacing={4} shadow="0 0 14px rgba(102,45,248,.6)">{`0${card.n}`}</CText>
+        <CText cx={640} cy={268} size={54} weight={700} family={FONT_ORB} color={PURPLE_TECH} letterSpacing={4} shadow="0 0 14px rgba(207,180,127,.6)">{`0${card.n}`}</CText>
       </div>
       <GlitchIn N={N} f0={card.from + 3} rgbSplit={5} seed={card.n}>
         <CText cx={640} cy={372} size={80} weight={900} scaleX={0.85} letterSpacing={3} style={{WebkitTextStroke: '1px #000', paintOrder: 'stroke fill'}}>{card.title}</CText>

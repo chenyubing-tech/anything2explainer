@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {FONT_HEAVY, FONT_ORB, powOutRemain, easeInOutPow, clamp01} from '../../common';
 import {LLMIcon, CText, Pill, Box, DocIcon, PURPLE, PURPLE_LIGHT, GREY, WHITE, ORANGE, TEXT_GLOW, fadeIn, scaleIn, abs, SoftIn} from '../../ui';
 
@@ -41,7 +42,7 @@ const LoopArrow: React.FC<{p: number}> = ({p}) => {
   const bx = tx - ux * hl, by = ty - uy * hl;
   const px = -uy, py = ux;
   return (
-    <svg width={1280} height={720} viewBox="0 0 1280 720" style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', filter: 'drop-shadow(0 0 6px rgba(102,45,248,.85))'}}>
+    <svg width={1280} height={720} viewBox="0 0 1280 720" style={{position: 'absolute', left: 0, top: 0, overflow: 'visible', filter: 'drop-shadow(0 0 6px rgba(207,180,127,.85))'}}>
       <polyline points={pts.join(' ')} fill="none" stroke={PURPLE_LIGHT} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
       <polygon points={`${tx.toFixed(1)},${ty.toFixed(1)} ${(bx + px * hw).toFixed(1)},${(by + py * hw).toFixed(1)} ${(bx - px * hw).toFixed(1)},${(by - py * hw).toFixed(1)}`} fill={PURPLE_LIGHT} />
     </svg>
@@ -62,7 +63,7 @@ const CalPage: React.FC<{title: string; docColor: string; children?: React.React
 );
 
 export const SC05: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC05', useCurrentFrame());
   const sLLM = scaleIn(N - F0, 21);
   const loopP = 1 - Math.pow(1 - clamp01((N - 637) / 24), 1.8);
   const nCost = N - 670;

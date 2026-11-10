@@ -45,7 +45,7 @@ const Typed: React.FC<{segs: Seg[]; count: number; x: number; y: number}> = ({se
 };
 
 export const SC34: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC34', useCurrentFrame());
   const op = fadeOut(N - T_EXIT, 12);
   // 答复卡
   const nc = N - T_CARD;

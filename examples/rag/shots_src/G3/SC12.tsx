@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {slideIn} from '../../common';
 import {Box, CText, TechText, Svg, LineArrow, ArrowH, WHITE, abs, slideUp, fadeIn, fadeOut, exitAccel, SoftIn} from '../../ui';
 import {DocCard, DOC_ITEMS, PdfIcon, WebIcon, TableIcon, ScanIcon} from './g3ui';
@@ -17,7 +18,7 @@ const ICONS = [PdfIcon, WebIcon, TableIcon, ScanIcon];
 export const DOC_CX = 980, DOC_CY = 400;
 
 export const SC12: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC12', useCurrentFrame());
   // 左/中组离场（1880 起 10 帧）
   const ex = N - 1880;
   const gOp = ex > 0 ? fadeOut(ex, 10) : 1;

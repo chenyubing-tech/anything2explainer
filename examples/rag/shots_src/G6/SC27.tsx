@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {clamp01} from '../../common';
 import {CText, Pill, TagBlock, Svg, Check, fadeIn, slideUp, scaleIn, ORANGE, PURPLE, abs, SoftIn} from '../../ui';
 import {TrapRag, TrapText, GREY_STOPS, PURP_STOPS} from './ui';
@@ -46,7 +47,7 @@ const PopTag: React.FC<{N: number; f0: number; x: number; y: number; color: stri
 };
 
 export const SC27: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC27', useCurrentFrame());
   // QC v2：5016–5021 整组淡出 1−(n/5)^1.5 + 下摇 ≤10px（Sequence to 延到 5021，与 SC28 5018 起入场重叠）
   const nx = N - 5016;
   const tx = clamp01(nx / 5);

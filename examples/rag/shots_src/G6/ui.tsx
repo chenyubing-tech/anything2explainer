@@ -91,7 +91,7 @@ export const EvidenceCard: React.FC<{x: number; y: number; w?: number; h?: numbe
 // ---------- 来源卡（员工手册 p.12 / 差旅补充规定 2025） ----------
 export const SourceCard: React.FC<{x: number; y: number; w?: number; h?: number; title: string; active?: number; opacity?: number; scale?: number; seed?: number}> = ({x, y, w = 280, h = 70, title, active = 0, opacity = 1, scale = 1, seed = 2}) => (
   <div style={{...abs(x, y, w, h), opacity, transform: scale === 1 ? undefined : `scale(${scale.toFixed(3)})`, transformOrigin: '50% 50%'}}>
-    <Box x={0} y={0} w={w} h={h} r={8} sw={2} stroke={mixHex(WHITE, PURPLE_LIGHT, active)} glow={active > 0.01 ? `0 0 ${Math.round(24 * active)}px ${Math.round(8 * active)}px rgba(102,45,248,${(0.6 * active).toFixed(2)})` : undefined} />
+    <Box x={0} y={0} w={w} h={h} r={8} sw={2} stroke={mixHex(WHITE, PURPLE_LIGHT, active)} glow={active > 0.01 ? `0 0 ${Math.round(24 * active)}px ${Math.round(8 * active)}px rgba(207,180,127,${(0.6 * active).toFixed(2)})` : undefined} />
     <div style={{position: 'absolute', left: 16, top: 12, fontFamily: FONT_HEAVY, fontWeight: 700, fontSize: 22, lineHeight: 1, color: WHITE, whiteSpace: 'nowrap'}}>{title}</div>
     {[0, 1].map((i) => <div key={i} style={{position: 'absolute', left: 16, top: 44 + i * 10, width: (0.5 + 0.4 * rnd(seed, i, 5)) * (w - 32), height: 3, background: GREY_LIGHT, opacity: 0.8}} />)}
   </div>
@@ -105,7 +105,7 @@ export const ANS_TOTAL = L1.length + 1 + L2.length + 1; // 打字机总字符数
 /** 引用角标中心（相对答复卡左上角）：按 Noto 26px 估算（CJK 26 / 数字 14.9 / 空格 6.8），still 校正后可微调 */
 export const CITE_ANCHOR: Array<[number, number]> = [[20 + 318 + 14, 60], [20 + 188 + 14, 108]];
 const Cite: React.FC<{n: number; op: number}> = ({n, op}) => (
-  <span style={{display: 'inline-block', position: 'relative', top: -9, fontFamily: FONT_ORB, fontWeight: 700, fontSize: 20, color: PURPLE_LIGHT, marginLeft: 2, marginRight: 2, opacity: op, textShadow: '0 0 8px rgba(161,117,241,.6)'}}>[{n}]</span>
+  <span style={{display: 'inline-block', position: 'relative', top: -9, fontFamily: FONT_ORB, fontWeight: 700, fontSize: 20, color: PURPLE_LIGHT, marginLeft: 2, marginRight: 2, opacity: op, textShadow: '0 0 8px rgba(227,205,163,.6)'}}>[{n}]</span>
 );
 /**
  * 答复卡：黑底白边 420×180 + 「回答」紫小标签 + 两行 26px 正文；typed = 已打出的字符数（≥ANS_TOTAL 全显）；

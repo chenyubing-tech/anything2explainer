@@ -126,7 +126,7 @@ export const Bubble: React.FC<{x: number; y: number; w: number; h: number; tail?
 /** 横向紫光条（R6 光条的水平版）：紫渐隐两端 + 白芯 + 紫柔光；(x,y) 为左上，w×h；alpha 为整体不透明度（SC08 用 .55–.6） */
 export const LightBar: React.FC<{x: number; y: number; w: number; h: number; alpha?: number; color?: string; core?: boolean}> = ({x, y, w, h, alpha = 0.3, color = PURPLE_LIGHT, core = true}) => (
   <div style={{...abs(x, y, w, h), opacity: alpha}}>
-    <div style={{position: 'absolute', inset: 0, borderRadius: h / 2, background: `linear-gradient(90deg, transparent 0%, ${color} 16%, ${color} 84%, transparent 100%)`, boxShadow: `0 0 ${h * 2.4}px ${h * 0.9}px rgba(102,45,248,.6)`}} />
+    <div style={{position: 'absolute', inset: 0, borderRadius: h / 2, background: `linear-gradient(90deg, transparent 0%, ${color} 16%, ${color} 84%, transparent 100%)`, boxShadow: `0 0 ${h * 2.4}px ${h * 0.9}px rgba(207,180,127,.6)`}} />
     {core ? <div style={{position: 'absolute', left: w * 0.18, right: w * 0.18, top: h * 0.3, height: h * 0.4, borderRadius: h, background: 'linear-gradient(90deg, transparent 0%, #FFFFFF 28%, #FFFFFF 72%, transparent 100%)', boxShadow: '0 0 6px 1px rgba(255,255,255,.75)'}} /> : null}
   </div>
 );
@@ -148,7 +148,7 @@ export const Bulb: React.FC<{cx: number; cy: number; r?: number; opacity?: numbe
 /** 步骤下方的小胶囊标签（黑底白边 / 紫底），统一 130×44 26px */
 export const StepPill: React.FC<{cx: number; y: number; text: string; w?: number; active?: boolean; grey?: boolean; opacity?: number}> = ({cx, y, text, w = 130, active = false, grey = false, opacity = 1}) => (
   <div style={{...abs(0, 0, 1280, 720), opacity}}>
-    <Box x={cx - w / 2} y={y} w={w} h={44} r={22} fill={active ? PURPLE : '#000'} stroke={grey ? GREY : WHITE} sw={2} style={{filter: active ? 'drop-shadow(0 0 2px rgba(200,180,255,.6))' : undefined}}>
+    <Box x={cx - w / 2} y={y} w={w} h={44} r={22} fill={active ? PURPLE : '#000'} stroke={grey ? GREY : WHITE} sw={2} style={{filter: active ? 'drop-shadow(0 0 2px rgba(227,205,163,.6))' : undefined}}>
       <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_HEAVY, fontWeight: 700, fontSize: 26, color: grey ? GREY : WHITE, lineHeight: 1, transform: 'translateY(-2px)', whiteSpace: 'nowrap'}}>{text}</div>
     </Box>
   </div>

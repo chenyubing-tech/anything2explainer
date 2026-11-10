@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, clamp01} from '../../common';
 import {CText, Pill, PURPLE, PURPLE_LIGHT, WHITE, fadeIn, slideUp, SoftIn} from '../../ui';
 import {FR, Castle, ellipsePerim} from './shared';
@@ -14,7 +15,7 @@ const MOAT = {cx: 640, cy: 428, rxo: 335, ryo: 78, rxi: 245, ryi: 44};
 const PERIM_O = ellipsePerim(MOAT.rxo, MOAT.ryo), PERIM_I = ellipsePerim(MOAT.rxi, MOAT.ryi);
 
 export const SC44: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC44', useCurrentFrame());
   const nC = N - 8061;
   const castleDy = slideUp(nC, 170); // QC v1：Δ300→170，起点城堡底 y≈590 不穿字幕带
   const mp = clamp01((N - 8071) / 20);
@@ -57,10 +58,10 @@ export const SC44: React.FC = () => {
         </svg>
       ) : null}
       <SoftIn N={N} f0={8069}>
-        <Pill x={CX - 85} y={122} w={170} h={46} fill={PURPLE} text="知识库" fontSize={28} weight={800} letterSpacing={3} sw={2.5} glow="0 0 14px 3px rgba(102,45,248,.35)" />
+        <Pill x={CX - 85} y={122} w={170} h={46} fill={PURPLE} text="知识库" fontSize={28} weight={800} letterSpacing={3} sw={2.5} glow="0 0 14px 3px rgba(207,180,127,.35)" />
       </SoftIn>
       <GlitchIn N={N} f0={8077} rgbSplit={6}>
-        <CText cx={640} cy={574} size={60} weight={900} scaleX={0.85} letterSpacing={2} style={{WebkitTextStroke: `2.5px ${PURPLE}`, paintOrder: 'stroke fill'}} shadow="0 0 18px rgba(102,45,248,.7)">
+        <CText cx={640} cy={574} size={60} weight={900} scaleX={0.85} letterSpacing={2} style={{WebkitTextStroke: `2.5px ${PURPLE}`, paintOrder: 'stroke fill'}} shadow="0 0 18px rgba(207,180,127,.7)">
           知识库 = 护城河
         </CText>
       </GlitchIn>

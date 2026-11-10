@@ -45,7 +45,7 @@ const ORDER = NODES.map((_, i) => i).sort((a, b) => rnd(a, 36) - rnd(b, 36));
 const RANK = NODES.map((_, i) => ORDER.indexOf(i));
 
 export const SC36: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC36', useCurrentFrame());
   const ex = exitOut(N - T_EXIT, 14);
   const nodeK = (i: number) => scaleIn(N - (T_NODES + RANK[i]), 10);
   const edgeP = (e: number) => slideIn(N - (T_EDGES + e), 14, 2);
@@ -74,7 +74,7 @@ export const SC36: React.FC = () => {
           if (n < 0) return null;
           const s = scaleIn(n);
           return (
-            <div key={i} style={{...abs(c.cx - COMM_R, c.cy - COMM_R, 2 * COMM_R, 2 * COMM_R), borderRadius: '50%', transform: `scale(${s.toFixed(3)})`, opacity: fadeIn(n, 8), background: 'radial-gradient(circle, rgba(102,48,248,.34) 0%, rgba(102,48,248,.16) 55%, rgba(102,48,248,0) 74%)', border: '1.5px solid rgba(161,117,241,.6)', boxSizing: 'border-box'}} />
+            <div key={i} style={{...abs(c.cx - COMM_R, c.cy - COMM_R, 2 * COMM_R, 2 * COMM_R), borderRadius: '50%', transform: `scale(${s.toFixed(3)})`, opacity: fadeIn(n, 8), background: 'radial-gradient(circle, rgba(207,180,127,.34) 0%, rgba(207,180,127,.16) 55%, rgba(207,180,127,0) 74%)', border: '1.5px solid rgba(227,205,163,.6)', boxSizing: 'border-box'}} />
           );
         })}
         {/* 图谱 + 箭头 + 连线 */}
@@ -117,7 +117,7 @@ export const SC36: React.FC = () => {
         {/* 社区摘要卡 */}
         {[0, 1, 2].map((i) => (
           <SoftIn key={i} N={N} f0={T_CARDS + 4 * i}>
-            <Box x={CARD.x} y={CARD.cy[i] - CARD.h / 2} w={CARD.w} h={CARD.h} r={8} sw={2} stroke={PURPLE_LIGHT} glow="0 0 14px 2px rgba(102,45,248,.35)">
+            <Box x={CARD.x} y={CARD.cy[i] - CARD.h / 2} w={CARD.w} h={CARD.h} r={8} sw={2} stroke={PURPLE_LIGHT} glow="0 0 14px 2px rgba(207,180,127,.35)">
               <div style={{position: 'absolute', left: 12, top: 10, fontFamily: FONT_HEAVY, fontSize: 19, fontWeight: 700, color: WHITE, lineHeight: 1, whiteSpace: 'nowrap'}}>社区摘要 {['①', '②', '③'][i]}</div>
               <div style={{position: 'absolute', left: 12, top: 38, width: 100, height: 3, background: GREY_LIGHT, opacity: 0.85}} />
               <div style={{position: 'absolute', left: 12, top: 48, width: 66, height: 3, background: GREY_LIGHT, opacity: 0.85}} />
@@ -130,7 +130,7 @@ export const SC36: React.FC = () => {
         ) : null}
         <SoftIn N={N} f0={T_GLOBAL}>
           <div style={{...abs(Q.cx - 75, 450, 150, 40), transform: `scale(${emphasisPulse(N - (T_GLOBAL + 4), {peak: 1.11}).toFixed(4)})`, transformOrigin: '50% 50%'}}>
-            <Pill x={0} y={0} w={150} h={40} fill={PURPLE} sw={2} text="全局问题" fontSize={22} weight={700} textDy={-2} glow="0 0 24px 8px rgba(102,45,248,.6)" />
+            <Pill x={0} y={0} w={150} h={40} fill={PURPLE} sw={2} text="全局问题" fontSize={22} weight={700} textDy={-2} glow="0 0 24px 8px rgba(207,180,127,.6)" />
           </div>
         </SoftIn>
       </div>

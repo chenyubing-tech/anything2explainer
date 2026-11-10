@@ -14,7 +14,7 @@ export const T_PIPE = 5748; // 节拍 5750 −2
 const T_Q = 5778; // 节拍 5780 −2
 
 export const SC31: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC31', useCurrentFrame());
   return (
     <AbsoluteFill style={{pointerEvents: 'none'}}>
       {PIPE_NAMES.map((_, i) => (

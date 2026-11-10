@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, clamp01, FONT_HEAVY, FONT_ORB, FONT_SERIF, powOutRemain} from '../../common';
 import {Box, Pill, TechText, CText, PURPLE, PURPLE_LIGHT, ORANGE, GREY, WHITE, GLOW_PURPLE_S, slideUp, fadeIn, fadeOut, exitAccel, stagger, SoftIn} from '../../ui';
 import {bez2, inOut, mixHex, mixK} from './g5util';
@@ -49,7 +50,7 @@ const Tok: React.FC<{i: number; N: number; children: React.ReactNode; style?: Re
 };
 
 export const SC25: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC25', useCurrentFrame());
   // 离场（4664 起 12 帧下摇 + 线性淡出）
   const ne = N - T_EXIT;
   const op = ne > 0 ? fadeOut(ne, 12) : 1;
@@ -104,10 +105,10 @@ export const SC25: React.FC = () => {
         // 到位后灰→紫边 11 帧
         const km = nf >= 20 && !dropped ? mixK(nf - 20) : 0;
         const stroke = km > 0 ? mixHex('#FFFFFF', PURPLE_LIGHT, km) : WHITE;
-        const glow = km > 0.5 ? '0 0 12px 2px rgba(161,117,241,.45)' : undefined;
+        const glow = km > 0.5 ? '0 0 12px 2px rgba(227,205,163,.45)' : undefined;
         return (
           <div key={i} style={{position: 'absolute', left: 0, top: entryDy, width: 1280, height: 720, opacity: op}}>
-            <Card cx={px} cy={py} rank={km > 0 ? c.slot + 1 : c.rank} text={c.text} accent={accent} stroke={stroke} glow={glow} hot={c.hot} rankColor={km > 0 ? mixHex(accent === ORANGE ? '#F05F41' : '#A175F1', '#A175F1', km) : undefined} />
+            <Card cx={px} cy={py} rank={km > 0 ? c.slot + 1 : c.rank} text={c.text} accent={accent} stroke={stroke} glow={glow} hot={c.hot} rankColor={km > 0 ? mixHex(accent === ORANGE ? '#F05F41' : '#E3CDA3', '#E3CDA3', km) : undefined} />
           </div>
         );
       })}

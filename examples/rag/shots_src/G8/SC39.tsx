@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {clamp01, easeOutCubic, emphasisPulse, FONT_ORB, FONT_WIDE} from '../../common';
 import {CText, Pill, TechText, LLMIcon, PURPLE, ORANGE, GREY, TEXT_GLOW, PILL_SHADOW, fadeIn, scaleIn, slideUp, SoftIn} from '../../ui';
 import {FR, fmtInt, Anchor, exitOut} from './shared';
@@ -12,7 +13,7 @@ const F0 = FR.SC39.from, F1 = FR.SC39.to;
 const CNT0 = 7189, CNT_LEN = 26;
 
 export const SC39: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC39', useCurrentFrame());
   const nIcon = N - 7176;
   const nc = N - CNT0;
   const val = nc < 0 ? 0 : Math.round(1e6 * easeOutCubic(clamp01(nc / CNT_LEN)));

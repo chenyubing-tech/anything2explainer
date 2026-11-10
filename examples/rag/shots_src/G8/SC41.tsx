@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {clamp01, easeInOutPow, rnd, powOutRemain} from '../../common';
 import {Svg, Cross, CText, Pill, PURPLE, PURPLE_LIGHT, ORANGE, WHITE, GLOW_PURPLE_S, fadeIn, fadeOut, scaleIn, exitAccel, SoftIn} from '../../ui';
 import {FR, RulerPart, WindowPart, WIN, IconPill, mix} from './shared';
@@ -25,7 +26,7 @@ const LP = {w: 340, h: 90, cx: 435, cy: 450}; // 左胶囊终位中心
 const RP = {w: 380, h: 90, cx: 865, cy: 450};
 
 export const SC41: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC41', useCurrentFrame());
   const eio = easeInOutPow(2.5);
   const exO = fadeOut(N - (F1 - 9), 10);
   // 刻度尺组离场（7641）
@@ -71,12 +72,12 @@ export const SC41: React.FC = () => {
       {N >= 7641 ? <IconPill x={lx - LP.w / 2} y={LP.cy - LP.h / 2} w={LP.w} h={LP.h} fill={PURPLE} text="RAG · 找" icon="search" glow={GLOW_PURPLE_S} /> : null}
       {N >= 7675 ? <IconPill x={rx - RP.w / 2} y={RP.cy - RP.h / 2} w={RP.w} h={RP.h} text="长上下文 · 读" icon="book" /> : null}
       {N >= 7675 ? (
-        <CText cx={640} cy={450} size={64} weight={900} color={mix(WHITE, PURPLE_LIGHT, plusK)} opacity={fadeIn(N - 7675, 10)} shadow={plusK > 0 ? `0 0 ${Math.round(22 * plusK)}px rgba(102,45,248,${(0.9 * plusK).toFixed(2)}), 0 0 ${Math.round(48 * plusK)}px rgba(102,45,248,${(0.5 * plusK).toFixed(2)})` : undefined} dy={-4}>
+        <CText cx={640} cy={450} size={64} weight={900} color={mix(WHITE, PURPLE_LIGHT, plusK)} opacity={fadeIn(N - 7675, 10)} shadow={plusK > 0 ? `0 0 ${Math.round(22 * plusK)}px rgba(207,180,127,${(0.9 * plusK).toFixed(2)}), 0 0 ${Math.round(48 * plusK)}px rgba(207,180,127,${(0.5 * plusK).toFixed(2)})` : undefined} dy={-4}>
           +
         </CText>
       ) : null}
       <SoftIn N={N} f0={7711}>
-        <Pill x={560} y={537} w={160} h={46} fill={PURPLE} text="搭档" fontSize={28} weight={800} letterSpacing={4} sw={2.5} glow="0 0 14px 3px rgba(102,45,248,.35)" />
+        <Pill x={560} y={537} w={160} h={46} fill={PURPLE} text="搭档" fontSize={28} weight={800} letterSpacing={4} sw={2.5} glow="0 0 14px 3px rgba(207,180,127,.35)" />
       </SoftIn>
     </div>
   );

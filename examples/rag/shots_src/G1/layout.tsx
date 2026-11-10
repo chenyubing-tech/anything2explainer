@@ -52,7 +52,7 @@ export const LLMBlock: React.FC<{N: number; accent?: string; label?: string; hal
   const s = scaleIn(n, 21);
   // 柔光脉冲：入场完成后 100–134 帧一次呼吸（外圈 halo 透明度 0→1→0.35 常亮）
   const ph = N < 100 ? 0 : N < 114 ? clamp01((N - 100) / 14) : N < 118 ? 1 : 0.35 + 0.65 * clamp01(1 - (N - 118) / 16);
-  const halo = `0 0 ${Math.round(28 + 26 * ph)}px ${Math.round(8 + 10 * ph)}px rgba(102,45,248,${(0.35 + 0.4 * ph).toFixed(2)})`;
+  const halo = `0 0 ${Math.round(28 + 26 * ph)}px ${Math.round(8 + 10 * ph)}px rgba(207,180,127,${(0.35 + 0.4 * ph).toFixed(2)})`;
   const half = LLM.size / 2;
   return (
     <div style={{...abs(0, 0, 1280, 720), transformOrigin: `${LLM.cx}px ${LLM.cy}px`, transform: s < 1 ? `scale(${s.toFixed(3)})` : undefined, opacity: clamp01(0.15 + 1.4 * s)}}>
@@ -89,7 +89,7 @@ export const DashedBox: React.FC<{i: number; N: number}> = ({i, N}) => {
   const badgeOp = fadeIn(n - 12, 8);
   return (
     <div style={{opacity: op}}>
-      <div style={{...abs(x, b.y, BOX_W, BOX_H), boxSizing: 'border-box', border: `2px dashed ${stroke}`, borderRadius: 6, background: 'rgba(0,0,0,0.42)', boxShadow: act > 0 ? `0 0 18px 4px rgba(102,45,248,${(0.45 * act).toFixed(2)})` : undefined}} />
+      <div style={{...abs(x, b.y, BOX_W, BOX_H), boxSizing: 'border-box', border: `2px dashed ${stroke}`, borderRadius: 6, background: 'rgba(0,0,0,0.42)', boxShadow: act > 0 ? `0 0 18px 4px rgba(207,180,127,${(0.45 * act).toFixed(2)})` : undefined}} />
       {/* 编号徽章：框左上角，Orbitron 数字 */}
       <div style={{...abs(x - 17, b.y - 17, 34, 34), boxSizing: 'border-box', borderRadius: 17, background: '#000', border: `2px solid ${stroke}`, opacity: badgeOp}}>
         <CText cx={17} cy={17} size={22} weight={700} family={FONT_ORB} color={mixHex(GREY, WHITE, act)} dy={-1}>

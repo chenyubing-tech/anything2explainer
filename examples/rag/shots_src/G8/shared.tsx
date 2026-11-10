@@ -1,4 +1,5 @@
 import React from 'react';
+import {BASE_RANGES} from '../../timing';
 import {Box, CText, PURPLE, PURPLE_LIGHT, WHITE, GREY, GREY_LIGHT, GLOW_PURPLE_S, TEXT_GLOW, abs, fadeIn, scaleIn, SoftIn} from '../../ui';
 import {GlitchIn, rnd, clamp01, easeOutCubic, easeInOutPow, powOutRemain, FONT_HEAVY, FONT_TECH, FONT_ORB} from '../../common';
 
@@ -12,13 +13,13 @@ export const EntryIn: React.FC<{N: number; f0: number; glitch?: boolean; childre
 
 // ---- 分镜表 G8 帧区间（1 起含端点） ----
 export const FR = {
-  SC38: {from: 6991, to: 7167},
-  SC39: {from: 7168, to: 7301},
-  SC40: {from: 7302, to: 7503},
-  SC41: {from: 7504, to: 7753},
-  SC42: {from: 7754, to: 7869},
-  SC43: {from: 7870, to: 8052},
-  SC44: {from: 8053, to: 8148},
+  SC38: BASE_RANGES.SC38,
+  SC39: BASE_RANGES.SC39,
+  SC40: BASE_RANGES.SC40,
+  SC41: BASE_RANGES.SC41,
+  SC42: BASE_RANGES.SC42,
+  SC43: BASE_RANGES.SC43,
+  SC44: BASE_RANGES.SC44,
 } as const;
 
 // ---- 颜色插值 ----
@@ -52,7 +53,7 @@ export const PageCard: React.FC<{cx: number; cy: number; w?: number; h?: number;
   const ink = mix(GREY_LIGHT, WHITE, activeK);
   return (
     <div style={{...abs(cx - w / 2, cy - h / 2, w, h), opacity}}>
-      <Box x={0} y={0} w={w} h={h} r={6} sw={2.5} stroke={stroke} glow={activeK > 0 ? `0 0 ${Math.round(24 * activeK)}px ${Math.round(8 * activeK)}px rgba(102,45,248,${(0.6 * activeK).toFixed(2)})` : undefined} />
+      <Box x={0} y={0} w={w} h={h} r={6} sw={2.5} stroke={stroke} glow={activeK > 0 ? `0 0 ${Math.round(24 * activeK)}px ${Math.round(8 * activeK)}px rgba(207,180,127,${(0.6 * activeK).toFixed(2)})` : undefined} />
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{position: 'absolute', left: 0, top: 0}}>
         {kind === 'bar' ? (
           <g>
@@ -82,7 +83,7 @@ export const PageCard: React.FC<{cx: number; cy: number; w?: number; h?: number;
 
 /** Embedding 紫盒（沿用推荐片 Embedding 层：紫填充 + 白虚线边 r8） */
 export const EmbedBox: React.FC<{x: number; y: number; w?: number; h?: number; opacity?: number}> = ({x, y, w = 180, h = 62, opacity = 1}) => (
-  <Box x={x} y={y} w={w} h={h} r={8} fill={PURPLE} stroke={WHITE} sw={2.5} dashed opacity={opacity} glow="0 0 14px 3px rgba(102,45,248,.35)">
+  <Box x={x} y={y} w={w} h={h} r={8} fill={PURPLE} stroke={WHITE} sw={2.5} dashed opacity={opacity} glow="0 0 14px 3px rgba(207,180,127,.35)">
     <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_TECH, fontStyle: 'italic', fontWeight: 700, fontSize: 27, color: WHITE, letterSpacing: 1, transform: 'scaleX(0.86)', lineHeight: 1}}>Embedding</div>
   </Box>
 );
@@ -143,7 +144,7 @@ export const RulerPart: React.FC<{N: number; opacity?: number; dy?: number; glit
       <CText cx={RULER.x1} cy={414} size={24} family={FONT_ORB} weight={700} opacity={fadeIn(N - 7330, 8)}>1M</CText>
       {g > 0 ? <div style={{...abs(RULER.kx - 2, RULER.y - lineH, 4, lineH), background: PURPLE_LIGHT, boxShadow: GLOW_PURPLE_S}} /> : null}
       <EntryIn N={N} f0={7377} glitch={glitch}>
-        <CText cx={RULER.kx} cy={282} size={30} family={FONT_TECH} weight={700} color={PURPLE_LIGHT} italic scaleX={0.86} letterSpacing={1} dy={0} shadow="0 0 8px rgba(120,70,240,.7)">200K tokens</CText>
+        <CText cx={RULER.kx} cy={282} size={30} family={FONT_TECH} weight={700} color={PURPLE_LIGHT} italic scaleX={0.86} letterSpacing={1} dy={0} shadow="0 0 8px rgba(207,180,127,.7)">200K tokens</CText>
       </EntryIn>
       <EntryIn N={N} f0={7428} glitch={glitch}>
         <CText cx={RULER.kx} cy={448} size={40} weight={900} scaleX={0.9} shadow={TEXT_GLOW} style={{fontVariantNumeric: 'tabular-nums'}}>{`≈ ${pages} 页`}</CText>

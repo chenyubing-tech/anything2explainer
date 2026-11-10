@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, clamp01, easeOutCubic, emphasisPulse, rnd} from '../../common';
 import {Svg, LineArrow, TechText, CText, Pill, MonoText, PURPLE_LIGHT, GREY, WHITE, GLOW_PURPLE_S, abs, fadeIn, slideUp, SoftIn} from '../../ui';
 import {FR, PageCard, EmbedBox, mix, Anchor, exitOut} from './shared';
@@ -18,7 +19,7 @@ const ROWS = 6, ROW_Y0 = 347, ROW_H = 30;
 const FLY0 = 7112, HIT = FLY0 + 16;
 
 export const SC38: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC38', useCurrentFrame());
   const ex = exitOut(N - (F1 - 14), 14);
   const hitK = clamp01((N - HIT) / 11);
   const pulse = emphasisPulse(N - HIT - 2, {peak: 1.1});
@@ -67,7 +68,7 @@ export const SC38: React.FC = () => {
         }),
       )}
       <SoftIn N={N} f0={FLY0 - 6}>
-        <Pill x={qx - 150} y={qy - 22} w={300} h={44} text="Q3 营收趋势图在哪？" fontSize={24} weight={700} sw={2} glow={hitK > 0 ? `0 0 16px 4px rgba(102,45,248,${(0.45 * hitK).toFixed(2)})` : undefined} stroke={mix(WHITE, PURPLE_LIGHT, hitK)} />
+        <Pill x={qx - 150} y={qy - 22} w={300} h={44} text="Q3 营收趋势图在哪？" fontSize={24} weight={700} sw={2} glow={hitK > 0 ? `0 0 16px 4px rgba(207,180,127,${(0.45 * hitK).toFixed(2)})` : undefined} stroke={mix(WHITE, PURPLE_LIGHT, hitK)} />
       </SoftIn>
     </div>
   );

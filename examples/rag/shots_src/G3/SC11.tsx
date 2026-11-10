@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {easeInOutPow, emphasisPulse, slideIn, clamp01} from '../../common';
 import {Pill, CText, TechText, DocIcon, DBIcon, ArrowH, PURPLE, PURPLE_LIGHT, GREY, GREY_LIGHT, ORANGE, abs, scaleIn, fadeOut, exitAccel, SoftIn} from '../../ui';
 import {BookIcon, Dial, mixColor} from './g3ui';
@@ -14,7 +15,7 @@ const EASE = easeInOutPow(2.5);
 const BOOK = {cx: 640, cy: 410};
 
 export const SC11: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC11', useCurrentFrame());
   // 离场
   const ex = N - 1646;
   const gOp = ex > 0 ? fadeOut(ex, 9) : 1;
@@ -41,7 +42,7 @@ export const SC11: React.FC = () => {
       {/* 书上方胶囊：手册 → 知识库 */}
       <SoftIn N={N} f0={1538}>
         <div style={{...abs(555, 228, 170, 50), transform: `scaleX(${flipX.toFixed(4)})`}}>
-          <Pill x={0} y={0} w={170} h={50} fill={isKB ? PURPLE : '#000'} sw={2.5} text={isKB ? '知识库' : '手册'} fontSize={28} weight={700} textDy={-2} glow={isKB ? '0 0 18px 4px rgba(102,45,248,.45)' : undefined} />
+          <Pill x={0} y={0} w={170} h={50} fill={isKB ? PURPLE : '#000'} sw={2.5} text={isKB ? '知识库' : '手册'} fontSize={28} weight={700} textDy={-2} glow={isKB ? '0 0 18px 4px rgba(207,180,127,.45)' : undefined} />
         </div>
       </SoftIn>
       <SoftIn N={N} f0={1614}>

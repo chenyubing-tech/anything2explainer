@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {FONT_HEAVY, powOutRemain, clamp01} from '../../common';
 import {Svg, LineArrow, CText, Pill, PURPLE, GREY, GREY_MID, WHITE, ORANGE, fadeIn, scaleIn, abs} from '../../ui';
 import {Scene1Frame, LabelTab, BOXES, pastOpacity, mixHex} from './layout';
@@ -88,7 +89,7 @@ export const llmHaloAt = (N: number, f0: number) => {
 };
 
 export const SC02: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC02', useCurrentFrame());
   return (
     <div style={abs(0, 0, 1280, 720)}>
       <Scene1Frame N={N} accent={llmAccentAt(N, 275)} haloK={llmHaloAt(N, 275)} />

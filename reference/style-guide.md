@@ -1,6 +1,6 @@
 # 风格指南（视觉体系）
 
-默认主题为**深海黑金**：藏蓝黑背景、灰白结构与正文、沙金当前重点、蓝灰对照数据。金色是局部强调，避免铺满画面；默认哑光，普通标题/HUD/表格不加霓虹光晕。字体、字幕和布局沿用模板。`examples/rag/` 保留旧版黑紫样片，仅参考构图、节拍和动画，不照搬其配色或强光。
+默认主题为**深海黑金**：藏蓝黑背景、灰白结构与正文、沙金当前重点、蓝灰对照数据。金色是局部强调，避免铺满画面；默认哑光，普通标题/HUD/表格不加霓虹光晕。字体、字幕和布局沿用模板。`examples/rag/` 的镜头源码统一使用主题 token，构图、节拍和动画可直接作为样片参考。
 
 ## 1. 画布与安全区（1280×720@30fps）
 | 区域 | 像素 | 说明 |
@@ -36,6 +36,21 @@
 为兼容旧镜头，`PURPLE*` / `GLOW_PURPLE*` / `glowPurple*` 名称仍可导入，但实际值已映射为沙金；`ORANGE` / `GLOW_ORANGE` 映射为蓝灰。新代码使用 GOLD / BLUE_GREY。禁止从旧样片复制写死的紫色色值、紫色渐变或品红残影；RGB 残影若显式启用也只用沙金和蓝灰。
 
 校样：模板提供无音频 `ThemePreview` 合成，复用正式图元检查 HUD、金底深字、曲线与表格。运行 `npx remotion still src/index.ts ThemePreview stills/deep-sea-black-gold.png --frame=100`，或在 Studio 中选择 ThemePreview。
+
+## 2.1 镜头时间轴同步
+
+镜头源码内部的节拍继续以 `BASE_RANGES` 为基准，Sequence 区间从 `CURRENT_RANGES` 读取。旁白或 TTS 重排后，先生成带实际帧号的 `examples/rag/分镜表.md`，再同步当前区间：
+
+```powershell
+python template/scripts/sync_shot_timing.py `
+  --storyboard examples/rag/分镜表.md `
+  --timing template/src/timing.ts
+python template/scripts/sync_shot_timing.py `
+  --storyboard examples/rag/分镜表.md `
+  --timing examples/rag/timing.ts
+```
+
+这样只需更新分镜表和 `CURRENT_RANGES`，不必手动改动 44 个镜头里的绝对节拍帧。
 
 ## 3. 字体（`public/fonts`，全部 OFL；`common/lib.tsx` 的 `Fonts` 在 Main 挂一次）
 | 角色 | 族 | 字号/字重/变形 |

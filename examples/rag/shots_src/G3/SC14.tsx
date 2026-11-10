@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {slideIn, rnd, clamp01, FONT_ORB} from '../../common';
 import {Box, Pill, CText, TechText, ChunkCard, Svg, Check, Cross, ArrowH, PURPLE, PURPLE_LIGHT, ORANGE, GREY_LIGHT, abs, scaleIn, slideUp, fadeIn, fadeOut, exitAccel, SoftIn} from '../../ui';
 import {Magnifier} from './g3ui';
@@ -15,7 +16,7 @@ const CARD_X = 565, CARD_Y0 = 258, CARD_H = 92, CARD_GAP = 14;
 const PIECES = 14;
 
 export const SC14: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC14', useCurrentFrame());
   const ex = N - 2298;
   const gOp = ex > 0 ? fadeOut(ex, 10) : 1;
   const gDy = ex > 0 ? exitAccel(ex, 0.9) : 0;
@@ -79,7 +80,7 @@ export const SC14: React.FC = () => {
         );
       })}
       <SoftIn N={N} f0={2173}>
-        <Pill x={565} y={196} w={150} h={44} fill={PURPLE} sw={2.5} text="常见做法" fontSize={26} weight={700} glow="0 0 18px 4px rgba(102,45,248,.45)" />
+        <Pill x={565} y={196} w={150} h={44} fill={PURPLE} sw={2.5} text="常见做法" fontSize={26} weight={700} glow="0 0 18px 4px rgba(207,180,127,.45)" />
       </SoftIn>
       <ArrowH x={516} y={310} w={44} h={20} p={slideIn(N - 2177, 12)} />
       {rolling ? (
@@ -101,7 +102,7 @@ export const SC14: React.FC = () => {
         const p = clamp01((N - (2257 + 4 * k)) / 8);
         if (p <= 0) return null;
         const y = CARD_Y0 + CARD_H + k * (CARD_H + CARD_GAP) - 8;
-        return <div key={k} style={{...abs(CARD_X, y, 150 * p, CARD_GAP + 16), boxSizing: 'border-box', background: 'rgba(102,48,248,.45)', border: `1.5px solid ${PURPLE_LIGHT}`, borderRadius: 3}} />;
+        return <div key={k} style={{...abs(CARD_X, y, 150 * p, CARD_GAP + 16), boxSizing: 'border-box', background: 'rgba(207,180,127,.45)', border: `1.5px solid ${PURPLE_LIGHT}`, borderRadius: 3}} />;
       })}
       <SoftIn N={N} f0={2261}>
         <Pill x={735} y={342} w={76} h={30} fill={PURPLE} sw={0} text="重叠" fontSize={22} weight={700} textDy={-1} />

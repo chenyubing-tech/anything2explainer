@@ -45,7 +45,7 @@ export const PipePill: React.FC<{i: number; x: number; cy: number; h?: number; w
     weight={700}
     textDy={-2}
     opacity={opacity}
-    glow={hl > 0.02 ? `0 0 ${Math.round(24 * hl)}px ${Math.round(8 * hl)}px rgba(102,45,248,${(0.6 * hl).toFixed(3)})` : undefined}
+    glow={hl > 0.02 ? `0 0 ${Math.round(24 * hl)}px ${Math.round(8 * hl)}px rgba(207,180,127,${(0.6 * hl).toFixed(3)})` : undefined}
     style={{filter: 'drop-shadow(0 0 2px rgba(255,255,255,.35))'}}
   />
 );
@@ -67,14 +67,14 @@ export const DashFrame: React.FC<{x: number; y: number; w: number; h: number; co
 
 /** 框角标签（紫 / 橙实心小胶囊） */
 export const CornerTag: React.FC<{x: number; y: number; text: string; fill: string; w?: number; h?: number; opacity?: number}> = ({x, y, text, fill, w = 156, h = 40, opacity = 1}) => (
-  <Pill x={x} y={y} w={w} h={h} fill={fill} stroke={WHITE} sw={2} text={text} fontSize={26} weight={700} textDy={-2} opacity={opacity} style={{filter: 'drop-shadow(0 0 2px rgba(200,180,255,.6))'}} />
+  <Pill x={x} y={y} w={w} h={h} fill={fill} stroke={WHITE} sw={2} text={text} fontSize={26} weight={700} textDy={-2} opacity={opacity} style={{filter: 'drop-shadow(0 0 2px rgba(227,205,163,.6))'}} />
 );
 
 /** 指标 Pill：英文（Exo 2 紫斜体）+ 中文（Noto 白）；dim → 灰边灰字（非重点） */
 export const MetricPill: React.FC<{cx: number; cy: number; w: number; h?: number; en: string; zh?: string; opacity?: number; dim?: boolean; enSize?: number; zhSize?: number}> = ({cx, cy, w, h = 56, en, zh, opacity = 1, dim = false, enSize = 27, zhSize = 24}) => (
   <Box x={cx - w / 2} y={cy - h / 2} w={w} h={h} r={h / 2} stroke={dim ? GREY : WHITE} sw={2} opacity={opacity} style={{filter: dim ? undefined : 'drop-shadow(0 0 2px rgba(255,255,255,.3))'}}>
     <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, whiteSpace: 'nowrap', lineHeight: 1, transform: 'translateY(-1px)'}}>
-      <span style={{display: 'inline-block', fontFamily: FONT_TECH, fontStyle: 'italic', fontWeight: 700, fontSize: enSize, letterSpacing: 1, color: dim ? GREY : PURPLE_TECH, transform: 'scaleX(0.86)', textShadow: dim ? undefined : '0 0 6px rgba(80,30,200,.7)'}}>{en}</span>
+      <span style={{display: 'inline-block', fontFamily: FONT_TECH, fontStyle: 'italic', fontWeight: 700, fontSize: enSize, letterSpacing: 1, color: dim ? GREY : PURPLE_TECH, transform: 'scaleX(0.86)', textShadow: dim ? undefined : '0 0 6px rgba(125,102,63,.7)'}}>{en}</span>
       {zh ? <span style={{fontFamily: FONT_HEAVY, fontWeight: 600, fontSize: zhSize, color: dim ? GREY : WHITE}}>{zh}</span> : null}
     </div>
   </Box>
@@ -87,7 +87,7 @@ export const QMark: React.FC<{N: number; f0: number; cx?: number; cy?: number; o
   const s = scaleIn(n) * emphasisPulse(n - 22, {peak: 1.11});
   return (
     <div style={{...abs(cx - 100, cy - 100 + dy, 200, 200), opacity: opacity * fadeIn(n, 6), transform: `scale(${s.toFixed(4)})`, transformOrigin: '50% 50%'}}>
-      <CText cx={100} cy={100} size={110} weight={800} family={FONT_ORB} color={PURPLE} dy={0} shadow="0 0 26px rgba(102,45,248,.75), 0 0 6px rgba(160,120,255,.6)">
+      <CText cx={100} cy={100} size={110} weight={800} family={FONT_ORB} color={PURPLE} dy={0} shadow="0 0 26px rgba(207,180,127,.75), 0 0 6px rgba(227,205,163,.6)">
         ?
       </CText>
     </div>
@@ -109,7 +109,7 @@ const Pan: React.FC<{x: number; y: number; hang: number; label: string; k: numbe
         <line x1={x} y1={y} x2={x + dw / 2} y2={top} stroke="#FFF" strokeWidth={2} />
         <path d={`M${x - dw / 2},${top} H${x + dw / 2} L${x + bw / 2 + 4},${top + dep - 4} Q${x + bw / 2},${top + dep} ${x + bw / 2 - 5},${top + dep} H${x - bw / 2 + 5} Q${x - bw / 2},${top + dep} ${x - bw / 2 - 4},${top + dep - 4} Z`} fill="#000" stroke="#FFF" strokeWidth={2} strokeLinejoin="round" />
       </svg>
-      <Pill x={x - 54} y={top - 34} w={108} h={38} fill={k > 0 ? mixHex('#000000', PURPLE, k) : '#000'} stroke={k > 0 ? mixHex(GREY, WHITE, k) : GREY} sw={2} text={label} fontSize={24} weight={700} color={k > 0 ? WHITE : GREY} textDy={-2} glow={k > 0.02 ? `0 0 ${Math.round(30 * k)}px ${Math.round(10 * k)}px rgba(102,45,248,${(0.6 * k).toFixed(3)})` : undefined} />
+      <Pill x={x - 54} y={top - 34} w={108} h={38} fill={k > 0 ? mixHex('#000000', PURPLE, k) : '#000'} stroke={k > 0 ? mixHex(GREY, WHITE, k) : GREY} sw={2} text={label} fontSize={24} weight={700} color={k > 0 ? WHITE : GREY} textDy={-2} glow={k > 0.02 ? `0 0 ${Math.round(30 * k)}px ${Math.round(10 * k)}px rgba(207,180,127,${(0.6 * k).toFixed(3)})` : undefined} />
     </>
   );
 };

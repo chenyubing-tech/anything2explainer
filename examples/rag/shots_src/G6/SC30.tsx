@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, easeInOutPow, clamp01} from '../../common';
 import {CText, Pill, Svg, scaleIn, fadeIn, PURPLE_LIGHT, SoftIn} from '../../ui';
 import {AnswerCard, SourceCard, DrawPath, CITE_ANCHOR} from './ui';
@@ -23,7 +24,7 @@ const SRC = [
 const easeMove = easeInOutPow(2.5);
 
 export const SC30: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC30', useCurrentFrame());
   const opAll = N >= 5695 ? Math.max(0, 1 - (N - 5694) / 3) : 1;
 
   // ---- 答复卡移位（14 帧） ----
@@ -58,7 +59,7 @@ export const SC30: React.FC = () => {
         <Pill x={640 - 125} y={486} w={250} h={36} text="可追溯 · 可核查" fontSize={22} weight={700} sw={2} />
       </SoftIn>
       <GlitchIn N={N} f0={B_VALUE + 2}>
-        <CText cx={640} cy={561} size={46} weight={900} scaleX={0.85} letterSpacing={1} dy={-3} shadow="0 0 14px rgba(102,45,248,.55)">RAG 的价值</CText>
+        <CText cx={640} cy={561} size={46} weight={900} scaleX={0.85} letterSpacing={1} dy={-3} shadow="0 0 14px rgba(207,180,127,.55)">RAG 的价值</CText>
       </GlitchIn>
     </div>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {emphasisPulse, easeOutCubic, easeInOutPow, powOutRemain} from '../../common';
 import {CText, Pill, Svg, LineArrow, Check, Cross, DBIcon, ChunkCard, PURPLE, ORANGE, WHITE, GREY, GREY_LIGHT, GREEN, CORAL, fadeIn, scaleIn, exitAccel, abs, SoftIn} from '../../ui';
 
@@ -36,7 +37,7 @@ const UserIcon: React.FC<{cx: number; cy: number; color?: string; s?: number}> =
 );
 
 export const SC19: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC19', useCurrentFrame());
   const ne = N - EXIT;
   const exitOp = ne <= 0 ? 1 : Math.max(0, 1 - ne / 8);
   const exitDy = exitAccel(ne, 0.5);
@@ -55,7 +56,7 @@ export const SC19: React.FC = () => {
   return (
     <div style={{position: 'absolute', inset: 0, opacity: exitOp, transform: `translateY(${exitDy.toFixed(2)}px)`}}>
       {/* 库后方紫柔光（3432 起） */}
-      {lockGlow > 0 ? <div style={{...abs(DB.cx - DB.w / 2 + 10, DB.cy - DB.h / 2 + 10, DB.w - 20, DB.h - 20), borderRadius: '50% / 30%', boxShadow: '0 0 30px 14px rgba(102,45,248,.55), 0 0 70px 30px rgba(102,45,248,.3)', opacity: lockGlow}} /> : null}
+      {lockGlow > 0 ? <div style={{...abs(DB.cx - DB.w / 2 + 10, DB.cy - DB.h / 2 + 10, DB.w - 20, DB.h - 20), borderRadius: '50% / 30%', boxShadow: '0 0 30px 14px rgba(207,180,127,.55), 0 0 70px 30px rgba(207,180,127,.3)', opacity: lockGlow}} /> : null}
 
       {/* 三张卡（+ 标签）：自左滑入 → 贴标签 → 沿弧线飞入库 */}
       {CARDS.map((c, i) => {

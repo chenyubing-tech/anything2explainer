@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, rnd, kf, emphasisPulse, easeOutCubic, clamp01, FONT_ORB} from '../../common';
 import {CText, TechText, Pill, Svg, LineArrow, Cross, PURPLE, PURPLE_LIGHT, ORANGE, WHITE, GREY, GREY_LINE, GREY_LIGHT, TEXT_GLOW, fadeIn, slideUp, scaleIn, exitAccel, abs, SoftIn} from '../../ui';
 
@@ -88,7 +89,7 @@ const planePts = (L: number) => {
 };
 
 export const SC18: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC18', useCurrentFrame());
   const ne = N - EXIT;
   const exitOp = ne <= 0 ? 1 : Math.max(0, 1 - ne / 8);
   const exitDy = exitAccel(ne, 0.5);

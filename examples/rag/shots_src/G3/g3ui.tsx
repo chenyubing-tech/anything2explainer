@@ -12,7 +12,7 @@ export const mixColor = (a: string, b: string, k: number) => {
   return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`;
 };
 /** 紫柔光随 k 增强 */
-export const purpleGlow = (k: number) => (k <= 0 ? undefined : `0 0 24px 8px rgba(102,45,248,${(0.6 * clamp01(k)).toFixed(3)})`);
+export const purpleGlow = (k: number) => (k <= 0 ? undefined : `0 0 24px 8px rgba(207,180,127,${(0.6 * clamp01(k)).toFixed(3)})`);
 
 /** 左对齐单行文字（y 为行盒顶） */
 export const LText: React.FC<{x: number; y: number; size: number; weight?: number; color?: string; family?: string; opacity?: number; letterSpacing?: number; style?: React.CSSProperties; children: React.ReactNode}> = ({x, y, size, weight = 700, color = WHITE, family = FONT_HEAVY, opacity = 1, letterSpacing = 0, style, children}) => (
@@ -88,7 +88,7 @@ export const DocCard: React.FC<DocCardProps> = ({cx, cy, s = 1, opacity = 1, rev
                 <DocContent reveal={reveal} />
               </div>
               {tagOp && tagOp[i] > 0 ? (
-                <CText cx={314} cy={16} size={22} weight={700} color={WHITE} italic family="'Exo 2 Rag', 'Exo 2 R2', sans-serif" scaleX={0.85} opacity={tagOp[i]} dy={0} shadow="0 0 6px rgba(80,30,200,.7)">
+                <CText cx={314} cy={16} size={22} weight={700} color={WHITE} italic family="'Exo 2 Rag', 'Exo 2 R2', sans-serif" scaleX={0.85} opacity={tagOp[i]} dy={0} shadow="0 0 6px rgba(125,102,63,.7)">
                   chunk
                 </CText>
               ) : null}

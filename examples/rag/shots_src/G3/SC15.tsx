@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {slideIn, emphasisPulse, clamp01, FONT_TECH} from '../../common';
 import {Box, Pill, CText, TechText, ChunkCard, Svg, LineArrow, PURPLE, PURPLE_LIGHT, ORANGE, GREY, GREY_LIGHT, WHITE, abs, scaleIn, slideUp, fadeIn, exitAccel, SoftIn} from '../../ui';
 import {LText, Bar} from './g3ui';
@@ -35,7 +36,7 @@ const ENTRIES: Entry[] = [
 ];
 
 export const SC15: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC15', useCurrentFrame());
   // 离场（2674 起 12 帧，末帧 α=0）
   const ex = N - 2673;
   const gOp = ex <= 0 ? 1 : 1 - Math.pow(clamp01(ex / 12), 1.5);
@@ -60,7 +61,7 @@ export const SC15: React.FC = () => {
       {tn >= 0 ? (
         <div style={{...abs(treeX, TREE.y, TREE.w, TREE.h), opacity: fadeIn(tn, 6)}}>
           <Box x={0} y={0} w={TREE.w} h={TREE.h} r={10} sw={2.5}>
-            {hlOp > 0 ? <div style={{...abs(14, CUTS[0], TREE.w - 32, CUTS[1] - CUTS[0]), background: `rgba(102,48,248,${hlOp.toFixed(3)})`, borderRadius: 4}} /> : null}
+            {hlOp > 0 ? <div style={{...abs(14, CUTS[0], TREE.w - 32, CUTS[1] - CUTS[0]), background: `rgba(207,180,127,${hlOp.toFixed(3)})`, borderRadius: 4}} /> : null}
             {ENTRIES.map((e, i) => {
               const op = fadeIn(N - (2322 + 3 * i), 4);
               if (op <= 0) return null;
@@ -95,14 +96,14 @@ export const SC15: React.FC = () => {
       ) : null}
       {barSy > 0 ? (
         <div style={{...abs(560, 356, 330, 34), transform: `scaleY(${barSy.toFixed(4)})`, transformOrigin: '50% 100%'}}>
-          <Box x={0} y={0} w={330} h={34} r={6} fill={PURPLE} sw={0} glow="0 0 14px 3px rgba(102,45,248,.4)" />
+          <Box x={0} y={0} w={330} h={34} r={6} fill={PURPLE} sw={0} glow="0 0 14px 3px rgba(207,180,127,.4)" />
           <LText x={12} y={6} size={22} weight={700}>
             {PREFIX.slice(0, typed)}
           </LText>
         </div>
       ) : null}
       <SoftIn N={N} f0={2572}>
-        <Pill x={816} y={320} w={86} h={34} fill={PURPLE} sw={2} text="BM25" fontSize={22} weight={700} family={FONT_TECH} textDy={-1} style={{fontStyle: 'italic'}} glow="0 0 14px 3px rgba(102,45,248,.45)" />
+        <Pill x={816} y={320} w={86} h={34} fill={PURPLE} sw={2} text="BM25" fontSize={22} weight={700} family={FONT_TECH} textDy={-1} style={{fontStyle: 'italic'}} glow="0 0 14px 3px rgba(207,180,127,.45)" />
       </SoftIn>
 
       {/* 右：Anthropic 实验 → −49% */}

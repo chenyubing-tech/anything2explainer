@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {clamp01, emphasisPulse, FONT_HEAVY} from '../../common';
 import {Box, DBIcon, DocIcon, Svg, Check, CText, PURPLE, GREY, GREY_LIGHT, WHITE, GREEN, GLOW_PURPLE_S, PILL_SHADOW, slideUp, scaleIn, fadeIn, SoftIn} from '../../ui';
 import {Anchor, mixHex, mixK} from './g5util';
@@ -13,7 +14,7 @@ const T_DB = 3710, T_CHECK = 3716, T_BOX = 3718, T_TYPE = 3741, T_SEND = 3763, T
 const QUESTION = '差旅报销的上限是多少？';
 
 export const SC21: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC21', useCurrentFrame());
   // 知识库 + 绿勾
   const sDb = scaleIn(N - T_DB);
   const pCheck = clamp01((N - T_CHECK) / 12);

@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, rnd, kf, emphasisPulse, easeOutCubic, FONT_ORB, FONT_HEAVY} from '../../common';
 import {CText, TechText, MonoText, Box, ChunkCard, Svg, LineArrow, PURPLE, WHITE, GREY, GREY_LIGHT, GLOW_PURPLE_S, TEXT_GLOW, fadeIn, slideUp, exitAccel, abs} from '../../ui';
 
@@ -24,7 +25,7 @@ const fmt = (v: number) => (v < 0 ? '−' : ' ') + Math.abs(v).toFixed(2);
 const NUMS = Array.from({length: 8}, (_, i) => fmt(rnd(16, i, 3) * 1.8 - 0.9));
 
 export const SC16: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC16', useCurrentFrame());
   // 离场：8 帧线性淡出 + 加速下摇
   const ne = N - EXIT;
   const exitOp = ne <= 0 ? 1 : Math.max(0, 1 - ne / 8);

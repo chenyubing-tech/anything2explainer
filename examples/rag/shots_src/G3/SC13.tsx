@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {easeInOutPow, slideIn, clamp01} from '../../common';
 import {CText, LLMIcon, Svg, LineArrow, GREY, abs, scaleIn, fadeOut, exitAccel, fadeIn, SoftIn} from '../../ui';
 import {DocCard} from './g3ui';
@@ -15,7 +16,7 @@ const F0 = 1891;
 const EASE = easeInOutPow(2.5);
 
 export const SC13: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC13', useCurrentFrame());
   const ex = N - 2044;
   const gOp = ex > 0 ? fadeOut(ex, 10) : 1;
   const gDy = ex > 0 ? exitAccel(ex, 0.9) : 0;

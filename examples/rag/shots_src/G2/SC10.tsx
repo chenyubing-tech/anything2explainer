@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {clamp01, powOutRemain, easeInOutPow} from '../../common';
 import {Pill, Svg, LineArrow, Check, DocIcon, LLMIcon, WHITE, GREY, PURPLE, PURPLE_LIGHT, fadeIn, scaleIn, stagger, SoftIn} from '../../ui';
 import {mixHex, StepPill} from './parts';
@@ -22,7 +23,7 @@ const DOCS_X = [748, 814, 880];
 const FLASH_A = [0.85, 0.55, 0.3, 0.12];
 
 export const SC10: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC10', useCurrentFrame());
   // 末 6 帧（1475–1480）整组淡出到 0：n=1..6 → 0.93 / 0.81 / 0.65 / 0.46 / 0.24 / 0
   const exOp = N <= T_EXIT ? 1 : Math.max(0, 1 - Math.pow((N - T_EXIT) / 6, 1.5));
 

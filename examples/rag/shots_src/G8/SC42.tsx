@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {GlitchIn, clamp01, emphasisPulse} from '../../common';
 import {Svg, LineArrow, CText, LLMIcon, PURPLE_LIGHT, GREY, WHITE, fadeIn, scaleIn, SoftIn} from '../../ui';
 import {ExamPaper, BookIcon} from '../G2/parts';
@@ -17,7 +18,7 @@ const PAPER = {w: 270, h: 342, cx: 400}; // 0.9 × SC06 (300×380)
 const BOOK = {cx: 880, cy: ROW_Y, w: 280, h: 180}; // = SC06 BOOK
 
 export const SC42: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC42', useCurrentFrame());
   const ex = exitOut(N - (F1 - 14), 14);
   const n0 = N - 7762, n1 = N - 7764, n2 = N - 7766;
   const arrowP = clamp01((N - 7802) / 18);
@@ -46,7 +47,7 @@ export const SC42: React.FC = () => {
       </Svg>
       <GlitchIn N={N} f0={7812}>
         <Anchor cx={BOOK.cx} cy={TXT_Y} s={pulse}>
-          <CText cx={BOOK.cx} cy={TXT_Y} size={56} weight={900} scaleX={0.85} color={PURPLE_LIGHT} letterSpacing={2} shadow="0 0 16px rgba(102,45,248,.8), 0 0 40px rgba(102,45,248,.45)">开卷</CText>
+          <CText cx={BOOK.cx} cy={TXT_Y} size={56} weight={900} scaleX={0.85} color={PURPLE_LIGHT} letterSpacing={2} shadow="0 0 16px rgba(207,180,127,.8), 0 0 40px rgba(207,180,127,.45)">开卷</CText>
         </Anchor>
       </GlitchIn>
     </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {FONT_HEAVY, GlitchIn, powOutRemain, clamp01} from '../../common';
 import {Svg, Cross, Box, Pill, TagBlock, GREY, WHITE, ORANGE, CORAL, RED_DEEP, fadeIn, exitFade, abs, SoftIn} from '../../ui';
 import {Scene1Frame, BOXES, mixHex} from './layout';
@@ -82,7 +83,7 @@ export const Box3Content: React.FC<{N: number}> = ({N}) => {
 };
 
 export const SC04: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC04', useCurrentFrame());
   return (
     <div style={{...abs(0, 0, 1280, 720), opacity: exitFade(N - 610)}}>
       <Scene1Frame N={N} />

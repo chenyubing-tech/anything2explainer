@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {clamp01} from '../../common';
 import {Box, Pill, DBIcon, Svg, LineArrow, CText, TechText, PURPLE, GREY, GREY_LIGHT, WHITE, slideUp, scaleIn, fadeIn, fadeOut, exitAccel, SoftIn} from '../../ui';
 import {Anchor, DrawLine, mixHex, mixK} from './g5util';
@@ -37,7 +38,7 @@ const Card: React.FC<{i: number}> = ({i}) => {
 };
 
 export const SC22: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC22', useCurrentFrame());
   // 离场（4045 起 12 帧）
   const ne = N - T_EXIT;
   const op = ne > 0 ? fadeOut(ne, 12) : 1;

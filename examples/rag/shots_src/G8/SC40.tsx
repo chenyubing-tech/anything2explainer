@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {FR, RulerPart, WindowPart} from './shared';
 
 /**
@@ -10,7 +11,7 @@ import {FR, RulerPart, WindowPart} from './shared';
 const F0 = FR.SC40.from;
 
 export const SC40: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC40', useCurrentFrame());
   return (
     <>
       <RulerPart N={N} />

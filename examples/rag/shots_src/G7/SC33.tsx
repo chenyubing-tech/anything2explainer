@@ -39,7 +39,7 @@ const RIGHT_CY = [272, 340, 408, 476];
 const rect = (a: {x: number; y: number; w: number; h: number}, b: {x: number; y: number; w: number; h: number}, m: number) => ({x: lerp(a.x, b.x, m), y: lerp(a.y, b.y, m), w: lerp(a.w, b.w, m), h: lerp(a.h, b.h, m)});
 
 export const SC33: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC33', useCurrentFrame());
   const m = EASE(clamp01((N - T_MORPH) / 14));
   const fL = rect(FRAME_L32, FRAME_L33, m), fR = rect(FRAME_R32, FRAME_R33, m);
   const cy = lerp(PIPE.cy, HEAD_CY, m), h = lerp(PIPE.h, HEAD_H, m);
@@ -49,7 +49,7 @@ export const SC33: React.FC = () => {
   return (
     <AbsoluteFill style={{pointerEvents: 'none'}}>
       <div style={{position: 'absolute', inset: 0, transform: `translateY(${ex.dy.toFixed(2)}px)`, opacity: ex.op}}>
-        <DashFrame {...fL} color={PURPLE_LIGHT} tint="rgba(102,48,248,0.07)" />
+        <DashFrame {...fL} color={PURPLE_LIGHT} tint="rgba(207,180,127,0.07)" />
         <DashFrame {...fR} color={ORANGE} tint="rgba(240,95,65,0.06)" />
         {/* 表头流水线 */}
         {PIPE_NAMES.map((_, i) => {
@@ -83,7 +83,7 @@ export const SC33: React.FC = () => {
         })}
         {/* RAGAS */}
         <GlitchIn N={N} f0={T_RAGAS}>
-          <Pill x={535} y={538} w={210} h={44} fill={PURPLE} sw={2} text="RAGAS" fontSize={28} weight={800} letterSpacing={2} textDy={-1} style={{filter: 'drop-shadow(0 0 2px rgba(200,180,255,.6))'}} glow="0 0 24px 6px rgba(102,45,248,.45)" />
+          <Pill x={535} y={538} w={210} h={44} fill={PURPLE} sw={2} text="RAGAS" fontSize={28} weight={800} letterSpacing={2} textDy={-1} style={{filter: 'drop-shadow(0 0 2px rgba(227,205,163,.6))'}} glow="0 0 24px 6px rgba(207,180,127,.45)" />
         </GlitchIn>
         {/* 灰小字全称：非重点，SoftIn（闪烁整改：本镜头 glitch 只给 RAGAS Pill） */}
         <SoftIn N={N} f0={T_RAGAS}>

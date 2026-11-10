@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {clamp01, easeOutCubic, FONT_HEAVY, FONT_ORB, powOutRemain} from '../../common';
 import {Box, Svg, Cross, CText, ORANGE, CORAL, GREY, GREY_LIGHT, WHITE, PILL_SHADOW, slideUp, fadeIn, fadeOut, exitAccel, stagger, SoftIn} from '../../ui';
 import {hlW} from './g5util';
@@ -34,7 +35,7 @@ const ResultCard: React.FC<{cx: number; title: string; dim?: boolean; children?:
 };
 
 export const SC24: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC24', useCurrentFrame());
   const ne = N - T_EXIT;
   const op = ne > 0 ? fadeOut(ne, 12) : 1;
   const dy = ne > 0 ? exitAccel(ne, 0.6) : 0;

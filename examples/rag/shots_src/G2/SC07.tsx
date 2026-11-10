@@ -1,5 +1,6 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
+import {frameAt} from '../../timing';
 import {clamp01, powOutRemain} from '../../common';
 import {Svg, LineArrow, DocIcon, WHITE, PURPLE_LIGHT, fadeIn, scaleIn, stagger, SoftIn} from '../../ui';
 import {BookIcon, Bubble, StepPill} from './parts';
@@ -23,7 +24,7 @@ const Q = {w: 290, h: 56, yStart: 150, yEnd: 258};
 const ANS = {x: 872, y: 328, w: 328, h: 104};
 
 export const SC07: React.FC = () => {
-  const N = useCurrentFrame() + F0;
+  const N = frameAt('SC07', useCurrentFrame());
   const arr1 = clamp01((N - T_ARR1) / 16);
   const bn = N - T_BOOK;
   const bookS = bn < 0 ? 0 : 0.2 + 0.8 * scaleIn(bn, 21);
