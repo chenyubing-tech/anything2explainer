@@ -32,8 +32,8 @@
 - **主角与尺寸**：每镜头一个主角，高度 ≥170px 或大字 ≥96px，在第 1–2 个节拍入场；三档尺寸（主角 ≥170 / 配角 60–110 / 标签 22–30）；内容区最大物体 <110px 持续 >45 帧是缺陷。时间轴 / 公式 / 表格这类细小题材必须配主角（大数字、放大的当前项）。
 - **光跟主角**：主角以金色描边、尺寸和对比突出；`GLOW_GOLD` / `HeroGlow` / `HaloRing` 仅按需使用低强度微光；胶囊、流程轨、标签、表格默认不发光，当前重点 ≤1 处 `GLOW_GOLD_S`；离场先灭光再淡出。
 - **高光时刻**：分镜表「全局约束 §高光时刻清单」里的镜头按 composition-and-light.md §3 对应类型编排，≥90 帧；不要用「胶囊 + 图标 + 一行字」应付。**三轮扫光开场（`LightSweep` → `StageLine` → `GhostText` → 白闪 + `GlitchIn`）只给「扫光白名单」里的镜头（全片 ≤2 处）**；论点 / 大数字 / 象征物型用各自变体（大字 `GlitchIn`、`BigNumber`、`HaloRing`），不加扫光、舞台光线、幽灵轮廓——不在名单里就别 import `LightSweep`。
-- **背景只有幕底**（星点或点阵波）：不撒小图标做氛围；表现「多」用 ≥6px 方点阵列，按节拍点亮。
-- **纵深**：空间 / 层级 / 索引用 `TiltPlane` 叠层，筛选用 `Trap`，旋转只给齿轮表盘转盘。
+- **旧平面 MG 背景**用幕底（星点或点阵波）；新空间场景可使用解释对象所需的几何、层级与环境。不撒无关小图标；数量感按语义选择阵列或实际空间排布。
+- **纵深**：旧平面模式可用 `TiltPlane` 叠层与 `Trap`；新场景按 `spatial-motion-direction.md` 选择真实三维穿行、几何演变或 H3 运镜。为展示结构和内外关系可以旋转，不限于齿轮表盘；有解释目的，不原地空转。
 - **持续动作**（composition-and-light.md §7）：每个字幕块的动词有持续到下一拍的动作；入场后不许完全静止 >3 s；**不为凑指标给静止的物体加漂浮 / 飘动 / 呼吸**，找不到动词动作就让它静着；没有其它运镜的镜头可加 1.0→1.05 慢推（内容留在 x 89–1191 / y 122–607）。
 - **落位停留**（composition-and-light.md §7）：按分镜表「停留：…」做——末拍元素落位（最后一个入场 / 运镜结束）后停 ≥30 帧（目标 30–45）再开始离场，稳定期内不新增元素、不运镜；末拍余量不够时先把末拍元素前挂到上一块，还不够就报主会话（加 `## gap` 要重排帧号，不要自己改时间轴）。完工前 `python3 scripts/motion_check.py <Gn>`：每镜头最长静止 ≤3 s、末拍稳定期 ≥30 帧（成片复测为判据），数字写进 BUILD_NOTES。
 - **共用小工具必须用共用层的**：`softOp / firstOp / exitOp / glowOffK / mix / mixHex / glowPurple(k) / glowPurpleS(k)`（ui.tsx）、`GlowBlob / Vignette`（fx.tsx）；首帧入场用 `firstOp`（`fadeIn(0)=0` 会空一帧），硬切前 `exitOp`，带光元素先 `glowOffK` 再淡出。
@@ -50,7 +50,7 @@ H3 场景按 `generated-video-direction.md` 设计；纯代码镜头的幕底限
 
 ## 4. 性能红线（违反会让整片渲染慢 10–50 倍）
 - 禁 `feConvolveMatrix`；`filter: blur()`/feGaussianBlur σ≥1（σ<0.8 在 Chromium 中无效）；SVG filter 加 `colorInterpolationFilters="sRGB"`。
-- 单帧 DOM 节点 ≤ 600、SVG filter 实例 ≤ 6、OffthreadVideo ≤ 1。粒子/网格用纯函数按 N 生成，不要每帧 new 大数组以外的东西。
+- 旧平面镜头预算：单帧 DOM 节点 ≤600、SVG filter 实例 ≤6、常态 OffthreadVideo ≤1；新场景受控边界可能临时叠加相邻媒体。三维几何/纹理/渲染调用另按真实测渲检查，不用二维预算禁止三维或证明其性能合格。粒子、网格、相机和模型变化按帧驱动，随机种子固定。
 - 完工前跑 30 帧测渲测 fps（见 §6），低于 3 fps 要找原因。
 
 ## 5. 自检（必须做，写进 BUILD_NOTES）
@@ -77,3 +77,5 @@ H3 场景按 `generated-video-direction.md` 设计；纯代码镜头的幕底限
 ## 新混合场景模式
 
 图片、视频和代码共同表达时先读 `scene-composition.md`。新模式使用一个 `BoundarySpec` 协调双侧，不叠加旧 FootageTrack；`sceneFromShot`/`sceneFromFootage` 用于显式迁移。编写每个图层的主角、视口、order 和关键帧；外部素材真实文件须预检，不能只写路径。每场景可包含多个节拍和多次镜头运动，每节拍一个主导运动；本文件旧的“每镜头 ≤1 次运镜”仅针对旧模式。
+
+空间与变形场景另读 `spatial-motion-direction.md`，按分镜列出实际几何、相机路线、跨媒体身份锚点、共享参数与交接帧。依赖和素材在真正实施时核对；BUILD_NOTES 区分计划、已实现和待验证，不能把 2.5D 倾斜、叠化或 H3 计划写成真实 3D / morph 已完成。

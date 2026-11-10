@@ -2,6 +2,8 @@
 
 H3 是主动创作画面的手段。先想清楚这句话怎样拍更有说服力，再选择代码、生成视频或真实资料；不必等搜索不到素材才生成，也不把重复播放同一段素材作为增加生成视频的目标。
 
+用户优先偏好复杂空间穿行、跨媒体主体变形与代码图形 3D 演变，按 `spatial-motion-direction.md` 设计 H3 的相机路线、主体动作和交接帧。H3 承担原创运动与空间创作，不只在代码镜头之间插一段背景。当前无工具时记待生成，不把该方向写成已有实现。
+
 ## 画面分工
 
 | 表达目的 | 首选画面 | 组合方式 |
@@ -17,11 +19,11 @@ H3 是主动创作画面的手段。先想清楚这句话怎样拍更有说服�
 
 分镜阶段为主要论点提出不同的新素材创意，例如：
 
-- **处境**：人在文件堆中寻找答案，表现信息过载。
-- **过程**：一页证据从书架取出、经过筛选并进入答复，表现检索链路。
-- **空间**：镜头穿过档案馆、机器内部或微观结构，建立尺度感。
-- **反例**：道路被闸门挡住、关键物体被遮蔽，表现权限或失败机制。
-- **对照**：同一场景分别呈现有序与混乱、局部与全局、闭卷与开卷。
+- **处境**：直接呈现该主题的问题、异常或观察对象。
+- **过程**：跟随介质、能量或信息通过结构，让原因与结果在同一运动中出现。
+- **空间**：进入机器、细胞、地层或网络的内部，再拉回整体，建立尺度与连接关系。
+- **反例**：通道阻塞、部件失效或路径中断，表现具体机制的边界。
+- **对照**：同一机制在不同条件下的变化，或从外部现象进入内部结构。
 - **回扣**：结尾回到开头的处境，让观众看到问题被解决。
 
 3–5 分钟的混合媒体片可先提出约 8–12 条独立创意，再按叙事价值、预算和生成效果取舍；这是策划起点，不是强制比例。每条素材要有不同的叙事任务。不能为了数量插入无关的机房、粒子或城市航拍。优先把长时间静态讲解中的一个关键过程拍出来，而非只在章间插 B-roll。
@@ -31,6 +33,8 @@ H3 是主动创作画面的手段。先想清楚这句话怎样拍更有说服�
 在项目内建立 `script/h3_shot_plan.md`。每条记录：
 
 `asset_id / 关联镜头与节拍 / 表达目的 / 场景和唯一主动作 / 提示词 / 目标使用时长 / 入点构图 / 出点构图 / 运动方向 / 代码叠加 / 状态 / 生成任务 id / 文件路径`
+
+有空间或主体变形的段落再记相机起止与路线、注视对象、尺度变化、身份锚点、交接姿态和参考帧。这些是分镜设计字段，不是自动存在的 API 参数；“唯一主动作”表示一个主要叙事任务，可包含连续的多节拍运动。
 
 1. 选择实际可用的 H3 工具或项目已有调用脚本；按工具真实支持的模型、时长和首尾帧参数执行，不猜模型标识或接口。
 2. 状态区分 `planned`、`submitted`、`generated`、`accepted`、`rejected`。只有拿到真实文件后才能记为 `generated`，剪辑验收后才记为 `accepted`。
@@ -44,15 +48,15 @@ H3 是主动创作画面的手段。先想清楚这句话怎样拍更有说服�
 
 示例：
 
-> A single ivory document with a brass corner tab slides out of an orderly archive shelf and moves toward the camera. Begin with the document centered inside a rectangular shelf opening; end on a front-facing close-up occupying the right half of the frame. Gentle forward dolly, navy-black environment, matte brass and paper materials, restrained warm rim light, clear silhouette. Keep the left half and bottom band quiet for composited graphics. One continuous shot, no readable text, no charts, no internal cuts.
+> Follow a single warm-gold tracer through a branching semi-transparent channel. Begin outside the structure with the entrance centered, move through the channel behind the tracer, then pull back to reveal how the branches connect to the whole. Preserve the tracer's silhouette and rightward travel at the exit for the next code-generated shot. Deep navy environment, readable matte surfaces, restrained warm rim light. Keep the bottom caption band clear; add precise labels later in code. One continuous explanatory shot, no readable text or charts. This is a conceptual transport model, not a real experiment.
 
 与工具支持的参数分开记录提示词，不把“不出现文字”等画面要求伪装成 API 参数。图生视频或首尾帧控制可用时，可用代码渲染的锚点帧辅助匹配；不支持时靠物体形状、位置和运动方向匹配。
 
 ## 拼接在生成之前设计
 
-- **共同物体**：前一张代码卡片，对应 H3 中的一页纸；返回时仍落在同一侧。不要从卡片直接跳到无关的机房。
-- **动作接力**：代码中的查询点向右移动，H3 中的证据也沿相同方向进入；下一镜头沿用该方向。
-- **形状接力**：书架开口对应代码框，档案抽屉对应列表，闸门对应权限状态。
+- **共同物体**：代码图形、三维部件与 H3 主体保留可辨认的轮廓、部件或标记，交接时位置和姿态有依据。
+- **动作接力**：代码中的主体沿某方向进入空间，H3 沿用该方向与速度变化；返回代码时保留因果和行进方向。
+- **形状接力**：平面路径对应空间通道，节点对应实体连接，剖面对应内部结构；按主题选择，不绑定书页或某一种故事。
 - **代码留在视频上**：让生成场景承担空间和动作，代码只叠加一两个关键标签或指标；不必每次清空画面再换媒介。
 - **先验收直切**：相邻两个画面即使没有特效，也应该能读懂共同主角与因果。遮罩、短叠化再用于润饰，不以扫光代替承接设计。
 - **边界验收**：看实际剪辑入点/出点及前后各约半秒，核对位置、方向、亮度、主体尺度、字幕可读性与动作是否完整。不要只看中间一帧。
