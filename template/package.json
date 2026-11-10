@@ -5,7 +5,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "studio": "remotion studio src/index.ts",
-    "test:scenes": "node --test scripts/scene_timeline.test.cjs",
+    "test:scenes": "node --test scripts/scene_timeline.test.cjs scripts/science_story.test.cjs",
     "check:scene-assets": "node scripts/check_scene_assets.cjs"
   },
   "dependencies": {

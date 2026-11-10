@@ -239,4 +239,4 @@ Adapted from [taste-skill](https://github.com/Leonxlnx/taste-skill): subject-led
 
 ## Mixed-media scenes
 
-Compose images, videos and code graphics in a shared scene with one boundary clock (18 frames total by default). See [scene composition](reference/scene-composition.md) for timing, source mapping, migration and checks. The template includes two narrated 12-second compositions, `MixedSolar` and `MixedVolcano`, using actual NASA media. These are cross-topic renderer demonstrations, not H3-generated outputs.
+Compose images, videos and code graphics in a shared scene with one boundary clock (18 frames total by default). See [scene composition](reference/scene-composition.md) for timing, source mapping, migration and checks. The template includes two narrated 15-second compositions, `MixedSolar` and `MixedVolcano`, using actual NASA media. These are cross-topic renderer demonstrations, not H3-generated outputs.

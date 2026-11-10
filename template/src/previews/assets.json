@@ -4,22 +4,40 @@
     "src": "assets/scene-demo/solar-clip.mp4",
     "sourceDurationSeconds": 6.0,
     "sourceFps": 30.0,
-    "width": 480,
-    "height": 270,
-    "sha256": "c96f4ddfa84ba1fd73239c916eebb50f9b805e1dbef445824cbafa51d0e8cc1c"
+    "width": 1920,
+    "height": 1080,
+    "sha256": "6c148aaa126df04be15377c76789202deb08d85c0b6af50d9aeeac6cea6b66e2"
   },
   {
-    "kind": "image",
-    "src": "assets/scene-demo/solar.jpg"
+    "kind": "video",
+    "src": "assets/scene-demo/solar-alt.mp4",
+    "sourceDurationSeconds": 6.0,
+    "sourceFps": 30.0,
+    "width": 1920,
+    "height": 1080,
+    "sha256": "3cf422a45885ec3445f86f97b239dc63f056233a8e5e4c6e0a04d47b20149412"
   },
   {
     "kind": "video",
     "src": "assets/scene-demo/volcano-clip.mp4",
     "sourceDurationSeconds": 6.0,
     "sourceFps": 30.0,
-    "width": 480,
-    "height": 270,
-    "sha256": "d91a49cecad6af0f00ea855ecac671c91394b11d43e9beca2567d6418e97a379"
+    "width": 1920,
+    "height": 1080,
+    "sha256": "f2e5e3541dff2ba99432f514f0658bb009711add938a18f3750e8cc77023d987"
+  },
+  {
+    "kind": "video",
+    "src": "assets/scene-demo/volcano-alt.mp4",
+    "sourceDurationSeconds": 6.0,
+    "sourceFps": 30.0,
+    "width": 1920,
+    "height": 1080,
+    "sha256": "f12275e05c4574a6c74a1ac049caf30656d11655c40ccb669ba7ef2cb9d4fe01"
+  },
+  {
+    "kind": "image",
+    "src": "assets/scene-demo/solar.jpg"
   },
   {
     "kind": "image",

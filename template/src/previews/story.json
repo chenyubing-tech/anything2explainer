@@ -1,0 +1,21 @@
+{
+  "fps": 30,
+  "totalFrames": 450,
+  "scenes": {"video": 42, "mechanism": 120, "mixed": 324},
+  "stageFrames": [0, 45, 126],
+  "boundaries": [{"at": 42, "duration": 18}, {"at": 120, "duration": 0}, {"at": 324, "duration": 18}],
+  "captions": {
+    "solar": [
+      {"at": 0, "text": "太阳为什么会突然爆发？"},
+      {"at": 102, "text": "能量，藏在磁场中。"},
+      {"at": 198, "text": "磁场重组，周围物质升温。"},
+      {"at": 324, "text": "这就是耀斑的能量来源。"}
+    ],
+    "volcano": [
+      {"at": 0, "text": "没喷发，为什么也冒气？"},
+      {"at": 102, "text": "气体，藏在岩浆里。"},
+      {"at": 198, "text": "沿裂隙上升，在地表形成羽流。"},
+      {"at": 324, "text": "冒气，不等于正在喷发。"}
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "topic": "solar",
+    "at": 0,
+    "text": "太阳为什么会突然爆发？",
+    "index": 0,
+    "durationSeconds": 3.1584126984126986
+  },
+  {
+    "topic": "solar",
+    "at": 102,
+    "text": "能量，藏在磁场中。",
+    "index": 1,
+    "durationSeconds": 3.0537414965986396
+  },
+  {
+    "topic": "solar",
+    "at": 198,
+    "text": "磁场重组，周围物质升温。",
+    "index": 2,
+    "durationSeconds": 3.6184126984126985
+  },
+  {
+    "topic": "solar",
+    "at": 324,
+    "text": "这就是耀斑的能量来源。",
+    "index": 3,
+    "durationSeconds": 3.0084807256235826
+  },
+  {
+    "topic": "volcano",
+    "at": 0,
+    "text": "没喷发，为什么也冒气？",
+    "index": 0,
+    "durationSeconds": 3.338548752834467
+  },
+  {
+    "topic": "volcano",
+    "at": 102,
+    "text": "气体，藏在岩浆里。",
+    "index": 1,
+    "durationSeconds": 3.018684807256236
+  },
+  {
+    "topic": "volcano",
+    "at": 198,
+    "text": "沿裂隙上升，在地表形成羽流。",
+    "index": 2,
+    "durationSeconds": 4.163310657596372
+  },
+  {
+    "topic": "volcano",
+    "at": 324,
+    "text": "冒气，不等于正在喷发。",
+    "index": 3,
+    "durationSeconds": 3.3485714285714288
+  }
+]

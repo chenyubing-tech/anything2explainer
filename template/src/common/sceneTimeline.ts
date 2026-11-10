@@ -63,6 +63,7 @@ export const compileSceneTimeline = (scenes: SceneSpec[], specs: BoundarySpec[],
         finite(layer.viewport.radius ?? 0, 'viewport.radius', 0);
       }
       validateMotion(layer.motion, scene.duration, layer.id);
+      if (layer.kind !== 'graphic') validateMotion(layer.contentMotion, scene.duration, `${layer.id}.contentMotion`);
       if (layer.kind === 'video') {
         finite(layer.sourceInSeconds, `${layer.id}.sourceInSeconds`, 0);
         finite(layer.sourceDurationSeconds, `${layer.id}.sourceDurationSeconds`, 0.001);

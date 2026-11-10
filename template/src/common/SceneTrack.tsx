@@ -9,8 +9,10 @@ const Layer: React.FC<{layer: SceneLayer}> = ({layer}) => {
   const {fps} = useVideoConfig();
   const motion = motionAt(frame, layer.motion);
   const viewport = layer.viewport;
+  const content = motionAt(frame, layer.kind === 'graphic' ? undefined : layer.contentMotion);
   const mediaStyle: React.CSSProperties = {width: '100%', height: '100%', objectFit: layer.kind === 'graphic' ? undefined : layer.fit ?? 'cover',
-    objectPosition: layer.kind === 'graphic' ? undefined : layer.focus ?? '50% 50%', filter: layer.kind === 'graphic' ? undefined : layer.filter};
+    objectPosition: layer.kind === 'graphic' ? undefined : layer.focus ?? '50% 50%', filter: layer.kind === 'graphic' ? undefined : layer.filter,
+    opacity: content.opacity, transform: `translate(${content.x}px,${content.y}px) scale(${content.scale}) rotate(${content.rotate}deg)`};
   return <div style={{position: 'absolute', left: viewport?.x ?? 0, top: viewport?.y ?? 0, width: viewport?.width ?? '100%', height: viewport?.height ?? '100%',
     overflow: 'hidden', borderRadius: viewport?.radius ?? 0, zIndex: layer.order, opacity: motion.opacity,
     transform: `translate(${motion.x}px,${motion.y}px) scale(${motion.scale}) rotate(${motion.rotate}deg)`}}>

@@ -14,6 +14,9 @@ Put the listener in a concrete scene, problem or puzzle before you name the conc
 should feel like the answer to a question the listener already has. A script that opens with "X is defined as…" or
 "In this video we will…" has spent its most valuable seconds on nothing.
 
+### First-sentence decision
+Lead with a concrete claim, a puzzle, or a rhetorical question that gives the viewer a reason to continue. Choose the form that fits the subject; do not force a question into every video. The first image must show its object or evidence. Reject false premises and unsupported surprise claims. Move straight from the hook to evidence or a causal mechanism, and answer the opening at the end.
+
 ## 2. One spine
 The whole script answers one question or follows one journey (a process from start to end, a tension that resolves,
 a mystery that gets solved). Every section is a visible step along that spine, and the listener can always say where
@@ -85,7 +88,7 @@ This is not the announcing transition §10 tells you to cut. "Next we'll cover c
 "the manual is only as good as the way it was built" creates the need for the next section. Announce nothing, motivate everything.
 
 ## Quick pre-flight for a finished draft
-- Opening sentence: is anyone in a situation yet? (§1)
+- Opening sentence: does a claim, puzzle or question give a reason to watch, without inventing a premise? Does the first image support it? (§1)
 - Could the sections be reordered without loss? (§2) If yes, find the spine.
 - Count "why" sentences vs "how" sentences; there should be at least one why per how-cluster. (§3)
 - Every number: converted to felt scale or cut. (§4)

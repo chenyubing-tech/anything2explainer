@@ -68,6 +68,8 @@ test('validate missing source and motion/beat bounds; reveal supports four direc
   const s=scene('a',0,30);s.layers=[{id:'i',kind:'image',src:'',role:'subject',order:0}];
   assert.throws(()=>compile([s],[],30,30),/missing source/);
   s.layers[0].src='image.jpg';s.camera=[{frame:30,scale:1}];assert.throws(()=>compile([s],[],30,30));
+  s.camera=[];s.layers[0].contentMotion=[{frame:30,scale:1.1}];assert.throws(()=>compile([s],[],30,30));
+  s.layers[0].contentMotion=[];
   s.camera=[];s.beats=[{at:25,duration:10,subject:'x',action:'move'}];assert.throws(()=>compile([s],[],30,30));
   for(const direction of ['left','right','up','down']) assert.match(revealClip(.5,direction),/50.00000%/);
 });

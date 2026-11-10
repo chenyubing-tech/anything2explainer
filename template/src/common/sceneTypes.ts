@@ -9,7 +9,10 @@ type LayerBase = {
   viewport?: Viewport;
   motion?: MotionKey[];
 };
-type MediaBase = LayerBase & {src: string; fit?: 'cover' | 'contain'; focus?: string; filter?: string};
+type MediaBase = LayerBase & {src: string; fit?: 'cover' | 'contain'; focus?: string; filter?: string;
+  /** Moves the media inside its fixed viewport, without moving the panel border. */
+  contentMotion?: MotionKey[];
+};
 export type ImageSceneLayer = MediaBase & {kind: 'image'};
 export type VideoSceneLayer = MediaBase & {
   kind: 'video';
