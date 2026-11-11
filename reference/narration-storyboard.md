@@ -1,5 +1,7 @@
 # 解说词、配音、分镜
 
+文案、字幕、事实与音频对齐规则用于全部模式；本文件的 G1–Gn 分组、绝对帧令牌和固定镜头预算是旧 ShotDef 协议。新 SceneSpec 与三维场景按 `scene-composition.md` / `spatial-motion-direction.md` 编排局部节拍和阅读窗口，不因阅读本文件改回旧镜头结构。输入与确认策略见 `production-workflow.md`，沿用本次会话已有决定。
+
 > 当前默认主题：深海黑金，色值以 `src/theme.ts` 和 `reference/style-guide.md` §2 为准。旧样片仅参考构图与时序；不用紫色，不强制柔光，优先金边和明暗对比。
 
 ## 1. 解说词（`script/narration.txt`）
@@ -38,7 +40,7 @@
 - 章节标题即进度条章名；章内小节名即 HUD 胶囊词（后面写进 config.ts）。
 
 ## 2. 配音（`scripts/tts_build.py`）
-- **跑之前先过 SKILL.md 的确认点 2（文案定稿）与确认点 3（配音）**：问一句用户有没有偏好的 TTS，没有就用默认，不要摆一堆选项让他挑。
+- **跑之前核对 `production-workflow.md` §1 的已有文案与声音决定**：沿用已确认偏好；只有真正缺失时问必要问题。已授权直接执行且无额外偏好时使用默认，不重复设置确认门。
 - 引擎（`TTS_ENGINE`，默认 `auto` 按解说词语言选）：
   - `edge` **中文默认**。edge-tts，`VOICE=zh-CN-YunxiNeural RATE=+0%`（男声；**默认原速不加速**，觉得慢再自己传 `RATE=+8%`，会从 ≈5.5 抬到 ≈6 字/秒）；可选 YunjianNeural（激昂）/ YunyangNeural（播报）/ XiaoxiaoNeural（女声）。有词级边界，字幕节拍最准。
   - `kokoro` **英文默认**。kokoro-82m 本地推理：`KOKORO_VOICE=am_liam KOKORO_LANG=a KOKORO_SPEED=1.0`——Liam，男声，与中文云希同定位。需 `pip install kokoro soundfile` + espeak-ng（macOS `brew install espeak-ng` / Linux `apt install espeak-ng`）。

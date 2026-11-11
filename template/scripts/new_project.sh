@@ -1,7 +1,7 @@
 #!/bin/zsh
 # 从模板创建新项目：new_project.sh <目标目录> <slug>
 set -e
-HERE=$(cd "$(dirname "$0")/.." && pwd)
+HERE=$(cd "$(dirname "$0")/.." && pwd -P)
 DEST=$1; SLUG=${2:-video}
 [ -n "$DEST" ] || { echo "usage: new_project.sh <dest_dir> <slug>"; exit 1; }
 # 本脚本必须留在 template/scripts/ 里：$HERE 是下面 rsync 的源，脚本被单独拷到别处时
@@ -11,8 +11,16 @@ DEST=$1; SLUG=${2:-video}
 case "$SLUG" in
   ''|*[!A-Za-z0-9_-]*) echo "slug 只能用字母/数字/-/_，收到：$SLUG"; exit 1;;
 esac
+# Only scaffold into a new or empty directory; never overwrite an existing project.
+if [ -e "$DEST" ] && { [ ! -d "$DEST" ] || [ -n "$(ls -A "$DEST")" ]; }; then
+  echo "目标已存在且非空，拒绝覆盖：$DEST"; exit 1
+fi
 mkdir -p "$DEST"
-rsync -a --exclude node_modules --exclude 'build*' --exclude renders --exclude fin_frames --exclude stills --exclude 'audio/cache' "$HERE/" "$DEST/"
+DEST=$(cd "$DEST" && pwd -P)
+case "$DEST/" in
+  "$HERE/"*) echo "目标不能位于模板内部：$DEST"; exit 1;;
+esac
+rsync -a --exclude node_modules --exclude 'build*' --exclude renders --exclude fin_frames --exclude stills --exclude audio --exclude qc --exclude 'public/assets/scene-demo/raw' --exclude 'public/assets/*/audio.wav' --exclude render.done --exclude fin_count.txt "$HERE/" "$DEST/"
 # portable in-place edit: `-i.bak` + rm works on both BSD/macOS and GNU/Linux sed
 # (BSD `sed -i ''` breaks on GNU sed, which reads '' as the script and config.ts as a file)
 sed -i.bak "s/slug: 'demo'/slug: '$SLUG'/" "$DEST/src/config.ts" && rm -f "$DEST/src/config.ts.bak"

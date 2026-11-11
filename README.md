@@ -26,7 +26,7 @@ Both cuts share one storyboard and 44 shots; the English cut re-times every shot
 - **Input**: a topic ("explain vector databases"), or an article / document you want turned into a video. You also pick the length and the language.
 - **Output**: a 1280×720 H.264 MP4 with synchronized voiceover, word-boundary-aligned subtitles, chapter cards, a top HUD and a bottom chapter progress bar, plus the full paper trail (research doc with sources, narration, storyboard, per-shot source code, QC reports).
 - **How**: the agent researches the topic with sources, writes the narration, generates the voiceover and frame-accurate timeline, storyboards every shot, then dispatches parallel build agents that write one Remotion component per shot. QC agents review the rendered frames against written criteria before delivery.
-- **Time**: roughly 1 to 3 hours of wall clock depending on length, most of it agents building shots in parallel. You are consulted at exactly four checkpoints.
+- **Time**: the legacy 2D workflow provides a rough 1–3 hour reference; actual 3D, HD media and generated footage require their own render and tool measurements. Existing decisions and authorization are reused; questions are reserved for missing key inputs or scope changes.
 
 ## Output spec
 
@@ -131,14 +131,14 @@ cd ~/work/my-video
 # 7. VER=v1 scripts/render.sh + python3 scripts/frame_metrics.py         8. QC → fix → v2/v3
 ```
 
-## Four checkpoints
+## Four production inputs and review artifacts
 
-The run stops and waits for you at exactly four points instead of ploughing through (details in `SKILL.md`):
+These are inputs and review artifacts for a new film. Existing decisions and authorization carry forward; local edits do not restart the entire process. See [production workflow](reference/production-workflow.md):
 
-1. **Length and language**: before the script is written. Length decides the line count, shot count and how many agents run in parallel, i.e. how much the film can actually cover; language flips `lang` in `src/config.ts`, which drives typography, subtitle budgets and the default voice.
-2. **Narration sign-off**: before voiceover. Once locked, frame numbers are hard-coded into every shot; changing one word re-times the whole film. This is the cheapest place to intervene.
-3. **Voiceover**: before TTS runs you get asked whether you have a preferred engine. If not, defaults apply (edge-tts Yunxi for Chinese, kokoro-82m Liam for English). You can also hand over finished audio and fill the per-line timeline yourself.
-4. **First 30 seconds**: only the first build group is done, then 30 seconds get rendered for you to judge the look. Fixing the style here costs one group; after the full render it costs every group.
+1. **Length and language**: before the script is written. Length sets the content scope; delegation and concurrency depend on the environment and authorization; language flips `lang` in `src/config.ts`, which drives typography, subtitle budgets and the default voice.
+2. **Narration sign-off**: before voiceover. Changed copy requires realigning audio, captions and scenes; scenes with local clocks do not require rewriting every absolute shot frame.
+3. **Voiceover**: reuse the voice already selected; ask only for genuinely missing key input. Otherwise defaults apply (edge-tts Yunxi for Chinese, kokoro-82m Liam for English). You can also hand over finished audio and fill the per-line timeline yourself.
+4. **First 30 seconds**: verify a segment containing the key action and handoff. Longer films may start with 30 seconds; short demos use their actual action length. Approved samples carry forward without restarting confirmation.
 
 ## How it compares
 
@@ -178,7 +178,7 @@ Chinese and English. Each has its own pacing model, subtitle budget and default 
 ## Repo layout
 
 ```
-SKILL.md                  the process: 9 stages, four checkpoints, quality bar
+SKILL.md                  scope, production modes, current rules and reference routing
 reference/                specs written for the main session and the agents
   style-guide.md            safe areas, palette, fonts, primitive catalogue, layout habits
   motion-vocabulary.md      entrance / emphasis / light / exit / camera formulas and frame counts

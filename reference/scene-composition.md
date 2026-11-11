@@ -34,7 +34,7 @@ export const MyVideo = () => <Stage scenes={scenes} boundaries={boundaries} />;
 - 场景使用 0 起的 `start` 和 `duration`，区间右端不含；顺序连续，精确覆盖合成总帧数。
 - 边界只在 `boundaries` 声明一次。默认 18 帧是总长 18 帧，前 9 帧、后 9 帧；17 帧则前 8 后 9。0/1 帧按直接切换处理。
 - `dissolve` 保持完整的前场景作为不透明底图，后场景逐渐覆盖；`reveal` 展开后场景；`cut` 直接切换。`background` 使用不透明十六进制颜色。
-- 转场按内容选择：不同标题和构图不强行叠化，避免文字重影；遮罩会切碎关键信息时使用 `cut`。保留的图表应对齐位置、尺度和已完成状态，不能切换后重新从零绘制。两份预览在观察→原理使用直切，在原理→同场保留标题与曲线并展开媒体窗口。
+- 转场按内容选择：不同标题和构图不强行叠化，避免文字重影；遮罩会切碎关键信息时使用 `cut`。保留的图形应对齐位置、尺度和已完成状态，不能切换后重新从零绘制。当前二维预览在观察→原理使用直切，在原理→同场保留标题与已完成的阶段面板，再展开媒体窗口；原无轴曲线已移除。
 - 前后扩展渲染钳制到场景首末有效帧。图片运动、图形内部 `useCurrentFrame()` 和视频同样保持；视频不会因为提前出现而抢播源片段。
 - `order` 决定同场媒体和代码层序；相邻场景临时叠加由 `SceneTrack` 控制。字幕不随内容相机移动。
 - 相机和图层 `motion` 接受 `frame/x/y/scale/rotate/opacity` 关键帧；各通道独立插值。节拍 `beats` 记录动作意图与时段，实际动作仍由关键帧和组件执行，不声称自动理解文字生成动画。
@@ -83,3 +83,5 @@ python scripts/inspect_scene_preview.py renders/MixedVolcano.mp4
 ```
 
 Chrome 路径按本机安装调整。检查脚本用 Pillow，ffprobe/ffmpeg 默认使用 Remotion 自带的 Windows 二进制；其他系统可设置 `FFPROBE`/`FFMPEG`。预览素材来源与处理记录见 `template/public/assets/scene-demo/MANIFEST.md`，技术证据与未检查项见 `template/qc/scene-composition-validation.md`。
+
+以上 inspect_scene_preview.py 读取 `src/previews/story.json`，只用于仓库样例，不是任意新视频的通用检查。自定义新片须按本片时间计划复核；实际三维验证入口另见 `SpatialVolcano` 与 `template/qc/spatial-volcano-validation.md`（路径相对仓库根）。
