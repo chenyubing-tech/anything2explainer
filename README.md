@@ -7,7 +7,7 @@
 
 **English** | [简体中文](README_ZH.md)
 
-**Topic in, narrated explainer video out.** anything2explainer is a [Claude Code](https://claude.com/claude-code) / [Codex](https://openai.com/codex) skill that turns any topic into a deep-navy-and-gold motion-graphics explainer video with TTS voiceover, subtitles and a chapter progress bar, in Chinese or English. Charts, numbers, tables and structured graphics are drawn in code with [Remotion](https://remotion.dev) by default; research also prepares topic-related images/videos, with MiniMax-H3 actively creating original scenes, process demonstrations and visual metaphors, while primary media is preferred for factual evidence, and research may collect related media and usage should be logged when source information is available.
+**Topic in, narrated explainer video out.** anything2explainer is a [Claude Code](https://claude.com/claude-code) / [Codex](https://openai.com/codex) skill that turns any topic into a deep-navy-and-gold motion-graphics explainer video with TTS voiceover, subtitles and a chapter progress bar, in Chinese or English. Charts, numbers, tables and structured graphics are drawn in code with [Remotion](https://remotion.dev) by default; research also prepares topic-related images/videos, with available MiniMax-H3 tools creating original scenes, process demonstrations and visual metaphors. Primary media is preferred for factual evidence; check content, source/usage conditions, quality and purpose before adoption, and keep unknown items pending.
 
 It is not a CLI. What ships here is the whole method an AI coding agent needs to finish the film: a compilable Remotion template, a primitives and lighting library, tooling for voiceover / storyboard / rendering / quantitative QC, written style and motion specs, a multi-agent division-of-labour protocol, and one complete reference film as the quality bar.
 
@@ -25,7 +25,7 @@ Both cuts share one storyboard and 44 shots; the English cut re-times every shot
 
 - **Input**: a topic ("explain vector databases"), or an article / document you want turned into a video. You also pick the length and the language.
 - **Output**: a 1280×720 H.264 MP4 with synchronized voiceover, word-boundary-aligned subtitles, chapter cards, a top HUD and a bottom chapter progress bar, plus the full paper trail (research doc with sources, narration, storyboard, per-shot source code, QC reports).
-- **How**: the agent researches the topic with sources, writes the narration, generates the voiceover and frame-accurate timeline, storyboards every shot, then dispatches parallel build agents that write one Remotion component per shot. QC agents review the rendered frames against written criteria before delivery.
+- **How**: the agent researches the topic with sources, writes the narration, generates the voiceover and frame-accurate timeline, storyboards every shot, then builds the selected scene mode independently or with authorized delegation. Technical checks and a complete final-film review with sound precede delivery.
 - **Time**: the legacy 2D workflow provides a rough 1–3 hour reference; actual 3D, HD media and generated footage require their own render and tool measurements. Existing decisions and authorization are reused; questions are reserved for missing key inputs or scope changes.
 
 ## Output spec
@@ -39,20 +39,20 @@ Both cuts share one storyboard and 44 shots; the English cut re-times every shot
 | Persistent layers | 44px white-on-black-stroke subtitles, bottom chapter progress bar, top capsule HUD, optional pipeline rail |
 | Voiceover | Chinese: edge-tts `zh-CN-YunxiNeural` (Yunxi, male, unmodified rate ≈5.5 chars/s). English: kokoro-82m `am_liam` (Liam, male). Or bring your own TTS / finished audio |
 
-Length drives how much ground the film covers, and the size of the whole pipeline:
+The following estimates describe the legacy flat ShotDef workflow, not quotas for new scenes, agent counts or render time. Short and spatial films follow their actual narration, actions and render measurements:
 
-| Length | Chinese chars | English words | Lines / shots | Build agents | Wall clock | Disk |
+| Length | Chinese chars | English words | Lines / shots | Historical delegation | Wall clock | Disk |
 |---|---|---|---|---|---|---|
 | 2–3 min | 650–880 | 280–420 | 24–32 | 4–6 | ≈1 h | ≈2 GB |
 | 3–5 min (reference tier) | 1100–1400 | 420–700 | 40–50 | 8 | ≈2 h | ≈2 GB |
 | 5–8 min | 1650–2200 | 700–1150 | 60–80 | 10–14 | ≈2–3 h | ≈3 GB |
 
-Chapter count follows the content, within limits set by length: under 3 minutes use a single chapter (no chapter cards), 3–5 minutes 3–4 chapters of at least 60 s each, 5–8 minutes 4–6. The progress bar splits evenly across however many chapters the narration declares. A blank line in the narration marks a paragraph, which is also one shot: sentences inside a paragraph are separated by 10 frames, paragraph ends by 30, so the pause lands where the picture changes and every shot holds 1–1.5 s after its last element lands. The finished video runs 5–8% longer than the raw speech by design.
+Choose chapters, scenes and reading windows from the content and actual voiceover. SceneSpec does not inherit fixed legacy holds or the one-camera-move-per-shot limit. See [production workflow](reference/production-workflow.md) for the current process and [narration and storyboard](reference/narration-storyboard.md) for voiceover formats and legacy examples.
 
 ## Install
 
 ```bash
-git clone https://github.com/Vincentwei1021/anything2explainer.git
+git clone https://github.com/chenyubing-tech/anything2explainer.git
 ln -s "$PWD/anything2explainer" ~/.claude/skills/anything2explainer   # Claude Code
 ln -s "$PWD/anything2explainer" ~/.codex/skills/anything2explainer    # Codex
 ```
@@ -70,7 +70,7 @@ pip install 'edge-tts==7.2.8' numpy pillow scipy   # pin edge-tts: it tracks a M
 pip install kokoro soundfile && brew install espeak-ng
 ```
 
-`scipy` is only used by the QC script `frame_metrics.py`. The shell scripts are zsh + Python 3, developed and verified on macOS; Linux should work, Windows is untested.
+`scipy` is used by the legacy QC script `frame_metrics.py`. Shell commands require zsh, rsync and related tools. Template checks and sample renders have been verified with native Node/Remotion commands on Windows; see [platform commands](reference/production-workflow.md#4-平台与命令). This Windows review did not verify the full Unix scaffolding pipeline.
 
 ### Linux / Raspberry Pi (ARM)
 
@@ -108,19 +108,11 @@ In Claude Code or Codex, just say what you want. The skill triggers itself:
 
 > 讲一下向量数据库，做成一条讲解视频
 
-It then walks the 9 stages in `SKILL.md`:
+For a new film, follow [production workflow](reference/production-workflow.md) from research and narration through storyboard, assets, construction and review. Reuse existing decisions and authorization; local edits stay within their requested scope. Delegation depends on authorization and actual tools, without a fixed agent count.
 
-1. **Scaffold** the Remotion project from the template.
-2. **Research** (1 agent): a sourced research doc with a list of numbers and analogies plus an image/video asset list that maps each asset to facts, chapters or candidate shots.
-3. **Narration & timeline**: the script, then TTS voiceover with per-word boundaries turned into a frame-accurate timeline and subtitle table.
-4. **Storyboard**: one line per shot with frame range, beat, visuals, motion, hero element and lighting.
-5. **Overlays & primitives**: title, chapter cards, HUD, pipeline rail, plus 2–5 topic-specific icons.
-6. **Pilot** (1 agent): the first shot group, then a 30-second cut for you to judge the look.
-7. **Parallel build**: the remaining groups, 5–7 shots per agent, each writing pure-function Remotion components.
-8. **Render** the full film and run quantitative frame metrics.
-9. **QC & fixes**: one QC agent per chapter, fix agents per group, re-verification, then delivery notes.
+New mixed-media and spatial films use SceneSpec; see [scene composition](reference/scene-composition.md) and [spatial motion](reference/spatial-motion-direction.md). H3 requires an available generation tool. Without one, deliver the plan and disclose pending assets; prompts are not generated footage.
 
-You can also drive the template by hand:
+The legacy ShotDef template can also be driven by hand (use actual composition names and production-workflow commands for SceneSpec):
 
 ```bash
 template/scripts/new_project.sh ~/work/my-video myslug
@@ -144,9 +136,9 @@ These are inputs and review artifacts for a new film. Existing decisions and aut
 
 | Tool class | What it produces | Where anything2explainer differs |
 |---|---|---|
-| Generative video models (Sora, Veo, Runway) | Footage synthesized from a prompt | Deterministic code, not pixels. Every number on screen traces to a source URL, and any frame can be fixed by editing one shot file |
+| Generative video models (Sora, Veo, Runway) | Footage synthesized from a prompt | Code guarantees precise data and typography while combining sourced media, code-driven 3D and available generated footage. Code is editable by frame; generated media may require reselection or regeneration |
 | Avatar / presenter tools (HeyGen, Synthesia) | A digital presenter reading a script | No presenter. Motion-graphics diagrams that show the mechanism, with the narration driving the visuals |
-| Remotion or Motion Canvas by hand | A programmable video canvas | Ships the method on top of the canvas: research → narration → storyboard → parallel build → QC, with style specs, motion vocabulary and a reference film to match |
+| Remotion or Motion Canvas by hand | A programmable video canvas | Ships the method on top of the canvas: research → narration → storyboard → construction → technical and aesthetic review, with style specs, motion vocabulary and a reference film to match |
 | Manim | Python mathematical animations | An agent-driven end-to-end pipeline with TTS-aligned subtitles, chapters and QC; React / TypeScript rather than Python |
 
 ## FAQ
@@ -155,16 +147,16 @@ These are inputs and review artifacts for a new film. Existing decisions and aut
 It is written for Claude Code and Codex, and those two are what it has been run with. The skill itself is plain Markdown plus a Remotion project, so any agent that reads `SKILL.md`-style skill folders and can run shell commands should be able to follow it.
 
 **Does it need a GPU?**
-No. Remotion renders through headless Chromium on the CPU. The Chinese default voice (edge-tts) is a cloud call to a Microsoft endpoint; the English default (kokoro-82m) is an 82M-parameter model that runs locally on CPU.
+Flat MG can render through headless Chromium on CPU. Real 3D requires working WebGL; software rendering or GPU availability and performance must be measured on the actual machine. Chinese edge-tts uses a cloud endpoint; English kokoro-82m can run locally on CPU.
 
 **Can I use my own voice or a different TTS?**
 Yes. Put the finished audio at `public/assets/<slug>/audio.wav` and fill `src/common/timeline.ts` and `subs.ts` by hand (format documented at the top of `tts_build.py`). Everything downstream is unchanged.
 
 **Can I change the visual style?**
-There is one visual style, on purpose, with a single switch: the backdrop, `bg` in `src/config.ts` (`'dots'` dot-field wave by default, `'stars'` star field with fog). To change anything else, edit `reference/style-guide.md` and `src/ui.tsx`; the shot code only uses those primitives.
+Deep Sea Black & Gold is the default, defined in `src/theme.ts`. `config.bg` switches the legacy flat backdrop; new scenes and 3D may use topic-specific environments, geometry and materials while sharing palette, typography and readability. See [style guide](reference/style-guide.md).
 
 **Are the renders reproducible?**
-Yes. Every animation is a pure function of the frame number with seeded randomness, and text fitting is computed rather than measured in the DOM, so re-rendering produces identical frames.
+Animation and seeded randomness give the same parameters at the same frame. Rendered pixels also depend on media, fonts, browser and WebGL environment; pixel identity across machines is not guaranteed.
 
 **Can I use it commercially?**
 The toolkit is licensed under PolyForm Noncommercial: free for noncommercial use, commercial use requires prior authorization from the author. The videos you make with it are yours. See [License](#license).
@@ -207,7 +199,7 @@ The default palette is **Deep Sea Black & Gold**: background `#101821`, accent `
 
 ## Originality
 
-- **Structured graphics are drawn in code; key media may be cited.** Charts, numbers, tables and process diagrams stay code-drawn. Key images or videos may come from the research asset list and may include a citation title when useful; external media should be logged when source or license information is available (sha256 / source URL / license / usage / related fact or shot). Use primary media for factual evidence and actively create distinct MiniMax-H3 scenes for processes, spatial relationships and visual metaphors. Mark generated assets as AI-generated; see [generated video direction](reference/generated-video-direction.md).
+- **Structured graphics are drawn in code; key media may be cited.** Charts, numbers, tables and process diagrams stay code-drawn. Key images or videos may come from the research asset list and may include a citation title when useful; record the source, usage conditions, purpose and related fact or shot before adoption. Unknown conditions stay pending; optional file hashes identify the checked version. Use primary media for factual evidence and actively create distinct MiniMax-H3 scenes for processes, spatial relationships and visual metaphors. Mark generated assets as AI-generated; see [generated video direction](reference/generated-video-direction.md).
 - **Every fact is sourced.** Every number, year, organisation and English term shown on screen must trace back to a source URL in that film's research document. Anything unverified stays off the screen and out of the narration.
 
 ## License
@@ -218,10 +210,10 @@ Remotion itself has its own license terms for companies — see [remotion.dev/li
 
 ## Known limits
 
-- Chinese and English are both supported (`lang: 'zh' | 'en'`), each with its own pacing, subtitle budget (16 chars / 48 characters per block) and default voice. Both cuts are embedded above; the paper trail in `examples/rag/` is from the Chinese cut. One visual style with two backdrops (`bg: 'stars' | 'dots'`); changing anything else means editing `reference/style-guide.md` + `src/ui.tsx`.
+- Chinese and English are both supported (`lang: 'zh' | 'en'`), each with its own pacing, subtitle budget (16 chars / 48 characters per block) and default voice. Both cuts are embedded above; the paper trail in `examples/rag/` is from the Chinese cut. Deep Sea Black & Gold is the default; the two `bg` backdrops belong to the legacy flat mode, while new scenes use environments appropriate to the subject.
 - Not for: replicating an existing video, talking-head presenter footage, or films that are mostly live action.
-- Once the narration is voiced, the words are frozen — shot code hard-codes frame numbers, so a rewrite re-times everything.
-- Parallel builds are demanding: several agents bundle Remotion at once, so keep ≥5 GB free; tmux panes are capped, so past ~12 you have to dispatch in waves.
+- Narration edits require realigning affected audio, captions and scenes. Update absolute ranges for legacy ShotDef or local beats and boundaries for SceneSpec.
+- Parallel builds consume additional disk and memory; choose concurrency from actual host capacity and authorization rather than a fixed agent or pane count.
 
 ## Star History
 

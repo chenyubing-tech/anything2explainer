@@ -1,5 +1,5 @@
 #!/bin/zsh
-# 前 N 秒样片（确认点 3：先给用户看风格，别等整片渲完）：preview.sh [秒数=30] [起始秒=0]
+# 旧 Video 合成的片段打样（复用已有方向与授权）：preview.sh [秒数=30] [起始秒=0]
 #   → renders/<slug>_preview_<a>-<b>s.mp4（含配音/字幕/进度条；还没建的组是空画面，正常）
 set -e
 ROOT=$(cd "$(dirname "$0")/.." && pwd); cd "$ROOT"

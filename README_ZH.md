@@ -7,7 +7,7 @@
 
 [English](README.md) | **简体中文**
 
-**给一个主题，产出一条带配音的科普讲解视频。** anything2explainer 是一个 [Claude Code](https://claude.com/claude-code) / [Codex](https://openai.com/codex) skill：输入任意主题，输出一条深海黑金 MG（motion graphics）风格的讲解视频，带 TTS 配音、字幕和章节进度条，中文或英文都行。图表、数字、表格等结构化画面默认由 [Remotion](https://remotion.dev)（React + TypeScript）代码绘制；调研阶段还会准备与主题相关的图片/视频素材，场景、过程演示与视觉隐喻主动使用 MiniMax-H3 创作不同的新视频，真实资料或用户明确要求时优先保留原始媒体，实际使用的外部素材在来源和许可信息可获得时登记。
+**给一个主题，产出一条带配音的科普讲解视频。** anything2explainer 是一个 [Claude Code](https://claude.com/claude-code) / [Codex](https://openai.com/codex) skill：输入任意主题，输出一条深海黑金 MG（motion graphics）风格的讲解视频，带 TTS 配音、字幕和章节进度条，中文或英文都行。图表、数字、表格等结构化画面默认由 [Remotion](https://remotion.dev)（React + TypeScript）代码绘制；调研阶段还会准备与主题相关的图片/视频素材，场景、过程演示与视觉隐喻主动使用实际可用的 MiniMax-H3 工具创作不同的新视频，真实资料或用户明确要求时优先保留原始媒体，外部素材采用前核对内容、来源/使用条件、画质和用途，未知项保持待核。
 
 它不是一个 CLI。仓库里装的是让 AI 编程 agent 把片子做出来的整套方法：可编译的 Remotion 模板工程、图元与光效库、配音/分镜/渲染/量化质检工具、风格与动效规范、多 agent 分工协议，以及一条完整样片作为质量标尺。
 
@@ -25,7 +25,7 @@ https://github.com/user-attachments/assets/e2771c68-a28c-4459-ac5a-a5b685181eeb
 
 - **输入**：一个主题（"讲一下向量数据库"），或一篇想改成视频的文章/文档。时长和语言由你定。
 - **输出**：1280×720 的 H.264 MP4，配音与字幕按词边界对齐，带章节卡、顶部 HUD 和底部章节进度条；同时交付全套过程文件（带出处的调研文档、解说词、分镜表、逐镜头源码、QC 报告）。
-- **怎么做**：agent 先做带出处的调研，写解说词，生成配音和帧级时间轴，逐镜头写分镜，按环境与授权选择独立或分工构建 Remotion 场景；渲染后由 QC agent 按书面判据逐帧检查，修完再交付。
+- **怎么做**：agent 先做带出处的调研，写解说词，生成配音和帧级时间轴，逐镜头写分镜，按环境与授权选择独立或分工构建 Remotion 场景；渲染后按所选模式进行技术检查和完整带声音的审美评审，修复、复验后交付。
 - **耗时**：旧平面 MG 的参考工时约 1–3 小时；真实 3D、高清媒体与生成镜头按实际测渲和工具耗时安排。已有决定与授权直接沿用，只在关键输入缺失或范围改变时询问。
 
 ## 成片规格
@@ -39,20 +39,20 @@ https://github.com/user-attachments/assets/e2771c68-a28c-4459-ac5a-a5b685181eeb
 | 常驻层 | 44px 白字黑边字幕、底部章节进度条、顶部胶囊 HUD、可选流程轨 |
 | 配音 | 中文 edge-tts `zh-CN-YunxiNeural`（云希，男声，原速不加速 ≈5.5 字/秒）/ 英文 kokoro-82m `am_liam`（Liam，男声）；也可用你自己的 TTS 或成品配音 |
 
-时长决定内容丰富程度与全流程规模：
+以下仅是旧平面 ShotDef 的估算参考，不是新场景的镜头、人数或工时配额；短片与空间片按实际旁白、动作和测渲安排：
 
-| 时长 | 中文字数 | 英文词数 | 句 / 镜头数 | 构建 agent | 产出耗时 | 磁盘 |
+| 时长 | 中文字数 | 英文词数 | 句 / 镜头数 | 历史构建分工 | 产出耗时 | 磁盘 |
 |---|---|---|---|---|---|---|
 | 2–3 分钟 | 650–880 | 280–420 | 24–32 | 4–6 | ≈1 小时 | ≈2GB |
 | 3–5 分钟（样片档） | 1100–1400 | 420–700 | 40–50 | 8 | ≈2 小时 | ≈2GB |
 | 5–8 分钟 | 1650–2200 | 700–1150 | 60–80 | 10–14 | ≈2–3 小时 | ≈3GB |
 
-章数按内容定、受时长约束：<3 分钟单章（不出章节卡），3–5 分钟 3–4 章且每章 ≥60 s，5–8 分钟 4–6 章；进度条按解说词声明的章数等宽分段。解说词用空行分段，一段就是一个镜头：段内句间只隔 10 帧、段末 30 帧，停顿落在画面切换处，每个镜头末拍落位后能停 1–1.5 s 再切；成片比纯语音长 5–8% 是设计内的。
+章数、场景数和读取窗口按内容与实际配音确定。新 SceneSpec 不采用旧镜头固定停留或每镜头一次运镜的预算；制作流程与模式选择统一见 [制作流程](reference/production-workflow.md)，旁白格式和旧模式参考见 [解说与分镜](reference/narration-storyboard.md)。
 
 ## 安装
 
 ```bash
-git clone https://github.com/Vincentwei1021/anything2explainer.git
+git clone https://github.com/chenyubing-tech/anything2explainer.git
 ln -s "$PWD/anything2explainer" ~/.claude/skills/anything2explainer   # Claude Code
 ln -s "$PWD/anything2explainer" ~/.codex/skills/anything2explainer    # Codex
 ```
@@ -70,7 +70,7 @@ pip install 'edge-tts==7.2.8' numpy pillow scipy   # 建议固定 edge-tts 版�
 pip install kokoro soundfile && brew install espeak-ng
 ```
 
-`scipy` 只给质检脚本 `frame_metrics.py` 用。脚本是 zsh + Python 3，在 macOS 上开发与验证；Linux 应可用，Windows 未测试。
+`scipy` 只给旧模式质检脚本 `frame_metrics.py` 用。下方 shell 命令需要 zsh、rsync 等工具；Windows 已验证的模板检查与样例渲染使用原生 Node/Remotion 命令，见 [平台与命令](reference/production-workflow.md#4-平台与命令)。Unix 脚本的完整成功流水线未在本次 Windows 复查中验证。
 
 ### Linux / 树莓派（ARM）
 
@@ -108,19 +108,11 @@ TTS_ENGINE=piper PIPER_MODEL=…/en_US-ryan-medium.onnx python3 scripts/tts_buil
 
 > Make me an explainer video about vector databases.
 
-它会按 `SKILL.md` 的 9 个阶段走：
+新片按 [制作流程](reference/production-workflow.md) 从调研、文案和声音推进到分镜、素材、构建与验收；复用已有决定与授权。局部修改只处理本次范围。是否分工取决于授权和实际工具，不固定 agent 数量。
 
-1. **建项目**：从模板复制出 Remotion 工程。
-2. **调研**（1 个 agent）：带出处的调研文档，含数字与比喻清单，以及按事实/章节/镜头关联的图片和视频素材清单。
-3. **解说词与时间轴**：写文案，TTS 配音，按词边界生成帧级时间轴和字幕表。
-4. **分镜**：每镜头一行，写帧区间、节拍、画面、动效、主角与光。
-5. **覆盖层与图元**：片头、章节卡、HUD、流程轨，外加 2–5 个主题图标。
-6. **打样**（1 个 agent）：先做第一组镜头，渲 30 秒样片给你看风格。
-7. **并行构建**：其余各组，每个 agent 5–7 个镜头，写纯函数 Remotion 组件。
-8. **渲染**：整片渲染并跑量化帧指标。
-9. **QC 与修复**：每章一个 QC agent，按组派修复 agent，复验后写交付说明。
+新混合/空间片优先使用 SceneSpec，入口见 [场景编排](reference/scene-composition.md) 与 [空间动效](reference/spatial-motion-direction.md)。H3 需实际可用的生成工具；无工具时完成计划并明确待生成，不将提示词算成生成成果。
 
-也可以手动跑模板：
+旧 ShotDef 模式可手动跑模板（新 SceneSpec 合成用制作流程中的实际合成名和命令）：
 
 ```bash
 template/scripts/new_project.sh ~/work/my-video myslug
@@ -144,9 +136,9 @@ cd ~/work/my-video
 
 | 工具类型 | 产出什么 | anything2explainer 的不同 |
 |---|---|---|
-| 视频生成模型（Sora、Veo、可灵、即梦） | 按提示词生成的画面 | 确定性代码而不是像素：画面上每个数字都能追溯到来源 URL，任何一帧都能通过改一个镜头文件修好 |
+| 视频生成模型（Sora、Veo、可灵、即梦） | 按提示词生成的画面 | 代码保证精确数据与排版，并组合真实资料、代码 3D 与实际可用的生成素材；代码可按帧修改，生成内容按需重选或重新生成 |
 | 数字人 / 口播工具（HeyGen、Synthesia） | 一个数字人读稿 | 没有主播；用 MG 图形把机制画出来，解说词驱动画面 |
-| 直接手写 Remotion / Motion Canvas | 一块可编程的视频画布 | 在画布之上给出整套方法：调研 → 解说词 → 分镜 → 并行构建 → QC，附风格规范、动效词表和一条可对标的样片 |
+| 直接手写 Remotion / Motion Canvas | 一块可编程的视频画布 | 在画布之上给出整套方法：调研 → 解说词 → 分镜 → 构建 → 技术与审美评审，附风格规范、动效词表和一条可对标的样片 |
 | Manim | Python 数学动画 | agent 驱动的端到端流水线，字幕按 TTS 对齐，带章节与 QC；技术栈是 React / TypeScript 而不是 Python |
 
 ## 常见问题
@@ -155,16 +147,16 @@ cd ~/work/my-video
 为 Claude Code 和 Codex 编写，也只在这两个上跑过。skill 本身就是 Markdown 加一个 Remotion 工程，任何能读 `SKILL.md` 式 skill 目录、能执行 shell 命令的 agent 理论上都能照着做。
 
 **需要 GPU 吗？**
-不需要。Remotion 用无头 Chromium 在 CPU 上渲染。中文默认配音 edge-tts 是调微软云端接口；英文默认 kokoro-82m 是 8200 万参数的小模型，本地 CPU 就能跑。
+平面 MG 可用无头 Chromium 在 CPU 上渲染。真实 3D 需要可工作的 WebGL 渲染环境，软件渲染或 GPU 的可用性与速度须在本机测渲。中文默认 edge-tts 使用云端接口；英文默认 kokoro-82m 可在 CPU 本地运行。
 
 **能用自己的声音或别的 TTS 吗？**
 可以。把成品音频放到 `public/assets/<slug>/audio.wav`，按 `tts_build.py` 文件头的格式手填 `src/common/timeline.ts` 和 `subs.ts`，后续流程不变。
 
 **能换视觉风格吗？**
-只做这一种风格，是有意为之，唯一的开关是幕底：`src/config.ts` 的 `bg`（默认 `'dots'` 点阵波，可选 `'stars'` 星点雾底）。其他要换就改 `reference/style-guide.md` 和 `src/ui.tsx`，镜头代码只用这些图元。
+默认深海黑金，主题色以 `src/theme.ts` 为准。`config.bg` 切换旧平面幕底；新场景与 3D 可按主题建立环境、几何和材质，同时统一颜色、字阶及可读性。视觉规则见 [风格指南](reference/style-guide.md)。
 
 **渲染结果可复现吗？**
-可以。所有动画都是帧号的纯函数，随机数带种子，文字排版靠计算而不测 DOM，重渲一遍帧完全一样。
+动画与随机按帧和固定种子驱动，保证相同时间输入得到相同参数。实际像素还依赖素材、字体、浏览器和 WebGL 环境；跨机器不能承诺逐像素一致。
 
 **能商用吗？**
 工具包本身是 PolyForm Noncommercial 许可：非商业使用免费，商业使用需事先获得作者授权。用它做出来的视频归你自己。见[许可](#许可)。
@@ -207,7 +199,7 @@ examples/contrast/        6 组正例/反例帧对照（构图与光的标尺）
 
 ## 原创性
 
-- **结构化画面代码绘制，关键素材可引用**：图表、数字、表格和流程默认用代码绘制；关键图片或视频可以使用调研阶段搜集的素材，可根据需要显示引用标题。外部素材的来源和许可信息可获得时登记 MANIFEST（sha256 / 来源 URL / 许可 / 用途 / 关联事实或镜头）；真实资料优先使用原始媒体；场景、空间关系、过程和视觉隐喻主动用 MiniMax-H3 创作新素材，生成素材标记为 AI 生成。分镜与提示词设计见 [H3 导演指南](reference/generated-video-direction.md)。
+- **结构化画面代码绘制，关键素材可引用**：图表、数字、表格和流程默认用代码绘制；关键图片或视频可以使用调研阶段搜集的素材，可根据需要显示引用标题。外部素材在清单中记录来源、使用条件、用途及关联事实或镜头，采用前完成核对，文件哈希可用于确认版本；真实资料优先使用原始媒体；场景、空间关系、过程和视觉隐喻主动用 MiniMax-H3 创作新素材，生成素材标记为 AI 生成。分镜与提示词设计见 [H3 导演指南](reference/generated-video-direction.md)。
 - **事实有出处**：画面上出现的每个数字、年份、机构、英文术语都必须能在该片的调研文档里找到来源 URL，没核实的不上画面也不进配音。
 
 ## 许可
@@ -218,9 +210,9 @@ Remotion 自身对公司用户另有授权要求，见 [remotion.dev/license](ht
 
 ## 已知限制
 
-- 中英文都支持（`lang: 'zh' | 'en'`），各有自己的语速、字幕块预算（每块 16 字 / 48 字符）与默认音色。两版成片都嵌在上方；`examples/rag/` 的过程文件是中文版的。只做这一种视觉风格，幕底二选一（`bg: 'stars' | 'dots'`），其他要换就改 `reference/style-guide.md` + `src/ui.tsx`。
+- 中英文都支持（`lang: 'zh' | 'en'`），各有自己的语速、字幕块预算（每块 16 字 / 48 字符）与默认音色。两版成片都嵌在上方；`examples/rag/` 的过程文件是中文版的。默认深海黑金；`bg` 的两种幕底用于旧平面模式，新场景环境按主题设计。
 - 不适用：复刻某条现有视频、真人口播、以实拍为主的片子。
-- 解说词一旦配音定稿就不能改词（镜头代码里硬编码帧号），改词等于全片重对位。
+- 解说词改动后须重排受影响的声音、字幕与场景；旧 ShotDef 同步其绝对时间区间，新 SceneSpec 按新的局部节拍和边界校验。
 - 并行构建对机器有要求：多个 agent 同时跑 Remotion bundle，建议预留 ≥5GB 磁盘；并发按当前宿主可用能力安排，不依赖固定 pane 数。
 
 ## Star History

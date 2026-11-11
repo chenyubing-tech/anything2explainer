@@ -39,9 +39,9 @@
 
 校样：模板提供无音频 `ThemePreview` 合成，复用正式图元检查 HUD、金底深字、曲线与表格。运行 `npx remotion still src/index.ts ThemePreview stills/deep-sea-black-gold.png --frame=100`，或在 Studio 中选择 ThemePreview。
 
-## 2.1 镜头时间轴同步
+## 2.1 旧 ShotDef / RAG 样例的时间轴同步
 
-镜头源码内部的节拍继续以 `BASE_RANGES` 为基准，Sequence 区间从 `CURRENT_RANGES` 读取。旁白或 TTS 重排后，先生成带实际帧号的 `examples/rag/分镜表.md`，再同步当前区间：
+以下命令操作仓库内 RAG 样例；其他项目替换为本片路径，不改写样例作为自己的时间轴。此映射只适用于已接入 `BASE_RANGES` / `CURRENT_RANGES` 的旧镜头，新 SceneSpec 按本片局部节拍与边界重算。镜头源码内部的节拍以 `BASE_RANGES` 为基准，Sequence 区间从 `CURRENT_RANGES` 读取。旁白或 TTS 重排后，先生成带实际帧号的 `examples/rag/分镜表.md`，再同步当前区间：
 
 ```powershell
 python template/scripts/sync_shot_timing.py `
@@ -62,9 +62,9 @@ python template/scripts/sync_shot_timing.py `
 
 生成前按 [H3 导演指南](generated-video-direction.md) 设计不同的新素材与共同物体/构图/运动方向。`reuseFootage()` 只作可选兼容工具。`TransitionPreview` 是旧转场装饰示意；真实媒体链路看 `MixedSolar` 和 `MixedVolcano`，它们使用 NASA 资料而非 H3 输出。
 
-## 2.3 节奏二轮调整
+## 2.3 旧 ShotDef 的节奏调整参考
 
-30fps 下，普通镜头目标为 105–165 帧（3.5–5.5 秒）；超过 180 帧时，画面至少要有两个持续到下一节拍的语义动作。动作应表现解说词里的动词，例如数据流入卡片、曲线扫描、指标逐项聚焦、节点跳转或结构重排。单纯增加漂浮、呼吸和装饰粒子不算节奏修复。
+下列数值用于旧平面镜头的历史调优，不作为新 SceneSpec 的时长或动作次数要求。30fps 下，普通镜头参考 120–165 帧（4–5.5 秒，遵守旧模式 120 帧下限）；超过 180 帧时，画面至少要有两个持续到下一节拍的语义动作。动作应表现解说词里的动词，例如数据流入卡片、曲线扫描、指标逐项聚焦、节点跳转或结构重排。单纯增加漂浮、呼吸和装饰粒子不算节奏修复。
 
 本轮优先修复长镜头内部的低变化区，保持旁白和镜头区间不变；需要压缩总时长时，先在 `tts_build.py` 重排语音与分镜，再用 `sync_shot_timing.py` 同步区间，避免只缩短 Sequence 造成字幕和旁白错位。
 

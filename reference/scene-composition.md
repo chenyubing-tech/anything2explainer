@@ -27,7 +27,7 @@ export const MyVideo = () => <Stage scenes={scenes} boundaries={boundaries} />;
 
 以上路径是调用方示例，不是仓库自带素材。可直接运行的真实路径见 `template/src/previews/MixedMediaPreview.tsx` 和 `assets.json`。
 
-`Stage` 在新模式保留全局配音、导航、进度条与字幕。`shots` 若传入，只用于显式的覆盖层；内容应移入 `scenes`。禁止同时传入旧 `footage` 与新场景，避免视频重复挂载。独立预览可直接使用 `SceneTrack`。
+`Stage` 在新模式保留进度条与字幕（读取本片 config 和时间轴）；配音须显式传 `audio` 开启，路径为 `public/assets/<slug>/audio.wav`。HUD、章节卡等导航通过 `shots` 显式传入，不由场景自动生成；内容应移入 `scenes`。禁止同时传入旧 `footage` 与新场景，避免视频重复挂载。独立预览可直接使用 `SceneTrack`。
 
 ## 时钟、边界与层序
 
