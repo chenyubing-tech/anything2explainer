@@ -36,7 +36,7 @@
 你是《<片名>》v<N> 的成片审美评审员。读 `<skill 路径>/reference/taste-video-review.md`、`taste-review-report-template.md`、项目的 `script/visual_direction.md`、分镜、时间轴、技术 QC、H3 实际素材清单和上一版报告。以 `<实际最终视频路径>` 为准，正常速度带声音完整通看，再看逐镜头代表帧、全片构图缩略表以及边界前后约半秒。按 T01–T08 逐镜头输出覆盖表，问题必须有镜头、timecode、帧范围、实际证据路径、影响与最小修法。保存到 `<项目根>/qc/taste_v<N>.md`，和最终技术报告互相链接。对旧问题沿用 id，列已修/部分修/未修及新版本证据；只评审，不改源码。结论按参考判定，未拿到真实成片或未完整通看为 NOT_REVIEWED；编译、bundle、静帧和提示词不能证明成片审美通过。最终回复先报结论和观看范围，再报最影响观感的三处及全部遗留。
 
 ## 派单与看门狗（主会话自用）
-- 并发受本机 / harness 的 pane 上限约束（派单前 ListAgents 看全机占用，稳妥按 4 个一波）；完成的 agent 及时 TaskStop 释放；被 API 错误打死的 agent 先 SendMessage 叫一次，10 分钟零产出则 TaskStop 重派（"复用磁盘上的半成品、只补未完成部分"）。ListAgents / SendMessage / TaskStop 是 Claude Code 的工具名，其它 harness 用等价操作。
+- 仅在已授权分工时使用此节；先核对当前环境可用的任务工具与并发上限，再安排文件所有权。失败时先读实际错误和落盘结果，恢复已有半成品；重试范围和次数按故障决定，不依赖特定宿主工具名、固定并发或无产出时间。
 - 每 30–40 分钟核一次各组 index.ts / BUILD_NOTES 的 mtime。
 - 构建组的裁定请求一句话回；相邻组共用元素时指定 import 方向，不要让两组互相对齐。
 - 消息可能在 agent 写最终报告时被吞：若其 idle 通知仍说"等待决定"，重发一次。

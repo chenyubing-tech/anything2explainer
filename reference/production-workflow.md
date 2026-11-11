@@ -52,8 +52,8 @@ Windows 新建工程时可用本机原生复制工具把模板复制到新目录
 | 入口 | 范围 | 不能据此宣称 |
 |---|---|---|
 | `npm run typecheck` | 当前工程类型 | 画面正确、事实正确或成片好看 |
-| `npm run test:scenes` | 模板时序、过程和三维路线的固定测试 | 任意新片镜头和素材已被覆盖 |
-| `check_scene_assets.cjs <清单>` | 本片实际文件、已声明尺寸/fps/时长/哈希 | 素材的科学含义或最终观感已通过 |
+| `npm run test:scenes` | 模板时序、过程、三维路线与素材预检的回归测试 | 任意新片镜头和素材已被覆盖 |
+| `check_scene_assets.cjs <清单>` | 清单结构、本片实际文件、视频必填 fps/时长及可选尺寸/哈希；空清单为 SKIP | 素材的科学含义或最终观感已通过 |
 | `selfcheck.py`、`motion_check.py`、`frame_metrics.py` | 旧 G1–Gn / 分镜结构的静态与图像辅助检查 | 自动支持任意 SceneSpec、三维场景或 H3；旧像素门槛不是新场景的审美裁决 |
 | `inspect_scene_preview.py` | 仓库特定样例；读取 `src/previews/story.json` 的片长和边界 | 是任意视频的通用检查器；新片需使用其实际元数据与时间计划 |
 | taste 终审 | 实际最终视频完整带声音观看、逐镜头与边界证据 | 未看完整视频、未查声音或只查静帧也可 PASS |

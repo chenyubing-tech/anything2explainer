@@ -44,7 +44,7 @@ export const MyVideo = () => <Stage scenes={scenes} boundaries={boundaries} />;
 
 视频图层必须提供 `sourceInSeconds`、`sourceDurationSeconds`、`sourceFps`（从真实文件读取），可选 `playbackRate`。源起点按合成 fps 换算给 Remotion，源文件的 fps 由视频解码器处理；不要拿源 fps 直接乘 `trimBefore`。
 
-`compileSceneTimeline()` 校验场景连续性、重复 id、边界关系与重叠、关键帧范围和源视频长度。它不读磁盘。使用 `scripts/check_scene_assets.cjs <清单JSON>` 检查实际文件、可探测视觉流、fps 与时长；图片最终解码与视频实际取帧还需渲染验证。缺失素材或源时长不足不能用静默循环掩盖。
+`compileSceneTimeline()` 校验场景连续性、重复 id、边界关系与重叠、关键帧范围和源视频长度。它不读磁盘。使用 `scripts/check_scene_assets.cjs <清单JSON>` 检查实际文件、可探测视觉流、fps 与时长；清单为 JSON 数组，每项须含 `kind`（`image` / `video`）和 public 相对路径 `src`；视频须含正数 `sourceFps`、`sourceDurationSeconds`，可选正整数 `width` / `height` 和 64 位十六进制 `sha256`。纯代码场景可传空数组，脚本输出 SKIP，不能记作素材验证 PASS。图片最终解码与视频实际取帧还需渲染验证。缺失素材或源时长不足不能用静默循环掩盖。
 
 旧 `ShotDef` 可经 `sceneFromShot()` 转换 1 起含端点区间；旧视频可经 `sceneFromFootage()` 包装保留裁切/模糊/调色关键帧。适配器不自动消除旧组件自带的入退场，迁移镜头需审查重复淡出。新场景的转场只使用 `BoundarySpec`。旧轨道保留兼容入口，其装饰和视频也已统一为总时长口径，但不会因此自动协调旧代码镜头的进退场。
 
