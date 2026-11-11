@@ -240,3 +240,5 @@ Adapted from [taste-skill](https://github.com/Leonxlnx/taste-skill): subject-led
 ## Mixed-media scenes
 
 Compose images, videos and code graphics in a shared scene with one boundary clock (18 frames total by default). See [scene composition](reference/scene-composition.md) for timing, source mapping, migration and checks. The template includes two narrated 15-second compositions, `MixedSolar` and `MixedVolcano`, using actual NASA media. These are cross-topic renderer demonstrations, not H3-generated outputs.
+
+`SpatialVolcano` adds a code-generated 3D cutaway and a camera flight through the gas conduit to the existing volcano preview. Select it in Studio, or render it with `npx remotion render src/index.ts SpatialVolcano`. It uses Three.js and `@remotion/three`; the model is an explanatory abstraction, not a physical simulation or H3 output. See the [validation record](template/qc/spatial-volcano-validation.md).

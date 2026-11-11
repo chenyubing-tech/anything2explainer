@@ -240,3 +240,5 @@ Remotion 自身对公司用户另有授权要求，见 [remotion.dev/license](ht
 ## 通用混合场景预览
 
 图片、视频、代码图表在同一场景编排，由统一边界同步切换，普通转场总长 18 帧。接入、源时间和检查命令见 [场景编排指南](reference/scene-composition.md)。在模板 Studio 选择 `MixedSolar`（太阳物理）或 `MixedVolcano`（地球科学），可以查看带中文配音的 15 秒高清资料预览。素材来自 NASA，并非 H3 输出；公共组件不绑定题材。
+
+新增 `SpatialVolcano`：在现有火山预览中接入代码生成的三维剖面与通道穿行，相机跟随气体进入内部，再从出口拉回整体。Studio 选择该合成，或运行 `npx remotion render src/index.ts SpatialVolcano`。使用 Three.js / `@remotion/three`，模型为解释性抽象，不是物理仿真或 H3 输出；实际验证范围见 [检查记录](template/qc/spatial-volcano-validation.md)。

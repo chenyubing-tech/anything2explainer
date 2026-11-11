@@ -8,15 +8,16 @@ import {Heading, Mechanism, PreviewChrome, Synthesis, type Topic} from './Scienc
 import {layout} from './processTimeline';
 import story from './story.json';
 import media from './assets.json';
+import {SpatialVolcanoMechanism} from './SpatialVolcano';
 
-const makeScenes = (topic:Topic): SceneSpec[] => {
+const makeScenes = (topic:Topic, spatial=false): SceneSpec[] => {
   const videoLayer = (suffix:string): VideoSceneLayer => {
     const source=media.find(m=>m.kind==='video'&&m.src.endsWith(`${topic}-${suffix}.mp4`));
     if(!source || typeof source.sourceDurationSeconds!=='number'||typeof source.sourceFps!=='number')throw new Error(`Missing verified metadata: ${topic}-${suffix}`);
     return {id:suffix,kind:'video',role:'subject',order:0,src:source.src,sourceInSeconds:0,sourceDurationSeconds:source.sourceDurationSeconds,sourceFps:source.sourceFps,viewport:layout.observation,fit:'cover',filter:topic==='solar'?'grayscale(1) sepia(.8) saturate(1.1)':'saturate(.85)'};
   };
   const Intro=()=> <Heading topic={topic}/>;
-  const Explain=()=> <Mechanism topic={topic}/>;
+  const Explain=()=> spatial?<SpatialVolcanoMechanism/>:<Mechanism topic={topic}/>;
   const Finish=()=> <Synthesis topic={topic}/>;
   return [
     {id:'image',start:0,duration:story.scenes.video,layers:[
@@ -37,12 +38,18 @@ const plans=Object.fromEntries((['solar','volcano'] as const).map(topic=>[topic,
   {fromScene:'video',toScene:'graphic',preset:'cut'},
   {fromScene:'graphic',toScene:'mixed',preset:'reveal',durationFrames:18,direction:'right'},
 ],story.totalFrames,story.fps)]));
+const spatialPlan=compileSceneTimeline(makeScenes('volcano',true),[
+  {fromScene:'image',toScene:'video',preset:'dissolve',durationFrames:18},
+  {fromScene:'video',toScene:'graphic',preset:'cut'},
+  {fromScene:'graphic',toScene:'mixed',preset:'reveal',durationFrames:18,direction:'right'},
+],story.totalFrames,story.fps);
 
-export const MixedMediaPreview: React.FC<{topic:Topic}> = ({topic}) => <AbsoluteFill>
+export const MixedMediaPreview: React.FC<{topic:Topic;spatial?:boolean}> = ({topic,spatial=false}) => <AbsoluteFill>
   <Fonts/>
   <Audio src={staticFile(`assets/scene-demo/${topic}-narration.wav`)}/>
-  <SceneTrack plan={plans[topic]}/>
+  <SceneTrack plan={spatial?spatialPlan:plans[topic]}/>
   <PreviewChrome topic={topic}/>
 </AbsoluteFill>;
 export const SolarPreview: React.FC = () => <MixedMediaPreview topic="solar"/>;
 export const VolcanoPreview: React.FC = () => <MixedMediaPreview topic="volcano"/>;
+export const SpatialVolcanoPreview: React.FC = () => <MixedMediaPreview topic="volcano" spatial/>;

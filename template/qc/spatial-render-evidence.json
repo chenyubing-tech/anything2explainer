@@ -1,0 +1,9 @@
+{
+  "composition": "SpatialVolcano",
+  "sha256": "fe48dae8af2205d71d89a09ce34981aeb528a78afd2a8e7587b7d947931ef964",
+  "bytes": 6217350,
+  "inspection": "stills/SpatialVolcano-v1/inspection.json",
+  "repeatFrame": 225,
+  "repeatFrameSha256": "d075548fdbac690069a1617d92241acd004926eb24fdf1d4a94e3550fc1422d8",
+  "repeatFrameIdentical": true
+}
