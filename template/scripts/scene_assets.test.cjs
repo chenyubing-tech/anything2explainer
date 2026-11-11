@@ -74,3 +74,31 @@ test('code-only films explicitly skip external media verification', () => {
   assert.match(result.stdout, /SKIP: no external visual assets declared/);
   assert.doesNotMatch(result.stdout, /PASS /);
 });
+
+test('longer audio cannot disguise a short video stream', () => {
+  const root = path.resolve(__dirname, '..');
+  const publicDir = path.join(root, 'public');
+  const folder = fs.mkdtempSync(path.join(publicDir, 'a2e-duration-'));
+  const ffmpeg = process.env.FFMPEG ?? (process.platform === 'win32'
+    ? path.join(root, 'node_modules/@remotion/compositor-win32-x64-msvc/ffmpeg.exe') : 'ffmpeg');
+  const encode = args => {
+    const result = spawnSync(ffmpeg, ['-v','error','-y', ...args], {encoding:'utf8'});
+    if(result.error) throw result.error;
+    assert.equal(result.status, 0, result.stderr);
+  };
+  try {
+    const short = path.join(folder, 'short.mp4');
+    const silence = path.join(folder, 'silence.raw');
+    const muxed = path.join(folder, 'muxed.mp4');
+    fs.writeFileSync(silence, Buffer.alloc(48000 * 2 * 2));
+    encode(['-i', path.join(publicDir, clip.src), '-an','-t','0.4','-vf','scale=64:64','-c:v','libx264',short]);
+    encode(['-i',short,'-f','s16le','-ar','48000','-ac','1','-i',silence,'-map','0:v:0','-map','1:a:0','-c:v','copy','-c:a','aac',muxed]);
+    const asset = {kind:'video', src:path.relative(publicDir, muxed), sourceFps:30, sourceDurationSeconds:1.5};
+    fails([asset], /shorter than declared/);
+    const valid = check([{...asset, sourceDurationSeconds:0.4}]);
+    assert.equal(valid.status, 0, valid.stderr);
+    assert.match(valid.stdout, /0.400000s video/);
+  } finally {
+    fs.rmSync(folder, {recursive:true, force:true});
+  }
+});

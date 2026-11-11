@@ -12,6 +12,11 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage as ndi
 
+# Keep CLI diagnostics readable when Windows redirects output with a legacy code page.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, 'reconfigure'):
+        _stream.reconfigure(encoding='utf-8')
+
 ap = argparse.ArgumentParser()
 ap.add_argument('--frames', default='fin_frames')
 ap.add_argument('--storyboard', default='分镜表.md')

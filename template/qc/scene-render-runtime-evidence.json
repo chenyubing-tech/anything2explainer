@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "scope": "Technical fixture only: real image/video/code, source trim, 2x playback, 18-frame boundaries, frozen extensions, local graphic clocks and repeatability. No audio or taste verdict.",
+  "createdAt": "2026-11-11T03:40:51.015Z",
+  "sourceHashes": {
+    "SceneTrack.tsx": "5d101f3d9a72c67b21a37bce2152abb710d53dcb1ad90ac36c49a36796f02e53",
+    "sceneTimeline.ts": "a655ff2faa07959ff3a1f791b0f71b8234172a3d3b71c41b5ee5801b1b016fc9",
+    "sceneTypes.ts": "2bb09ab16b0c55d44c1bb3ae9ea0d23562901b2594d9b7dc19a11cb04a61ceea"
+  },
+  "frames": 90,
+  "fps": 30,
+  "width": 320,
+  "height": 180,
+  "colorChecks": 179,
+  "clockChecks": 1760,
+  "repeatedFrame": 38,
+  "repeatedPixelsEqual": true,
+  "rawFramesSha256": "15527a293ef913da1136c8f8f7df9b82b97e72ad80ca2fcaa75fa77150b9fd13",
+  "sourceVideoSha256": "b44a0d415c0f4fe87413671f0d3535c3ffabd56f5b245e9b3634c737d9cf66e1"
+}

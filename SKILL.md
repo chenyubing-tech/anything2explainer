@@ -54,4 +54,6 @@ description: 将主题、文章或文档制作成原创科普讲解视频，或�
 
 在实际 Remotion 工程目录运行 `npm run typecheck`、`npm run test:scenes`、`npm run check:scene-assets`。测试验证模板引擎与特定样例，不能代替新片事实和审美检查。新片的素材预检须传入本片清单，不能沿用样例清单给新素材背书。
 
+配音/分镜生成与旧 QC 脚本的验收运行 `npm run test:workflow`；需要核对真实媒体取帧与边界时运行 `npm run check:scene-render`（本机 Chrome、Python/Pillow 与 ffmpeg）。后者渲染独立技术夹具并检查实际像素，不是新片审美验收。
+
 已有合成：`ThemePreview`（配色）、`MixedSolar` / `MixedVolcano`（图片/视频/代码）、`SpatialVolcano`（三维穿行）。样例的片长、题材、声音、素材与检查报告不作为新片的默认成果。平台命令、旧脚本适用范围与证据要求见 [制作流程](reference/production-workflow.md)。

@@ -14,6 +14,11 @@ import sys, os, re, glob, subprocess, tempfile, shutil
 import numpy as np
 from PIL import Image
 
+# Keep CLI diagnostics readable when Windows redirects output with a legacy code page.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, 'reconfigure'):
+        _stream.reconfigure(encoding='utf-8')
+
 THR = 0.35            # 静止帧阈值（320×180 内容区灰度平均变化）
 HOLD_THR = 1.5        # 「大面积变化」阈值（同口径；落位后的动词动作 0.4–1.2，入场 / 运镜 2.5+）
 STILL_MAX_S = 3.0     # 最长静止上限（秒）
@@ -61,7 +66,12 @@ def changed_px(a, b):
 tmpdirs = []
 FULL = args[0] == '--frames'
 if FULL:
-    d = args[1]; files = sorted(glob.glob(f'{d}/f_*.jpg'))[::STEP]
+    d = args[1]; all_files = sorted(glob.glob(f'{d}/f_*.jpg'))
+    available = {int(re.search(r'f_(\d+)', f).group(1)) for f in all_files}
+    missing = [f for _, a, b in shots for f in range(a, b + 1) if f not in available]
+    if missing:
+        raise SystemExit(f'INCOMPLETE: 成片帧缺失 {len(missing)} 帧，首批: {missing[:10]}')
+    files = all_files[::STEP]
     frames = [(int(re.search(r'f_(\d+)', f).group(1)), f) for f in files]
 else:
     comp = args[0]
@@ -92,9 +102,12 @@ diffs = {fnums[i + 1]: float(np.abs(small[fnums[i + 1]] - small[fnums[i]]).mean(
 print(f'{"shot":6s} {"len":>5s} {"still%":>7s} {"longest":>8s} {"hold":>6s}  verdict' + ('   longest-run  fullres-changed-px  class' if FULL else ''))
 print(f'判据：最长静止 ≤{STILL_MAX_S:.0f} s；末拍稳定期 hold ≥{HOLD_MIN} 帧（离场前最后一段无大面积变化的连续帧；带 ~ = 该镜头不离场、承接进下一镜头，只供参考）；still% 只报不判。')
 bad = 0
+incomplete = 0
 for sid, a, b in shots:
     fs = [f for f in fnums if a <= f <= b]
     if len(fs) < 3:
+        print(f'{sid}: INCOMPLETE，抽样不足，不能判定动作与停留')
+        incomplete += 1
         continue
     d = [diffs[f] for f in fs[1:]]
     still = sum(v < THR for v in d) / len(d) * 100
@@ -134,5 +147,7 @@ for sid, a, b in shots:
         extra = f'   {max(a, s_)}-{e_}  {cp:6d}  {cls}'
     print(f'{sid:6s} {(b-a+1)/30:4.1f}s {still:6.0f}% {longest:7.1f}s {hold:4d}f{"~" if not exited else " "}  {verdict}{extra}')
 print(f'shots failing: {bad}')
+print(f'shots not checked: {incomplete}')
 for t in tmpdirs:
     shutil.rmtree(t, ignore_errors=True)
+sys.exit(1 if bad else 2 if incomplete else 0)

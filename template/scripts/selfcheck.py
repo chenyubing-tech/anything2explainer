@@ -6,6 +6,11 @@
   3) 画面字面量：抽取各 SC 文件里会上画面的字符串，剔除 CSS / 标识符噪声，列出不在事实清单里的词供人工核对。
 用法：python3 scripts/selfcheck.py [--root <项目根>] [G1 G2 …]（不传组则查全部已建组）"""
 import re, os, sys, glob
+
+# Keep CLI diagnostics readable when Windows redirects output with a legacy code page.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, 'reconfigure'):
+        _stream.reconfigure(encoding='utf-8')
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if '--root' in sys.argv:
     i = sys.argv.index('--root'); ROOT = os.path.abspath(sys.argv[i + 1]); del sys.argv[i:i + 2]
@@ -13,7 +18,7 @@ sb = open(f'{ROOT}/分镜表.md', encoding='utf-8').read()
 
 # ---- 分镜表镜头区间 ----
 sb_shots = {}
-for m in re.finditer(r'^\| (SC\d\d)[^|]*\| (\d+)–(\d+) \|', sb, re.M):
+for m in re.finditer(r'^\|\s*(SC\d+)[^|]*\|\s*(\d+)\s*[–—-]\s*(\d+)\s*\|', sb, re.M):
     sb_shots[m.group(1)] = (int(m.group(2)), int(m.group(3)))
 
 # ---- 白名单 ----
@@ -24,27 +29,53 @@ if wl_text:
         mm = re.match(r'\s*(SC\d\d)\s+(.*)', part.strip())
         if mm: whitelist[mm.group(1)] = mm.group(2).strip()
 
-groups = sys.argv[1:] or sorted(os.path.basename(p) for p in glob.glob(f'{ROOT}/src/shots/G*'))
+requested_groups = sys.argv[1:]
+groups = requested_groups or sorted(os.path.basename(p) for p in glob.glob(f'{ROOT}/src/shots/G*'))
 problems = 0
+incomplete = 0
+expected = set(sb_shots)
+if requested_groups:
+    expected = set()
+    for group in requested_groups:
+        section = re.search(r'^##\s+' + re.escape(group) + r'(?=[\s（(]|$)[^\n]*\n(.*?)(?=^##\s|\Z)', sb, re.M | re.S)
+        if section:
+            section_ids = set(re.findall(r'^\|\s*(SC\d+)\b', section.group(1), re.M)) & set(sb_shots)
+            expected.update(section_ids)
+            if not section_ids:
+                print(f'[coverage] INCOMPLETE {group}: 分组中没有可核对的镜头区间')
+                incomplete += 1
+        else:
+            print(f'[coverage] INCOMPLETE {group}: 没有可识别的分组章节，无法核对该组缺失镜头')
+            incomplete += 1
+if not sb_shots:
+    print('[coverage] INCOMPLETE: 没有可识别的分镜区间')
+    incomplete += 1
 
 # ---- 1) 帧覆盖 ----
 built = {}
+declared = set()
 for g in groups:
     idx = f'{ROOT}/src/shots/{g}/index.ts'
     if not os.path.exists(idx): continue
     src = open(idx, encoding='utf-8').read()
+    declared.update(re.findall(r"\bid:\s*['\"](SC\d+)['\"]", src))
     for m in re.finditer(r"id:\s*'([^']+)'\s*,\s*from:\s*(\d+)\s*,\s*to:\s*(\d+)", src):
         built[m.group(1)] = (int(m.group(2)), int(m.group(3)), g)
     if not re.search(r"id:\s*'", src):
         print(f'[coverage] {g}: index.ts 里没有字面量 from/to（可能用了常量）→ 请人工核对')
 print(f'[coverage] 分镜表 {len(sb_shots)} 镜头；已建 {len(built)} 镜头')
+for sid in sorted(expected):
+    if sid not in declared:
+        print(f'  ✗ 缺失镜头 {sid}: 分镜表声明但所查 index.ts 没有登记'); problems += 1
+    elif sid not in built:
+        print(f'  INCOMPLETE {sid}: 区间使用常量或动态映射，静态脚本未核实'); incomplete += 1
 for sid, (a, b) in sorted(sb_shots.items()):
     if sid in built:
         ba, bb, g = built[sid]
         if (ba, bb) != (a, b):
             print(f'  ✗ {sid} ({g}) 区间 {ba}–{bb} ≠ 分镜表 {a}–{b}'); problems += 1
 import json
-_tl = json.load(open(f'{ROOT}/script/timeline.json'))
+_tl = json.load(open(f'{ROOT}/script/timeline.json', encoding='utf-8'))
 _chapter_starts = {c['from'] for c in _tl['chapters']}
 ids = sorted(built, key=lambda k: built[k][0])
 for p, q in zip(ids, ids[1:]):
@@ -103,4 +134,6 @@ for g in groups:
             elif not re.search(r'[A-Za-z]{3}', s2): continue
             if s2 in fact_txt or s2 in sb: continue
             seen.add(s2); print(f'  {os.path.basename(f)}: {s2}')
-print(f'\nproblems: {problems}')
+print(f'\nproblems: {problems}; incomplete: {incomplete}')
+print('FAIL' if problems else 'INCOMPLETE' if incomplete else 'PASS: supported static checks only; not a rendered-film verdict')
+sys.exit(1 if problems else 2 if incomplete else 0)

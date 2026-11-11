@@ -37,6 +37,7 @@
 npm ci
 npm run typecheck
 npm run test:scenes
+npm run test:workflow
 npm run check:scene-assets
 $env:REMOTION_BROWSER_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'
 npx remotion bundle src/index.ts --out-dir build_review
@@ -44,6 +45,8 @@ npx remotion render build_review SpatialVolcano renders/SpatialVolcano.mp4 --con
 ```
 
 浏览器路径、合成名、输出目录按实际环境修改；新片运行 `node scripts/check_scene_assets.cjs <本片清单JSON>`，不检查完样例就声称新素材通过。三维并发按真实测渲决定，先低并发检查实际 WebGL 输出。`npm ci` 需要锁文件；遇到 npm 缺少平台可选二进制时，按明确缺失包恢复兼容版本，不能盲目删除工程或改全局配置。
+
+`test:workflow` 需要 Python、numpy 和 Pillow，使用隔离项目及本地测试音轨验证文件生成，不调用 TTS 服务。检查真实媒体/边界接入时，设置上述浏览器路径后运行 `npm run check:scene-render`；需要 Python/Pillow 和 ffmpeg，可用 `PYTHON` / `FFMPEG` 指定可执行文件。它复用已安装依赖，在临时工程生成 90 帧技术夹具并实际渲染，核对裁切、2 倍速、18 帧边界、局部时钟和重复帧，结果写入 `qc/scene-render-runtime-evidence.json`；不自动下载浏览器，也不代表声音或审美通过。
 
 Windows 新建工程时可用本机原生复制工具把模板复制到新目录，排除 `node_modules`、`build*`、`renders`、`stills`、`fin_frames`、`audio` 与 `public/assets/scene-demo/raw` 等本地产物；保留源码、字体、包清单和锁文件。修改本片配置，再安装依赖与检查。不要覆盖已有工程，不复制旧的 render.done 或检查结果作为新片证据。
 
@@ -53,12 +56,16 @@ Windows 新建工程时可用本机原生复制工具把模板复制到新目录
 |---|---|---|
 | `npm run typecheck` | 当前工程类型 | 画面正确、事实正确或成片好看 |
 | `npm run test:scenes` | 模板时序、过程、三维路线与素材预检的回归测试 | 任意新片镜头和素材已被覆盖 |
-| `check_scene_assets.cjs <清单>` | 清单结构、本片实际文件、视频必填 fps/时长及可选尺寸/哈希；空清单为 SKIP | 素材的科学含义或最终观感已通过 |
+| `npm run test:workflow` | 配音文件输出、分镜令牌、时间映射和旧 QC 的 CLI 回归；本地测试音轨 | 实际 TTS 服务、真实音色或完整新片已验收 |
+| `npm run check:scene-render` | 独立技术夹具的实际浏览器渲染与解码像素 | 任意新片、3D/H3、音轨或审美均已覆盖 |
+| `check_scene_assets.cjs <清单>` | 清单结构、本片实际文件、视频流的必填 fps/时长及可选尺寸/哈希；空清单为 SKIP | 容器总时长等于画面长度；素材的科学含义或最终观感已通过 |
 | `selfcheck.py`、`motion_check.py`、`frame_metrics.py` | 旧 G1–Gn / 分镜结构的静态与图像辅助检查 | 自动支持任意 SceneSpec、三维场景或 H3；旧像素门槛不是新场景的审美裁决 |
 | `inspect_scene_preview.py` | 仓库特定样例；读取 `src/previews/story.json` 的片长和边界 | 是任意视频的通用检查器；新片需使用其实际元数据与时间计划 |
 | taste 终审 | 实际最终视频完整带声音观看、逐镜头与边界证据 | 未看完整视频、未查声音或只查静帧也可 PASS |
 
 新场景的间隔、重叠、源长度与关键帧由 `compileSceneTimeline` 校验；另按本片分镜检查实际帧、动作、字幕安全区和正常速度阅读。不要拿旧脚本读不到新场景的结果当成“无缺陷”。历史报告只对其指定版本负责，新片或重渲染后需新的证据。
+
+旧 `selfcheck.py` 的退出码为 0（支持的静态检查通过）/ 1（发现问题）/ 2（区间使用动态常量或分组无法解析，检查不完整）；不能把 2 记为通过。`motion_check.py` 缺失成片帧会报 INCOMPLETE 并失败；抽样不足的镜头单列未检查，退出 2；阈值标记退出 1，仍需看帧区分真实缺陷与误报。两者都不替代成片终审。
 
 ## 6. 分工是可选实现方式
 

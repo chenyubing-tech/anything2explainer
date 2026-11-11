@@ -11,6 +11,13 @@ import argparse
 import re
 from pathlib import Path
 
+import sys
+
+# Keep CLI diagnostics readable when Windows redirects output with a legacy code page.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, 'reconfigure'):
+        _stream.reconfigure(encoding='utf-8')
+
 
 ROW_RE = re.compile(
     r"^\|\s*(SC\d+)\b.*?\|\s*(\d+)\s*[–—-]\s*(\d+)\s*\|"
@@ -24,7 +31,12 @@ def read_ranges(storyboard: Path) -> dict[str, tuple[int, int]]:
         match = ROW_RE.match(line)
         if match:
             shot, start, end = match.groups()
-            ranges[shot] = (int(start), int(end))
+            start, end = int(start), int(end)
+            if shot in ranges:
+                raise SystemExit(f'镜头区间重复: {shot}')
+            if start < 1 or end < start:
+                raise SystemExit(f'无效镜头区间: {shot} {start}–{end}（1 起，结束不得早于开始）')
+            ranges[shot] = (start, end)
     if not ranges:
         raise SystemExit(f"未在分镜表中找到镜头区间: {storyboard}")
     return ranges

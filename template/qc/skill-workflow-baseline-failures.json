@@ -1,0 +1,77 @@
+{
+  "baseline": "5adf21668b1ffadfc5961f24462772ebb24529d2",
+  "scope": "Isolated local reproductions before fixes; synthetic audio/media, no external TTS/H3 call",
+  "cases": [
+    {
+      "case": "native Windows TTS text outputs",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<AUDIT_ROOT>\\tts-cp936\\run_local.py\", line 10, in <module>\n    with contextlib.redirect_stdout(io.StringIO()): asyncio.run(tts.main(str(path/'script/narration.txt')))\n                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\ProgramData\\miniconda3\\Lib\\asyncio\\runners.py\", line 190, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"C:\\ProgramData\\miniconda3\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\ProgramData\\miniconda3\\Lib\\asyncio\\base_events.py\", line 654, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"<AUDIT_ROOT>\\tts-cp936\\scripts\\tts_build.py\", line 480, in main\n    f.write(f\"| {s['id']} | {s['chapter']} | {s['from']}–{s['to']} | {(s['to']-s['from']+1)/FPS:.1f}s | {last}{warn} | {'¶' if s['para'] else ''} | {'｜'.join(sb['text'] for sb in s['subs'])} |\\n\")\nUnicodeEncodeError: 'gbk' codec can't encode character '\\xb6' in position 33: illegal multibyte sequence\n"
+    },
+    {
+      "case": "invalid zero-index subtitle token",
+      "exit": 0,
+      "stdout": "written 分镜表.md; unresolved: []\n",
+      "stderr": "",
+      "output": "| SC01 | 46–90 |\n"
+    },
+    {
+      "case": "unresolved storyboard token",
+      "exit": 0,
+      "stdout": "written 分镜表.md; unresolved: ['{S01.star}']\n",
+      "stderr": "",
+      "output": "| SC01 | {S01.star}–90 |\n"
+    },
+    {
+      "case": "timing reversed",
+      "exit": 0,
+      "stdout": "已同步 1 个镜头到 <AUDIT_ROOT>\\timing\\src\\timing.ts\n",
+      "stderr": ""
+    },
+    {
+      "case": "timing duplicate",
+      "exit": 0,
+      "stdout": "已同步 1 个镜头到 <AUDIT_ROOT>\\timing\\src\\timing.ts\n",
+      "stderr": ""
+    },
+    {
+      "case": "selfcheck with declared shot entirely absent",
+      "exit": 0,
+      "stdout": "[coverage] 分镜表 1 镜头；已建 0 镜头\n[glitch] 白名单 0 条\n[sweep] 扫光白名单 0 条（分镜表没写扫光白名单 → 任何扫光都算超标）：—\n[literals] 不在分镜表/事实清单中的画面字符串（人工核对）：\n\nproblems: 0\n",
+      "stderr": ""
+    },
+    {
+      "case": "container has 2s audio and only 0.4s video, manifest declares 1.5s video",
+      "exit": 0,
+      "stdout": "PASS audio-longer.mp4: 64x64, 2.000000s\n",
+      "stderr": "",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_type": "video",
+            "r_frame_rate": "30/1",
+            "duration": "0.400000",
+            "nb_frames": "12"
+          },
+          {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "2.000000",
+            "nb_frames": "95"
+          }
+        ],
+        "format": {
+          "duration": "2.000000"
+        }
+      }
+    },
+    {
+      "case": "motion check with no rendered frames",
+      "exit": 0,
+      "stdout": "shot     len  still%  longest   hold  verdict   longest-run  fullres-changed-px  class\n判据：最长静止 ≤3 s；末拍稳定期 hold ≥30 帧（离场前最后一段无大面积变化的连续帧；带 ~ = 该镜头不离场、承接进下一镜头，只供参考）；still% 只报不判。\nshots failing: 0\n",
+      "stderr": ""
+    }
+  ]
+}
